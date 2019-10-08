@@ -1,0 +1,39 @@
+;=====================================================================
+;  DEF File For "Hinako"                            
+;=====================================================================
+; Player Information
+[Info]
+name    = "Hinako"
+displayname = "Hinako"
+versiondate = 12,03,2014
+mugenversion = 1.0
+author = "Mondregon"; Modified By Mr.Lee
+pal.defaults = 4
+
+
+; Files for the Player
+[Files]
+cmd     = Hinako.cmd
+cns     = Hinako-N.cns    ;Constants
+st      = Hinako-N.cns    ;States (Normal)
+st1     = Hinako-S.cns    ;States (Special)
+st2     = Hinako-H.cns    ;States (Hyper)
+st3     = Hinako-Extra.st ;Patch by Mr.Lee
+st4     = Hinako-AI.st 	  ;AI by Mr.Lee
+st5		= Hinako-AI-Helper.st  ;AI Helper
+st6 	= Hinako-Common.st  ;Common states (in data/)
+sprite  = Hinako.sff      ;Sprite
+anim    = Hinako.air      ;Animation
+sound   = Hinako.snd      ;Sound
+pal1    = Hinako02.act    ;Palettes
+pal2    = Hinako04.act
+pal3    = Hinako06.act
+pal4    = Hinako01.act
+pal5    = Hinako03.act
+pal6    = Hinako05.act
+pal7    = Hinako07.act
+;pal8    = Hinako08.act
+;pal9    = Hinako09.act
+;pal10   = Hinako10.act
+;pal11   = Hinako11.act
+;pal12   = Hinako12.act

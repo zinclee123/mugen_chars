@@ -1,0 +1,34 @@
+; Definition file for Kung Fu Man
+; Contains all the filenames needed for the character
+
+; Player information
+[Info]
+name = "Lin"        ;Name of character
+displayname = "Lin" ;Name of character to display
+versiondate = 04,14,2002    ;Version date of character (MM-DD-YYYY)
+mugenversion = 04,14,2002   ;Version of M.U.G.E.N character works on
+author = "Ahuron"  ;Modified by Mr.Lee
+pal.defaults = 6,3,4,2      ;Default palettes in order of preference
+
+; Files for the player
+[Files]
+cmd     = lee/Lin.cmd  
+cns     = lee/Lin-Constant.st  
+st      = lee/Lin-N.st  
+st2     = lee/Lin-S.st
+st3 	= lee/Lin-H.st  
+st4     = lee/Lin-Helper.st
+st5		= lee/Lin-Override.st  
+st6 	= lee/Lin-2.st
+st7 	= lee/Lin-3.st
+st8		= lee/Lin-AI-Helper.st
+stcommon= lee/Lin-Common.st
+sprite  = Lin.sff   ;Sprite
+anim    = lee/Lin.air   ;Animation
+sound   = Lin.snd   ;Sound
+pal1    = Lin4.act
+pal2    = Lin5.act
+pal3    = Lin6.act
+pal4    = Lin.act
+pal5    = Lin2.act
+pal6    = Lin3.act

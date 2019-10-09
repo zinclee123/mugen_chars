@@ -9,5 +9,25 @@
 
 **多谢理解**
 
-人物不可避免的有Bug，可以https://github.com/zinclee123/mugen_chars 提issue，如果有改进的意见或者其他想法，也可以一样提issue
+## K'
+![K Dash](https://github.com/zinclee123/mugen_chars/blob/master/Resources/KDash.gif)
+02UM系统K 强级
+对战演示视频:
+https://www.bilibili.com/video/av70245135
+
+## 麟(Lin)
+![Lin](https://github.com/zinclee123/mugen_chars/blob/master/Resources/Lin.gif)
+02UM系统麟 强级
+对战演示视频:
+https://www.bilibili.com/video/av68792524
+https://www.bilibili.com/video/av68477163
+
+## 四条雏子(Hinako)
+![Hinako](https://github.com/zinclee123/mugen_chars/blob/master/Resources/Hinako.gif)
+02UM系统四条雏子 强级
+对战演示视频：
+https://www.bilibili.com/video/av66199493
+
+
+以上所有人物不可避免的有Bug，可以https://github.com/zinclee123/mugen_chars 提问题或者改进意见可通过Github的提交issue功能
 ![如何提issue](https://github.com/zinclee123/mugen_chars/blob/master/Resources/issue.png)

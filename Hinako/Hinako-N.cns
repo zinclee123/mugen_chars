@@ -5739,8 +5739,8 @@ ignorehitpause = 1
 [State -3, Debug]
 type = displaytoclipboard
 Trigger1 = 1
-text = "P2StateNo = %d p2HitTime = %d X = %d, Y = %d  combo = %d"
-params = P2StateNo, EnemyNear,GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, var(6)
+text = "P2StateNo = %d p2HitTime = %d X = %d, Y = %d  var(11) = %d"
+params = P2StateNo, EnemyNear,GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, helper(33000),var(11)
 ignorehitpause = 1
 
 [State -3, Debug]
@@ -5965,7 +5965,7 @@ ignorehitpause = 1
 ;======================================================
 
 [state -2, ???]
-type = Null; Helper
+type = Helper
 trigger1 = numhelper(7500) = 0
 id = 7500
 name = "POWER BAR"

@@ -1627,7 +1627,6 @@ down.velocity = -6,0
 down.hittime = 6
 fall.envshake.time = 15
 id = 1500
-p2stateno = 5000
 
 [State 1000,Projectile]
 type = HitDef
@@ -1661,7 +1660,6 @@ down.hittime = 6
 air.recover = 0
 fall.recover = 0
 id = 1500
-p2stateno = 5000
 
 
 
@@ -1782,7 +1780,6 @@ down.velocity = -6,0
 down.hittime = 6
 fall.envshake.time = 15
 id = 1510
-p2stateno = 5000
 
 [State 1000,Projectile]
 type = HitDef
@@ -1817,7 +1814,6 @@ down.hittime = 6
 air.recover = 0
 fall.recover = 0
 id = 1510
-p2stateno = 5000
 
 [State 1500,End]
 type = ChangeState

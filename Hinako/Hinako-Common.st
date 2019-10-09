@@ -429,10 +429,14 @@ type = StateTypeSet
 TriggerAll = StateType = C
 trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
-trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 1 
-trigger2 = EnemyNear,MoveType = A
-trigger2 = EnemyNear,StateType = A || helper(33000),var(11) = 2 || EnemyNear,AnimTime < -20
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 statetype = S
 physics = S
 IgnoreHitPause = 1
@@ -566,10 +570,14 @@ type = ChangeState
 TriggerAll = StateType = C
 trigger1 = var(59) = 0
 trigger1 = command != "holddown"
-trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 1 
-trigger2 = EnemyNear,MoveType = A
-trigger2 = EnemyNear,StateType = A || helper(33000),var(11) = 2 || EnemyNear,AnimTime < -20
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 value = 130
 IgnoreHitPause = 1
 
@@ -719,10 +727,14 @@ type = StateTypeSet
 TriggerAll = StateType = C
 trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
-trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 1 
-trigger2 = EnemyNear,MoveType = A
-trigger2 = EnemyNear,StateType = A || helper(33000),var(11) = 2 || EnemyNear,AnimTime < -20
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 statetype = S
 physics = S
 IgnoreHitPause = 1
@@ -769,10 +781,14 @@ type = StateTypeSet
 TriggerAll = StateType = C
 trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
-trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 1 
-trigger2 = EnemyNear,MoveType = A
-trigger2 = EnemyNear,StateType = A || helper(33000),var(11) = 2 || EnemyNear,AnimTime < -20
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 statetype = S
 physics = S
 IgnoreHitPause = 1
@@ -826,10 +842,14 @@ type = StateTypeSet
 TriggerAll = StateType = C
 trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
-trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 1 
-trigger2 = EnemyNear,MoveType = A
-trigger2 = EnemyNear,StateType = A || helper(33000),var(11) = 2 || EnemyNear,AnimTime < -20
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 statetype = S
 physics = S
 IgnoreHitPause = 1
@@ -892,10 +912,14 @@ type = StateTypeSet
 TriggerAll = StateType = C
 trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
-trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 1 
-trigger2 = EnemyNear,MoveType = A
-trigger2 = EnemyNear,StateType = A || helper(33000),var(11) = 2 || EnemyNear,AnimTime < -20
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 statetype = S
 physics = S
 IgnoreHitPause = 1
@@ -949,10 +973,14 @@ type = StateTypeSet
 TriggerAll = StateType = C
 trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
-trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 1 
-trigger2 = EnemyNear,MoveType = A
-trigger2 = EnemyNear,StateType = A || helper(33000),var(11) = 2 || EnemyNear,AnimTime < -20
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 statetype = S
 physics = S
 IgnoreHitPause = 1

@@ -560,14 +560,13 @@ flag = unguardable
 ;---------------------------------------------------------------------------------
 ;AI Start
 ;任务：
-;1.地面立回没有，攻击判定F在120动画之前，无法防御！
-;2.1600 1610打康弹墙的目押
+;1.1600 1610打康弹墙的目押
 ;---------------------------------------------------------------------------------
 [State -3]
 type = varset
 Trigger1 = roundstate = 2 && EnemyNear,alive && EnemyNear,life > 0
 ;Trigger1 = movehit
-var(59) = 1
+var(59) = 0
 IgnoreHitPause = 1
 
 [State -3]
@@ -841,8 +840,8 @@ Trigger1 = var(50) := 30091
 ;对空
 Trigger2 = (EnemyNear,time < helper(33000),var(3)) || (GameTime - var(46) < 2) || !inguarddist
 Trigger2 = EnemyNear,StateType = A
-Trigger2 = P2BodyDist x - fvar(39) * 2 < 34
-Trigger2 = EnemyNear,Pos Y + EnemyNear,Vel Y * 2 + fvar(38) * 2 * (2 + 1) / 2 = [-30,-5]
+Trigger2 = P2BodyDist x - fvar(39) * 2 = [-5, 34]
+Trigger2 = EnemyNear,Pos Y + EnemyNear,Vel Y * 1 + fvar(38) * 1 * (1 + 1) / 2 = [-23,-5]
 Trigger2 = var(50) := 30092
 IgnoreHitPause = 1
 
@@ -1150,8 +1149,8 @@ TriggerAll = EnemyNear,StateNo >= 1000
 Triggerall = EnemyNear,HitDefAttr = SCA,AA,AT,AP
 
 ;空振躲大招用 
-Trigger1 = InguardDist
-Trigger1 = (NumHelper(33000) && Helper(33000),var(1) <= 1) || (EnemyNear,Time <= 10)
+Trigger1 = InguardDist  || (EnemyNear,Time <= 15)
+Trigger1 = (NumHelper(33000) && Helper(33000),var(1) <= 1) || (EnemyNear,Time <= 15)
 Trigger1 = EnemyNear,StateType != A ;&& EnemyNear,Vel y = 0
 Trigger1 = P2BodyDist x - fvar(37) * 23 < 54
 Trigger1 = var(50) := 120081

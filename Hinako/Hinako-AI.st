@@ -566,7 +566,7 @@ flag = unguardable
 type = varset
 Trigger1 = roundstate = 2 && EnemyNear,alive && EnemyNear,life > 0
 ;Trigger1 = movehit
-var(59) = 0
+var(59) = 1
 IgnoreHitPause = 1
 
 [State -3]

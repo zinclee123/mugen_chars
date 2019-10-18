@@ -835,6 +835,13 @@ value = SCA
 time = 1
 persistent = 0
 
+[State -3, 4]
+type = ChangeState
+trigger1 = var(59) > 0
+trigger1 = Time >= GetHitvar(hittime)
+value = ifelse(EnemyNear,StateType = C, 11, 0)
+ctrl = 1
+
 [State 151, 4]
 type = ChangeState
 trigger1 = HitOver
@@ -948,6 +955,13 @@ trigger2 = Time = GetHitVar(ctrltime)
 value = SCA
 time = 1
 persistent = 0
+
+[State -3, 4]
+type = ChangeState
+trigger1 = var(59) > 0
+trigger1 = Time >= GetHitvar(hittime)
+value = ifelse(EnemyNear,StateType = C,11,0)
+ctrl = 1
 
 [State 153, 4]
 type = ChangeState

@@ -702,22 +702,22 @@ IgnoreHitPause = 1
 [State -3]
 type = VarSet
 trigger1 = stateno = 200
-trigger1 = AnimElem >= 3
+trigger1 = AnimElemTime(3) > 0
 
 trigger2 = stateno = 210
-trigger2 = AnimElem >= 6
+trigger2 = AnimElemTime(6) > 0
 
 trigger3 = stateno = 220
-trigger3 = AnimElem >= 3
+trigger3 = AnimElemTime(3) > 0
 
 trigger4 = stateno = 230
-trigger4 = AnimElem >= 5
+trigger4 = AnimElemTime(5) > 0
 
 trigger5 = stateno = 300 
-trigger5 = AnimElem >= 2
+trigger5 = AnimElemTime(2) > 0
 
 trigger6 = stateno = 310
-trigger6 = AnimElem >= 8
+trigger6 = AnimElemTime(8) > 0
 
 var(5) = 2
 IgnoreHitPause = 1
@@ -726,11 +726,11 @@ IgnoreHitPause = 1
 ;对应必杀技的取消条件
 [State -3]
 type = VarSet
-trigger1 = stateno = 700 && AnimElem >= 5
-trigger2 = stateno = 760 && AnimElem >= 4
-Trigger3 = stateno = 770 && AnimElem >= 4
-Trigger4 = stateno = 730 && AnimElem >= 6
-Trigger4 = stateno = 780 && AnimElem >= 4
+trigger1 = stateno = 700 && AnimElem >= 5, >0
+trigger2 = stateno = 760 && AnimElem >= 4, >0
+Trigger3 = stateno = 770 && AnimElem >= 4, >0
+Trigger4 = stateno = 730 && AnimElem >= 6, >0
+Trigger4 = stateno = 780 && AnimElem >= 4, >0
 var(5) = 3
 IgnoreHitPause = 1
 
@@ -738,11 +738,11 @@ IgnoreHitPause = 1
 ;对应超杀技的取消条件
 [State -3]
 type = VarSet
-Trigger1 = StateNo = 1050 && AnimElem >= 4 
-Trigger2 = Stateno = 1000 && AnimElem >= 4 
-Trigger3 = StateNo = 1400 && AnimElem >= 4 
-Trigger4 = StateNo = 1600 && AnimElem >= 9
-Trigger5 = StateNo = 1610 && AnimElem >= 9
+Trigger1 = StateNo = 1050 && AnimElem >= 4, >0
+Trigger2 = Stateno = 1000 && AnimElem >= 4, >0 
+Trigger3 = StateNo = 1400 && AnimElem >= 4, >0 
+Trigger4 = StateNo = 1600 && AnimElem >= 9, >0
+Trigger5 = StateNo = 1610 && AnimElem >= 9, >0
 var(5) = 4
 IgnoreHitPause = 1
 
@@ -888,17 +888,17 @@ TriggerAll = EnemyNear,Facing != Facing
 TriggerAll = EnemyNear,StateType != A
 
 Trigger1 = EnemyNear,BackEdgeBodyDist > 10
-Trigger1 = P2Dist X = [50, 100]
+Trigger1 = P2BodyDist X = [65, 100]
 Trigger1 = var(50) := 390701 
 Trigger1 = var(10) := 4
 
 Trigger2 = EnemyNear,BackEdgeBodyDist > 10
-Trigger2 = P2Dist X <= 50
+Trigger2 = P2BodyDist X <= 50
 Trigger2 = var(50) := 3907012
 Trigger2 = var(10) := 2
 
 Trigger3 = EnemyNear,BackEdgeBodyDist <= 0
-Trigger3 = P2Dist X < 80
+Trigger3 = P2BodyDist X < 80
 Trigger3 = var(50) := 390703
 Trigger3 = var(10) := 2
 
@@ -925,7 +925,7 @@ IgnoreHitPause = 1
 type = changestate
 TriggerAll = var(59)
 TriggerAll = var(5) = 1
-TriggerAll = !inguarddist || (Helper(33000),var(1) > 1 && EnemyNear,StateNo >= 1000 && AnimTime = [-6,-1])
+TriggerAll = !inguarddist || EnemyNear,Facing = Facing || EnemyNear,AnimTime = [-6,-1]
 TriggerAll = P2MoveType = A || (P2MoveType = I && !EnemyNear,Ctrl) 
 TriggerAll = P2StateType != L
 TriggerAll = P2StateNo != 5200 && P2StateNo != 5210 && P2StateNo != 5201
@@ -1144,16 +1144,22 @@ TriggerAll = var(5) = [1, 3]
 TriggerAll = StateType != A 
 TriggerAll = EnemyNear,MoveType = A 
 TriggerAll = (!EnemyNear,NumProj && !PlayerIdExist(helper(33333333),var(3))) || (P2BodyDist X < 54)
-;抢招不会抢大于1000的招式，容易被凹
-TriggerAll = EnemyNear,StateNo >= 1000
-Triggerall = EnemyNear,HitDefAttr = SCA,AA,AT,AP
-
 ;空振躲大招用 
+Trigger1 = EnemyNear,HitDefAttr = SCA,AA,AT,AP
 Trigger1 = InguardDist  || (EnemyNear,Time <= 15)
 Trigger1 = (NumHelper(33000) && Helper(33000),var(1) <= 1) || (EnemyNear,Time <= 15)
 Trigger1 = EnemyNear,StateType != A ;&& EnemyNear,Vel y = 0
 Trigger1 = P2BodyDist x - fvar(37) * 23 < 54
 Trigger1 = var(50) := 120081
+;切返打起身 
+Trigger2 = InguardDist
+Trigger2 = EnemyNear,Time < 20 || PrevStateNo = 5120
+Trigger2 = EnemyNear,StateType != A && EnemyNear,Vel y = 0 
+Trigger2 = EnemyNear,AnimTime < -22
+Trigger2 = Enemynear,Vel x >= 0
+Trigger2 = P2BodyDist x < 54
+Trigger2 = var(50) := 120082
+
 value = 1200
 IgnoreHitPause = 1
 
@@ -1945,7 +1951,7 @@ Trigger2 = Time % 3 = 0 && EnemyNear,Vel X = 0
 Trigger2 = EnemyNear,Ctrl
 Trigger2 = !inguarddist
 Trigger2 = (EnemyNear,MoveType != H || (EnemyNear,StateNo = [120,159])) && EnemyNear,StateType != A
-Trigger2 = P2BodyDist x = [95, 110]
+Trigger2 = P2BodyDist x = [110, 125]
 Trigger2 = var(10) := 4
 Trigger2 = var(50) := 390502
 ;1倍X速度大跳起攻

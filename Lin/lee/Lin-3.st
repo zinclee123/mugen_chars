@@ -1399,7 +1399,7 @@ TriggerAll = !InGuardDist
 TriggerAll = EnemyNear,MoveType = H && !EnemyNear,Ctrl
 TriggerAll = EnemyNear,StateNo >= 5000 
 ;那义取消接飞天脚
-Trigger1 = FrontEdgeBodyDist < 80 || EnemyNear,BackEdgeBodyDist < 60
+Trigger1 = (EnemyNear,Facing != Facing && EnemyNear,BackEdgeBodyDist < 32) || (EnemyNear,Facing = Facing && EnemyNear,FrontEdgeBodyDist < 32)
 Trigger1 = var(20) > 0
 Trigger1 = StateNo = 1310 && MoveHit
 Trigger1 = var(5) := 2

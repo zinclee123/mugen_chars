@@ -2156,7 +2156,7 @@ p2stateno = 5000
 
 [State 210, 1]
 type = HitDef
-trigger1 = animelem = 8
+trigger1 = animelem = 8 || animelem = 9
 attr = A, SA
 damage = 40 * fvar(39),10
 animtype = Hard

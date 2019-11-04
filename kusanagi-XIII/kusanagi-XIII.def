@@ -1,0 +1,39 @@
+[Info]
+Name         ="Kusanagi XIII"
+DisplayName  ="Kusanagi"
+VersionDate  =03,09,2009;1,10,2019 (yoooooo!)
+MugenVersion =1.1
+Author       ="jin+gdghf"; Modified By Mr.Lee
+Pal.Defaults =4,1,2,3,5,6
+
+[Files]
+Cmd      =lee/kusanagi-XIII.cmd
+Cns      =lee/kusanagi-XIII.st
+St       =lee/kusanagi-XIII.st
+StCommon =lee/kusanagi-XIII-Common.st
+Sprite   =lee/kusanagi-XIII.sff
+Anim     =lee/kusanagi-XIII.air
+Sound    =kusanagi-XIII.snd
+pal1=KUSANAGI01.act
+pal2=KUSANAGI02.act
+pal3=KUSANAGI03.act
+pal4=KUSANAGI04.act
+pal5=KUSANAGI05.act
+pal6=KUSANAGI06.act
+
+st2=lee/kusanagi-XIII-N.st
+st3=lee/kusanagi-XIII-S.st
+st4=lee/kusanagi-XIII-H.st
+st5=lee/kusanagi-XIII-2.st
+st6=lee/kusanagi-XIII-3.st
+st7=lee/kusanagi-XIII-Helper.st
+st8=lee/kusanagi-XIII-AI-Helper.st 
+
+
+
+;---カラーパレット---
+
+
+[Arcade]
+intro.storyboard=History.def
+ending.storyboard=

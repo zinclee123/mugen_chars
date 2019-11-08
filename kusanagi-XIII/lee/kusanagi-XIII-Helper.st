@@ -955,7 +955,6 @@ ontop = 1
 ownpal = 1
 SCALE = 1.3,1.3
 
-;?道打?火花
 [State -2,]
 type = Explod
 trigger1 = time = 10

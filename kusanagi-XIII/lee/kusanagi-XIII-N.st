@@ -11,6 +11,7 @@ velset   = 0,0               ;移動初速度の設定（このステートで�
 ctrl     = 0                 ;コントロールの可否（0=キー操作不可・1=キー操作可能）
 anim     = 200               ;airファイルの[Begin Action 200]のアニメを使っています
 sprpriority = 2              ;画像表示優先度　数値が多いと手前に、少ないと奥に優先されます
+facep2 = 1
 
 [State 200, ヒット定義]
 type = HitDef                ;攻撃ヒット定義（Hit Definition）のステートコントローラ
@@ -75,6 +76,7 @@ velset   = 0,0
 ctrl     = 0
 anim     = 205
 sprpriority = 2
+facep2 = 1
 
 [State 200, ヒット定義]
 type = HitDef
@@ -139,6 +141,7 @@ ctrl     = 0
 velset   = 0,0
 anim     = 210
 sprpriority = 2
+facep2 = 1
 
 [State 200, ヒット定義]
 type = HitDef
@@ -207,6 +210,7 @@ ctrl     = 0
 velset   = 0,0
 anim     = 215
 sprpriority = 2
+facep2 = 1
 
 [State 200, ヒット定義]
 type = HitDef
@@ -276,6 +280,7 @@ ctrl     = 0
 velset   = 0,0
 anim     = 230
 sprpriority = 2
+facep2 = 1
 
 [State 200,]
 type = Posadd
@@ -350,6 +355,7 @@ ctrl     = 0
 velset   = 0,0
 anim     = 235
 sprpriority = 2
+facep2 = 1
 
 [State 230, ヒット定義]
 type = HitDef
@@ -366,9 +372,9 @@ sparkxy = -20, -35
 hitsound = s1,2
 guardsound = s2,0
 ground.type = Low
-ground.slidetime = 10
-ground.hittime  = 11
-ground.velocity = -4.5
+ground.slidetime = 9
+ground.hittime  = 9
+ground.velocity = -6
 air.animtype = Back
 air.velocity = -4.5,-4
 airguard.velocity = -5.5,-2.5
@@ -408,6 +414,7 @@ ctrl     = 0
 velset   = 0,0
 anim     = 240
 sprpriority = 2
+facep2 = 1
 
 [State 240,Posadd]
 type = Posadd
@@ -482,6 +489,7 @@ ctrl     = 0
 velset   = 0,0
 anim     = 245
 sprpriority = 2
+facep2 = 1
 
 [State 200,]
 type = Posadd
@@ -553,6 +561,7 @@ ctrl     = 0
 velset   = 0,0
 anim     = 400
 sprpriority = 2
+facep2 = 1
 
 [State 200, 音を鳴らす]
 type = PlaySnd
@@ -584,13 +593,13 @@ guardsound = s2,0
 ground.type = Low
 ground.slidetime = 9
 ground.hittime = 9
-ground.velocity = -5.62
+ground.velocity = -6
 air.animtype = Back
 air.velocity = -4.5,-4
 airguard.velocity = -5.5,-2.5
 air.hittime = 13
 forcenofall = 1
-guard.velocity = -7
+guard.velocity = -9
 getpower = 50,50
 givepower = 16,16
 ID                 =400
@@ -612,6 +621,7 @@ ctrl     = 0
 anim     = 410
 velset   = 0,0
 sprpriority = 2
+facep2 = 1
 
 [State 200, 音を鳴らす]
 type = PlaySnd
@@ -675,6 +685,7 @@ ctrl     = 0
 velset   = 0,0
 anim     = 430
 sprpriority = 2
+facep2 = 1
 
 [State 200, 音を鳴らす]
 type = PlaySnd
@@ -735,6 +746,7 @@ ctrl     = 0
 anim     = 440
 velset   = 0,0
 sprpriority = 2
+facep2 = 1
 
 [State 200, 音を鳴らす]
 type = PlaySnd
@@ -1108,6 +1120,7 @@ ctrl     = 0
 velset   = 0,0
 anim     = 310
 sprpriority = 2
+facep2 = 1
 
 [State 200,]
 type = Posadd
@@ -1225,6 +1238,7 @@ ctrl     = 0
 velset   = 0,0
 anim     = 310
 sprpriority = 2
+facep2 = 1
 
 [State 200,]
 type = Posadd
@@ -1336,6 +1350,7 @@ ctrl     = 0
 velset   = 0,0
 anim     = 320
 sprpriority = 2
+facep2 = 1
 
 [State 200,]
 type = Posadd

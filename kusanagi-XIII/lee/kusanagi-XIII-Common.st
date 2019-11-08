@@ -352,8 +352,57 @@ trigger1 = 1
 [Statedef 52]
 type    = S
 physics = S
+anim    = 47
+ctrl    = 0
+velset  = 0,0
+;facep2  = 1
+
+[State 52, VarSet]
+type = VarSet
+trigger1 = Time = 0
+sysvar(3) = 0
+
+[State 52, VarSet]
+type = VarSet
+trigger1 = prevstateno = 155 || prevstateno = 5040
+sysvar(3) = 1
+
+[State 52, ChangeState]
+type = ChangeState
+trigger1 = Time = 0
+value = 53
+
+;---------------------------------------------------------------------------
+; Jump Land
+[Statedef 53]
+type    = S
+physics = S
 ctrl = 0
 anim = 47
+
+[State 53]
+type = NotHitBy
+trigger1 = 1
+value = SCA,NT,HT
+
+[State 52, ChangeAnim]
+type = ChangeAnim
+trigger1 = sysvar(3) != 1
+trigger1 = Time = 0
+trigger1 = p2dist x < 0
+value = Anim+1
+
+[State 52, Turn]
+type = Turn
+trigger1 = sysvar(3) != 1
+trigger1 = Time = 0
+trigger1 = p2dist x < 0
+
+[State 52, NotHitBy]
+type = NotHitBy
+trigger1 = sysvar(3) = 1
+value = SCA
+time = 2
 
 [State 52, 1]
 type = VelSet
@@ -366,33 +415,18 @@ type = PosSet
 trigger1 = time = 0
 y = 0
 
-[State 52, VarSet]
-type = VarSet
-trigger1 = time = 0
-v = 49
-value = 5
-
-[State 52, NotHitBy];No Recibir Golpes al Tocar el Piso
-type = NotHitBy
-trigger1 = time = 0
-value = SCA
-time = 1
-
 [State 52, 3]
 type = changestate
+triggerall = var(59) = 0
 trigger1 = time = 4 && command = "holdup"
 value = 40
 ctrl = 0
 
 [State 52, CtrlSet]
 type = CtrlSet
+triggerall = var(59) = 0
 triggerall = command != "holdup"
 trigger1 = time = 0
-value = 1
-
-[State 52, 3]
-type = CtrlSet
-trigger1 = Time = 3
 value = 1
 
 [State 52, 4]
@@ -400,11 +434,26 @@ type = VelSet
 trigger1 = abs(vel x) < Const(movement.stand.friction.threshold)
 x = 0
 
-[State 52, 4]
+[state 52, CtrlSet]
+type = CtrlSet
+trigger1 = sysvar(3) != 1
+trigger1 = time = 0
+value = 1
+
+[State 52, ChangeAnim]
+type = ChangeAnim
+trigger1 = Anim = 48
+trigger1 = AnimTime = 0
+value = 5
+
+[State 52, ChangeState]
 type = ChangeState
+trigger1 = Anim != 48
 trigger1 = AnimTime = 0
 value = 0
 ctrl = 1
+
+
 ;---------------------------------------------------------------------------
 ; RUN_FWD
 [Statedef 100]
@@ -653,6 +702,7 @@ trigger2 = EnemyNear,StateType != A
 trigger2 = EnemyNear,MoveType = A
 trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || PlayerIdExist(helper(33333333),var(3))
 trigger3 = var(59)
+trigger3 = helper(33000),var(11) != 2
 trigger3 = EnemyNear,MoveType = A
 trigger3 = EnemyNear,StateType != A
 trigger3 = EnemyNear,AnimTime >= -20

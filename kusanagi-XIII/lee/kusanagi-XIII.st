@@ -9,7 +9,7 @@ life              = 1000    ;体力ゲ?ジの最大値を決めます
 power             = 5000    ;パワ?ゲ?ジ最大値（デフォルトは 3000 = Lv.3 になります・オプション）
 attack            = 100     ;攻撃力パ?センテ?ジ（デフォルトは 100% になります）
 defence           = 100     ;防御力パ?センテ?ジ（デフォルトは 100% になります）
-fall.defence_up   = 0     ;一時的に上昇する?ウン時の防御力パ?センテ?ジ
+fall.defence_up   = 50     ;一時的に上昇する?ウン時の防御力パ?センテ?ジ
 liedown.time      = 20      ;?れてから起き上がるまでの時間
 airjuggle         = 30      ;ジャグル?イント限界値?★１
 sparkno           = S-1       ;デフォルトのヒットスパ?ク番号（fightfx.airか、キャラのairから呼び出す）
@@ -39,11 +39,11 @@ draw.offset      = 0,0      ;キャラ?画?示位置（Ｘ軸,Ｙ軸）
 
 ;---------------------------------------------------------------------------
 [Velocity]
-walk.fwd     = 3.2
-walk.back    = -3.2
-run.fwd      = 7, 0
+walk.fwd     = 3.0
+walk.back    = -3.0
+run.fwd      = 7.5, 0
 run.back     = -5.8,-4
-jump.neu     = 0,-9.75
+jump.neu     = 0,-10.2
 jump.back    = -3.5
 jump.fwd     = 3.5
 runjump.back = -2.55,-8.1
@@ -55,7 +55,7 @@ airjump.fwd  = 2.55
 [Movement]
 airjump.num = 0
 airjump.height = 35
-yaccel = .61
+yaccel = 0.6171875
 stand.friction = .85
 crouch.friction = .82
 ;---------------------------------------------------------------------------
@@ -1267,7 +1267,7 @@ x = 0
 
 [State 2100, 相手と重なった場合]
 type = PlayerPush
-trigger1 = AnimElemTime(1) > 0
+trigger1 = 1 
 value = 0
 
 [State 1000, PlaySnd]
@@ -3168,7 +3168,7 @@ value = 5150
 [State 5110, 11] ;If just died
 type = SelfState
 triggerall = alive
-trigger1 = time= 60;AnimTime = 0
+trigger1 = time= 20;AnimTime = 0
 ;trigger2 = SysVar(0) ;SysVar(0) = 1 avoids hit ground frame
 ;trigger3 = Anim = [116110,116119]
 value = 5120

@@ -389,8 +389,7 @@ flag = NoAutoTurn
 
 [State 100, 4]
 type = ChangeState
-
-Trigger1 = time >= 12
+TriggerAll = time >= 12
 Trigger1 = AnimTime = 0
 Trigger1 = var(50) := 1119901
 ;对方可控的情况下，不要跑太近
@@ -1672,7 +1671,7 @@ TriggerAll = Life >= 100
 Trigger1 = EnemyNear,MoveType = H && !EnemyNear,Ctrl
 Trigger1 = EnemyNear,StateNo = [120,159]
 Trigger1 = EnemyNear,GetHitVar(HitTime) >= 1
-Trigger1 = P2BodyDist X >= 70 
+Trigger1 = P2BodyDist X >= 70 || EnemyNear,BackEdgeBodyDist < 10
 Trigger1 = var(33) := ifelse(P2BodyDist X > 110, 4, 3)
 Trigger1 = var(50) := 390601
 

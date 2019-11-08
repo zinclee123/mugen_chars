@@ -589,6 +589,7 @@ palfx.color = 0
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
 guard.velocity = -12
+p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
 
 ;KO Flash Effect
 [State 2000, Helper]
@@ -1425,7 +1426,7 @@ time = 2
 type = HitDef
 trigger1 = time = 0
 attr = S, HA
-damage = 200,20
+damage = 250,20
 getpower = 0,0
 givepower = 15,15
 animtype = up
@@ -1612,7 +1613,7 @@ time = 2
 type = HitDef
 trigger1 = time = 0
 attr = S, HA
-damage = 250,25
+damage = 280,25
 getpower = 0,0
 givepower = 15,15
 animtype = up
@@ -1800,7 +1801,7 @@ time = 2
 type = HitDef
 trigger1 = time = 0
 attr = S, HA
-damage = 300,28
+damage = 350,28
 getpower = 0,0
 givepower = 15,15
 animtype = Diagup

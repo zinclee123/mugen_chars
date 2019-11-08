@@ -241,6 +241,7 @@ velset   = 0,0
 anim     = 1100
 ctrl     = 0
 sprpriority = 3
+facep2 = 1
 
 [State a]
 type = varadd
@@ -627,6 +628,7 @@ velset   = 0,0
 anim     = 1150
 ctrl     = 0
 sprpriority = 3
+facep2 = 1
 
 [State a]
 type = varadd
@@ -2081,6 +2083,7 @@ velset   = 0,0
 anim     = 1400
 ctrl     = 0
 sprpriority = 2
+facep2 = 1
 
 [State a]
 type = varadd
@@ -2189,6 +2192,7 @@ velset   = 0,0
 anim     = 1450
 ctrl     = 0
 sprpriority = 2
+facep2 = 1
 
 [State a]
 type = varadd
@@ -2430,7 +2434,7 @@ animtype = Hard
 guardflag = M
 hitflag = MAF
 priority = 6, Hit
-pausetime = 3,3
+pausetime = 0,0
 sparkno = s13024
 guard.sparkno = s13022 
 sparkxy = -25, -60
@@ -3162,6 +3166,7 @@ velset   = 0,0
 anim     = 1500
 ctrl     = 0
 sprpriority = 5
+facep2 = 1
 
 [State a]
 type = varadd
@@ -6498,6 +6503,8 @@ velset   = 0,0
 anim     = 1156
 ctrl     = 0
 sprpriority = 5
+facep2 = 1
+
 
 ;---------------------------------------------------------
 ;Drive Cancel Effect 1  -------------------------------------------------------------------------
@@ -6633,13 +6640,12 @@ ignorehitpause = 1
 bindtime = 0
 persistent = 0
 ownpal = 1
-scale = 0.58,0.58
+scale = 0.4,0.4
 
 [State 200, 音を鳴らす]
 type = PlaySnd
 trigger1 = time = 0
 value = s3500,11
-
 
 [State Helper]
 Type               = Helper 
@@ -6719,6 +6725,10 @@ vel = .1,-.1
 pos = 50,-5
 ownpal = 1
 sprpriority = 10
+
+
+
+
 
 [State 200, ヒット定?]
 type = HitDef
@@ -6849,7 +6859,6 @@ EnvShake.Ampl      = -12
 p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
 id = 1809
 
-
 [State 1000, 音を鳴らす]
 type = PlaySnd
 trigger1 = Movehit = 1
@@ -6873,6 +6882,7 @@ ctrl     = 0
 velset   = 0,0
 anim     = 1410
 sprpriority = 5
+facep2 = 1
 
 ;---------------------------------------------------------
 ;Drive Cancel Effect 1  -------------------------------------------------------------------------

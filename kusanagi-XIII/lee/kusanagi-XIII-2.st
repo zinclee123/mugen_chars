@@ -1,18 +1,32 @@
 [Statedef -2]
 
-;-----------------------------------------------------------
-;慢放用
+;---------------------------------------------------------------------------------
+;AI跳跃限制用
+;---------------------------------------------------------------------------------
 [State -2]
-type = Pause
-triggerall = (gametime%4) = 0
-trigger1 = NumTarget(330)
-trigger1 = StateType = A
-trigger1 = Vel Y > 0
-trigger1 = Pos Y >= -15
-trigger1 = EnemyNear,StateType != A
-time = 1
-movetime = 0
-ignorehitpause = 1
+type = varadd
+Trigger1 = var(44) > 0
+var(44) = -1
+
+;限制跳跃
+[State -2]
+type = varadd
+Triggerall = !ishelper
+Triggerall = name = "Kusanagi XIII"
+Triggerall = EnemyNear,StateType != A
+TriggerAll = EnemyNear,MoveHit = 1 && Time = 1
+TriggerAll = MoveType = H
+;空中攻击被打
+Trigger1 = var(50)/100 = [600,699]
+;起跳被打
+Trigger2 = var(50)/100 = 39
+;被抓落地
+Trigger3 = prevStateNo = 52
+Trigger4 = var(50)/100 = 330
+Trigger5 = var(50)/100 = 120 && StateType = A
+Trigger6 = var(50)/10000 = 39
+var(44) = 120 + EnemyNear,GetHitVar(damage)
+
 
 ;-----------------------------------------------------------
 ;打逆不可防用
@@ -104,6 +118,7 @@ IgNoreHitPause     = 1
 [State -2,]
 type = Explod
 triggerall = NumExplod(5223) = 0
+triggerall = EnemyNear,StateType != A
 trigger1 = p2stateno = 177200
 anim = 13049
 pos = 0,0
@@ -349,32 +364,6 @@ type = VarSet
 trigger1 = movetype = H
 v = 16
 value = 0
-;-------------------------------------------------------------------------------
-;Invulnerabilidares a agarres Estilo KOF
-[State -2, NotHitBy]
-type = NotHitBy
-trigger1 = var(49) != 0
-value = , NT,ST,HT
-
-[State -2, ]
-type = Varadd
-trigger1 = (GameTime%2) = 0 && var(49) != 0
-trigger1 = 1
-var(49) = -1
-ignorehitpause = 1
-persistent = 1
-
-[State -2, VarSet]
-type = VarSet
-trigger1 = movetype = A
-trigger2 = statetype = A
-trigger3 = movetype = H
-trigger4 = stateno = [120,132]
-v = 49
-value = 0
-ignorehitpause = 1
-persistent = 1
-
 ;-------------------------------------------------------------------------------
 [State -2, VarSet]
 type = VarSet
@@ -834,13 +823,13 @@ ignorehitpause = 1
 [State -2, Debug]
 type = displaytoclipboard
 Trigger1 = 1
-text = "P2StateNo = %d p2HitTime = %d hittime = %d X = %d, Y = %d  vel y = %f"
-params = P2StateNo, EnemyNear,GetHitVar(hittime), GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, vel y
+text = "P2StateNo = %d p2HitTime = %d hittime = %d X = %d, Y = %d VAR(50)/100 = %d"
+params = P2StateNo, EnemyNear,GetHitVar(hittime), GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, var(50)/100
 ignorehitpause = 1
 
 [State -2, Debug]
 type = appendtoclipboard
 Trigger1 = 1
-text="\nTRACE = %d var(44) = %d  var(42) = %d preHitState = %d p2time = %d p2AnimTime = %d"  
-params= var(50), var(44), var(42), prevstateno, enemynear,time, EnemyNear,AnimTime
+text="\nTRACE = %d var(44) = %d  prevHit = %d var(41) = %d p2time = %d p2AnimTime = %d"  
+params= var(50), var(44), helper(33000),var(13), var(41), enemynear,time, EnemyNear,AnimTime
 ignorehitpause = 1 

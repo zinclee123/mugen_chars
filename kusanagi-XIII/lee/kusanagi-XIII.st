@@ -22,8 +22,8 @@ floatpersistindex = 40      ;FVarを次のラウンドへ持ち越しが可? (最小=0, 最大=39)
 ;---------------------------------------------------------------------------
 ;サイズ設定
 [Size]
-xscale           = 1.0        ;キャラ画像の横のスケ?ル
-yscale           = 1.0        ;キャラ画像の縦のスケ?ル
+xscale           = 1.01        ;キャラ画像の横のスケ?ル
+yscale           = 1.01        ;キャラ画像の縦のスケ?ル
 ground.back      = 15       ;キャラの幅（地上後方）
 ground.front     = 16       ;キャラの幅（地上前方）
 air.back         = 12       ;キャラの幅（空中後方）
@@ -41,7 +41,7 @@ draw.offset      = 0,0      ;キャラ?画?示位置（Ｘ軸,Ｙ軸）
 [Velocity]
 walk.fwd     = 3.0
 walk.back    = -3.0
-run.fwd      = 7.5, 0
+run.fwd      = 7.0, 0
 run.back     = -5.8,-4
 jump.neu     = 0,-10.2
 jump.back    = -3.5
@@ -781,13 +781,62 @@ value = Anim + 3
 [Statedef 52]
 type    = S
 physics = S
+anim    = 47
+ctrl    = 0
+velset  = 0,0
+;facep2  = 1
+
+[State 53]
+type = NotHitBy
+trigger1 = 1
+value = SCA,NT,ST
+
+[State 52, VarSet]
+type = VarSet
+trigger1 = Time = 0
+sysvar(3) = 0
+
+[State 52, VarSet]
+type = VarSet
+trigger1 = prevstateno = 155 || prevstateno = 5040
+sysvar(3) = 1
+
+[State 52, ChangeState]
+type = ChangeState
+trigger1 = Time = 0
+value = 53
+
+
+[Statedef 53]
+type    = S
+physics = S
 ctrl = 0
 anim = 47
 velset = 0,0
 
-[State 22, 1]
-Type = Turn
-Trigger1 = P2Dist X < 0
+[State 53]
+type = NotHitBy
+trigger1 = 1
+value = SCA,NT,ST
+
+[State 52, ChangeAnim]
+type = ChangeAnim
+trigger1 = sysvar(3) != 1
+trigger1 = Time = 0
+trigger1 = p2dist x < 0
+value = Anim+1
+
+[State 52, Turn]
+type = Turn
+trigger1 = sysvar(3) != 1
+trigger1 = Time = 0
+trigger1 = p2dist x < 0
+
+[State 52, NotHitBy]
+type = NotHitBy
+trigger1 = sysvar(3) = 1
+value = SCA
+time = 2
 
 [State 30000]
 type = Explod
@@ -837,6 +886,23 @@ trigger1 = var(59) = 0
 trigger1 = time = 1 && command = "holdup"
 value = 40
 ctrl = 0
+
+[State 52, 4]
+type = VelSet
+trigger1 = abs(vel x) < Const(movement.stand.friction.threshold)
+x = 0
+
+[state 52, CtrlSet]
+type = CtrlSet
+trigger1 = sysvar(3) != 1
+trigger1 = time = 3
+value = 1
+
+[State 52, ChangeAnim]
+type = ChangeAnim
+trigger1 = Anim = 48
+trigger1 = AnimTime = 0
+value = 5
 
 [State 52, 4]
 type = ChangeState

@@ -45,6 +45,8 @@ type = varset
 triggerall = !isHelper
 trigger1 = EnemyNear,Ctrl 
 trigger2 = EnemyNear,MoveType = I
+trigger3 = EnemyNear,MoveType = A
+trigger4 = roundState != 2
 fvar(39) = 1.0
 IgnoreHitPause = 1
 
@@ -168,7 +170,7 @@ value = -.4
 
 [State MAX]
 type = palfx
-triggerall = !var(21)
+;triggerall = !var(21)
 trigger1 = var(20) > 2
 trigger1 = gametime % 2 = 0
 trigger1 = GetHitVar(hittime) < 2
@@ -178,7 +180,7 @@ color = 1
 ignorehitpause = 1
 
 [State MAX]
-type = palfx
+type = Null;palfx
 triggerall = var(21)
 trigger1 = gametime % 2 = 0
 trigger1 = alive
@@ -244,7 +246,7 @@ supermove = 1
 ignorehitpause = 1
 
 [state MAX]
-type = Helper
+type = Null;Helper
 trigger1 = numhelper(7552) = 0
 id = 7552
 name = "ground"
@@ -823,13 +825,13 @@ ignorehitpause = 1
 [State -2, Debug]
 type = displaytoclipboard
 Trigger1 = 1
-text = "P2StateNo = %d p2HitTime = %d hittime = %d X = %d, Y = %d VAR(50)/100 = %d"
-params = P2StateNo, EnemyNear,GetHitVar(hittime), GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, var(50)/100
+text = "P2StateNo = %d p2HitTime = %d hittime = %d X = %d, Y = %d facing = %d"
+params = P2StateNo, EnemyNear,GetHitVar(hittime), GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, facing
 ignorehitpause = 1
 
 [State -2, Debug]
 type = appendtoclipboard
 Trigger1 = 1
-text="\nTRACE = %d var(44) = %d  prevHit = %d var(41) = %d p2time = %d p2AnimTime = %d"  
-params= var(50), var(44), helper(33000),var(13), var(41), enemynear,time, EnemyNear,AnimTime
+text="\nTRACE = %d left = %d rigth = %d fvar(37) = %f p2AnimTime = %d"  
+params= var(50), helper(33001),rootdist x, helper(33002),rootdist x, fvar(37), EnemyNear,AnimTime
 ignorehitpause = 1 

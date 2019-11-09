@@ -611,6 +611,7 @@ trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
 ;÷–∂Œ«–’æ
 trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
 trigger2 = EnemyNear,MoveType = A 
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;
@@ -768,6 +769,7 @@ trigger1 = var(59) = 0
 trigger1 = command != "holddown"
 ;÷–∂Œ«–’æ
 trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
 trigger2 = EnemyNear,MoveType = A 
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;
@@ -940,6 +942,7 @@ trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
 ;÷–∂Œ«–’æ
 trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
 trigger2 = EnemyNear,MoveType = A 
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;
@@ -1001,6 +1004,7 @@ trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
 ;÷–∂Œ«–’æ
 trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
 trigger2 = EnemyNear,MoveType = A 
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;
@@ -1069,6 +1073,7 @@ trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
 ;÷–∂Œ«–’æ
 trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
 trigger2 = EnemyNear,MoveType = A 
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;
@@ -1146,6 +1151,7 @@ trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
 ;÷–∂Œ«–’æ
 trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
 trigger2 = EnemyNear,MoveType = A 
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;
@@ -1210,6 +1216,7 @@ trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
 ;÷–∂Œ«–’æ
 trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
 trigger2 = EnemyNear,MoveType = A 
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;

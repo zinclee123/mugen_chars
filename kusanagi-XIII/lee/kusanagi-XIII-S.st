@@ -821,9 +821,9 @@ vel = .1,-.1
 pos = 50,-5
 sprpriority = 10
 
-[State 1155,无敌,覆盖攻击第一F]
+[State 1155,无敌,覆盖到第一攻击F结束]
 type = NotHitBy
-trigger1 = Time <= 1
+trigger1 = Time <= 4
 value = SCA
 time = 1
 
@@ -2365,11 +2365,12 @@ ground.slidetime = 10
 ground.hittime = 21
 ground.velocity = -9
 air.type = High
-air.velocity = -5,-5
+air.velocity = -4.5,-1
+airguard.velocity = -4,-1
 air.hittime = 12
 air.fall = 1
 fall.recover = 0
-p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
+;p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
 id = 1405
 
 [State 210, ステ?ト変更]

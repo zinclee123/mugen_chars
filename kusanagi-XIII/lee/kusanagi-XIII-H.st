@@ -145,6 +145,12 @@ time = 32
 darken = 0
 p2defmul = 1
 
+[State -3]
+type = varadd
+trigger1 = var(20) > 0
+trigger1 = time = 0
+var(24) = -1000
+
 [State 1000, BGPalFX]
 type = BGPalFX
 trigger1 = Time = 0
@@ -797,6 +803,13 @@ time = 30
 darken = 0
 p2defmul = 1
 
+[State -3]
+type = varadd
+trigger1 = var(20) > 0
+trigger1 = time = 0
+var(24) = -1000
+ignorehitpause = 1
+
 [State 1000, EnvColor]
 type = EnvColor
 trigger1 = Time = 6
@@ -1078,6 +1091,13 @@ movetime = 30
 time = 30
 darken = 0
 p2defmul = 1
+
+[State -3]
+type = varadd
+trigger1 = var(20) > 0
+trigger1 = time = 0
+var(24) = -1000
+ignorehitpause = 1
 
 [State 1000, EnvColor]
 type = EnvColor
@@ -1910,6 +1930,13 @@ movetime = 30
 time = 30
 darken = 0
 p2defmul = 1
+
+[State -3]
+type = varadd
+trigger1 = var(20) > 0
+trigger1 = time = 0
+var(24) = -1000
+ignorehitpause = 1
 
 [State Helper]
 Type               = Helper 
@@ -2755,6 +2782,12 @@ movetime = 30
 time = 30
 darken = 0
 p2defmul = 1
+
+[State -3]
+type = varadd
+trigger1 = var(20) > 0
+trigger1 = time = 0
+var(24) = -2000
 
 [State 700,]
 type = palfx
@@ -5036,6 +5069,13 @@ time = 30
 darken = 0
 p2defmul = 1
 
+[State -3]
+type = varadd
+trigger1 = var(20) > 0
+trigger1 = time = 0
+var(24) = -2000
+ignorehitpause = 1
+
 [State 2000, 超必殺技発動の時間停?]
 type = SuperPause
 trigger1 = prevstateno = [2000,2900]
@@ -5474,7 +5514,7 @@ ownpal = 1
 type = HitDef
 trigger1 = AnimElem = 19
 attr = S, HA
-damage = 40,10
+damage = 35,10
 getpower = 0,0
 givepower = 15,15
 animtype = Hard
@@ -5750,7 +5790,7 @@ persistent = 0
 type = HitDef
 trigger1 = AnimElem = 6
 attr = S, HA
-damage = 60,16
+damage = 50,16
 getpower = 0,0
 givepower = 15,15
 animtype = Hard
@@ -5788,7 +5828,7 @@ trigger1 = AnimElem = 10 | AnimElem = 11 | AnimElem = 12 | AnimElem = 13
 trigger2 = AnimElem = 14 | AnimElem = 15 | AnimElem = 16 | AnimElem = 17
 trigger3 = AnimElem = 18
 attr = A, HA
-damage = 45,4
+damage = 35,4
 getpower = 0,0
 givepower = 15,15
 animtype = Diagup
@@ -5868,7 +5908,7 @@ persistent = 2
 type = SuperPause
 trigger1 = time = 0
 anim = -1
-poweradd = ifelse(var(20)>0, -2000,-3000)
+poweradd = ifelse(roundstate = 2, ifelse(var(20)>0, -2000,-3000), 0)
 movetime = 32
 time = 32
 darken = 0
@@ -6616,7 +6656,7 @@ trigger4 = time = 18
 trigger5 = time = 24
 trigger6 = time = 29
 attr = S, HP
-damage = 50,10
+damage = 45,10
 animtype = up
 guardflag = MAF
 hitflag = MAF
@@ -6653,7 +6693,7 @@ palfx.color = 0
 type = HitDef
 trigger1 = time = 34
 attr = S, HP
-damage = 150,10
+damage = 120,10
 animtype = up
 guardflag = MAF
 hitflag = MAF
@@ -7078,6 +7118,13 @@ movetime = 31
 time = 31
 darken = 0
 p2defmul = 1
+
+[State -3]
+type = varadd
+trigger1 = var(20) > 0
+trigger1 = time = 0
+var(24) = -2000
+ignorehitpause = 1
 
 [State 1000, BGPalFX]
 type = BGPalFX

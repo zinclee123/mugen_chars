@@ -439,12 +439,12 @@ time = 1
 
 [State -1,test]
 type = ChangeState
-value = 39
+value = 3100
 trigger1 = var(59) = 0
 ;trigger1 = ctrl
 triggerall = StateType != A
 trigger1 = command = "start"
-trigger1 = var(4) := 4
+;trigger1 = var(4) := 4
 
 ;?‡Å-??
 [State -1, ZEROSHIKI]

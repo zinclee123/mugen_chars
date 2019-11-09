@@ -384,6 +384,8 @@ getpower = 50,50
 givepower = 16,16
 ID                 =235
 air.cornerpush.veloff = 0
+ground.cornerpush.veloff = -6
+guard.cornerpush.veloff = -7
 
 [State 200, 音を鳴らす]
 type = PlaySnd
@@ -604,6 +606,8 @@ getpower = 50,50
 givepower = 16,16
 ID                 =400
 air.cornerpush.veloff = 0
+ground.cornerpush.veloff = -6
+guard.cornerpush.veloff = -7
 
 
 [State 400, ステート変更]
@@ -728,6 +732,8 @@ getpower = 50,50
 givepower = 16,16
 ID                 =430
 air.cornerpush.veloff = 0
+ground.cornerpush.veloff = -6
+guard.cornerpush.veloff = -7
 
 
 
@@ -787,7 +793,6 @@ yaccel = .45
 fall = 1
 getpower = 100,100
 givepower = 16,16
-p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
 EnvShake.Time      =  4
 EnvShake.Ampl      = -10
 ID                 =440
@@ -1164,7 +1169,6 @@ air.fall = 1
 fall.recovertime = 30
 getpower = 70,70
 givepower = 16,16
-p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
 ID                 =310
 ground.cornerpush.veloff = 0
 guard.cornerpush.veloff = 0
@@ -1188,7 +1192,7 @@ guardsound = s2,0
 ground.type = Low
 ground.slidetime = 21
 ground.hittime  = 22
-ground.velocity = -9
+ground.velocity = -10.5
 air.animtype = Back
 air.velocity = -4.5,-4
 airguard.velocity = -5.5,-2.5
@@ -1196,7 +1200,6 @@ air.hittime = 22
 fall.recover = 1
 getpower = 70,70
 givepower = 16,16
-p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
 ID                 =311
 air.cornerpush.veloff = 0
 
@@ -1388,7 +1391,6 @@ air.fall = 1
 fall.recover = 0
 getpower = 50,50
 givepower = 16,16
-p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
 EnvShake.Time      =  4
 EnvShake.Ampl      = -10
 ID                 =320
@@ -1423,7 +1425,6 @@ air.fall = 1
 fall.recover = 0
 getpower = 50,50
 givepower = 16,16
-p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
 EnvShake.Time      =  4
 EnvShake.Ampl      = -10
 ID                 =321
@@ -1480,7 +1481,7 @@ animtype = high
 damage = 50,0
 guardflag = H
 priority = 7, Hit
-pausetime = 8,10
+pausetime = 7,10
 sparkno = s13004            
 guard.sparkno = s13022 
 sparkxy = -10,-80
@@ -1591,7 +1592,6 @@ fall = 1              ;1にすれば相手がダウン状態になる
 numhits = 0
 getpower = 0,0
 givepower = 0,0
-p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
 
 
 [State 1000, ChangeState]

@@ -151,15 +151,17 @@ trigger1 = var(20) > 0
 trigger1 = time = 0
 var(24) = -1000
 
-[State 1000, BGPalFX]
-type = BGPalFX
-trigger1 = Time = 0
-time = 40
-add = 0,0,0
-mul = -256,-256,-256
-sinadd =  256,256,256,51
-invertall = 1
-color = 256
+[State Helper]
+Type               = Helper 
+Trigger1           = Time = 0
+Name               = "Skill_Color" 
+ID                 = 8000 + ID
+Pos                = 0,0
+PosType            = P1 
+StateNo            = 8000
+OwnPal             = 1 
+IgNoreHitPause     = 1 
+SuperMoveTime      = 30
 
 [State 1000, EnvColor]
 type = EnvColor
@@ -228,7 +230,7 @@ type = Explod
 trigger1 = time = 9
 anim = 8031; 2005
 postype = P1
-pos = -15,-20
+pos = -30,40
 bindtime = -1
 removetime = -1
 sprpriority = 5
@@ -236,7 +238,7 @@ ownpal = 1
 supermove = 1
 removeongethit = 1
 ID = 2000
-scale = 0.4, 0.4
+scale = 0.6, 0.6
 
 [State 1000, ステ?ト変更]
 type = ChangeState
@@ -476,9 +478,9 @@ persistent = 0
 anim = 8024
 scale = 0.5,0.5
 postype = P1
-pos = 50,20
+pos = 30,10
 sprpriority = 1
-bindtime = 1
+bindtime = 0
 ownpal = 1
 supermove = 1
 
@@ -487,12 +489,12 @@ type = Explod
 trigger1 = time = 0
 anim = 8032 ;2015
 postype = P1
-pos = 0,0 ;-10,20
+pos = 25,80 ;-10,20
 bindtime = -1
 sprpriority = 5
 ownpal = 1
 removeongethit = 1
-scale = 0.4, 0.4
+scale = 0.7, 0.7
 
 [State 700, 大蛇薙边角火]
 type = Null;Explod
@@ -517,13 +519,13 @@ name = "OROCHINAGI"
 stateno = 2020
 ID = 2020
 helpertype = normal
-pos = 60,0
+pos = 70,0
 postype = p1
 facing = 1
 keyctrl = 0
 ownpal = 1
-size.xscale = 0.4
-size.yscale = 0.4
+size.xscale = 0.35
+size.yscale = 0.35
 
 [State 1000, ステ?ト変更]
 type = ChangeState
@@ -544,6 +546,54 @@ velset   = 0,0
 anim     = 8030
 ctrl     = 0
 sprpriority = 5
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 300
+anim = 13017
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.4,0.4
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 250
+anim = 13018
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+vel = 2,-1
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 150
+anim = 13019
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
 
 [State 170, 無敵]
 type = NotHitBy
@@ -557,13 +607,13 @@ flag = noshadow
 
 [State 1201, キャラ?体に引っ付く位置]
 type = BindToParent
-trigger1 = time = [0,12]
-pos = 102,-50
+trigger1 = 1
+pos = 70,-50
 
 [State 200, ヒット定?]
 type = HitDef
 trigger1 = time = 0
-attr = S, HP
+attr = , HP
 damage = 210,25
 getpower = 0,0
 givepower = 15,15
@@ -572,9 +622,9 @@ guardflag = M
 hitflag = MAFP
 priority = 7, Hit
 pausetime = 0,12
-sparkno = 3
-guard.sparkno = s4120
-sparkxy = -25, -70
+sparkno = s13003  
+guard.sparkno = s13022
+sparkxy = -25, -20
 hitsound = s12,10
 guardsound = s2,1
 ground.type = High
@@ -596,73 +646,6 @@ ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
 guard.velocity = -12
 p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
-
-;KO Flash Effect
-[State 2000, Helper]
-type = Helper
-triggerall = numhelper(9910) <= 0
-trigger1 = winKo = 1 && movehit
-helpertype = normal
-name = "KO Flash"
-Id = 9910
-stateno = 9910
-pos = 0,0
-postype = p1
-facing = 1
-ignorehitpause = 1
-supermove = 1
-pausemove = 1
-pausemovetime = 99999
-supermovetime = 99999
-ownpal = 1
-
-[State 1000, Helper]
-type = Helper
-trigger1 = time = 2
-helpertype = normal
-name = "Colicion"
-stateno = 2025
-pos = 0,0
-postype = p1
-facing = 1
-keyctrl = 0
-ownpal = 0
-supermove = 1
-pausemove = 1
-
-[State 1000, Helper]
-type = Helper
-triggerall = numhelper(2010) <= 0
-trigger1 = movehit = 1
-helpertype = normal
-name = "Slow Motion"
-stateno = 2026
-id = 2010
-pos = 0,0
-postype = p1
-facing = 1
-keyctrl = 0
-ownpal = 1
-
-[State 1000,explods]
-type = Explod
-triggerall = p2movetype = H
-trigger1 = Random < 200
-trigger1 = Movehit
-anim = 13017
-pos = 0,-50
-postype = p2
-sprpriority = 5
-bindtime = 1
-random = 100,100
-ownpal = 1
-
-[State 1000,]
-type = Envcolor
-trigger1 = Movehit = 1
-time = 1
-value = 255,255,255
-under = 0
 
 [State 1000,]
 type = Envcolor
@@ -2865,6 +2848,55 @@ ownpal = 1
 bindtime = 1
 supermove = 1
 
+[State -2,explods]
+type = Explod
+trigger1 = time >= 7
+trigger1 = Random < 500
+anim = 13017
+pos = -10,-45
+postype = p1
+sprpriority = 99999999
+scale = 0.4,0.4
+trans = add
+bindtime = 1
+random = 70,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = time >= 7
+trigger1 = Random < 350
+anim = 13018
+pos = -10,-45
+postype = p1
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+vel = 2,-1
+bindtime = 1
+random = 70,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = time >= 7
+trigger1 = Random < 250
+anim = 13019
+pos = -10,-45
+postype = p1
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+bindtime = 1
+random = 70,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
 ;---------------------------------------------------------
 ;Super Cancel Effect 1
 
@@ -2986,12 +3018,12 @@ trigger1 = AnimElem = 1
 value = s10,21
 channel = 4
 
-[State 700, エフェクト?示]
+[State 700, 手上的火?]
 type = Explod
-trigger1 = time = 0
-anim = 2005
+trigger1 = time = 9
+anim = 8031; 2005
 postype = P1
-pos = 0,0
+pos = -30,40
 bindtime = -1
 removetime = -1
 sprpriority = 5
@@ -2999,6 +3031,7 @@ ownpal = 1
 supermove = 1
 removeongethit = 1
 ID = 2000
+scale = 0.6, 0.6
 
 [State 1000, EnvColor]
 type = EnvColor
@@ -3209,7 +3242,7 @@ persistent = 0
 anim = 8024
 scale = 0.5,0.5
 postype = P1
-pos = 50,20
+pos = 30,10
 sprpriority = 1
 bindtime = 1
 ownpal = 1
@@ -3220,12 +3253,12 @@ type = Explod
 trigger1 = time = 0
 anim = 8032 ;2015
 postype = P1
-pos = 0,0 ;-10,20
+pos = 25,80 ;-10,20
 bindtime = -1
 sprpriority = 5
 ownpal = 1
 removeongethit = 1
-scale = 0.4, 0.4
+scale = 0.7, 0.7
 
 [State 700, 手上的火焰]
 type = Null;Explod
@@ -3249,6 +3282,42 @@ sprpriority = 5
 ownpal = 1
 removeongethit = 1
 
+[State 2010,手上的火会移动]
+type = Explod
+trigger1 = AnimElem = 8
+anim = 8030 ;2015
+postype = P1
+pos = 65,-50
+bindtime = 20
+sprpriority = 5
+ownpal = 1
+removeongethit = 1
+scale = 0.35, 0.35
+
+[State 2010,手上的火会移动]
+type = Explod
+trigger1 = AnimElem = 9
+anim = 8030 ;2015
+postype = P1
+pos = 80,-50
+bindtime = 20
+sprpriority = 5
+ownpal = 1
+removeongethit = 1
+scale = 0.35, 0.35
+
+[State 2010,手上的火会移动]
+type = Explod
+trigger1 = AnimElem = 10
+anim = 8030 ;2015
+postype = P1
+pos = 95,-50
+bindtime = 20
+sprpriority = 5
+ownpal = 1
+removeongethit = 1
+scale = 0.35, 0.35
+
 [State 1000, ヘルパ?を出す]
 type = Helper
 trigger1 = AnimElem = 8
@@ -3256,13 +3325,13 @@ name = "MAX OROCHINAGI01"
 stateno = 2520
 ID = 2500
 helpertype = normal
-pos = 60,-80
+pos = 50,-80
 postype = p1
 facing = 1
 keyctrl = 0
 ownpal = 1
-size.xscale = 0.4
-size.yscale = 0.4
+size.xscale = 0.35
+size.yscale = 0.35
 
 [State 1000, ヘルパ?を出す]
 type = Helper
@@ -3271,13 +3340,13 @@ name = "MAX OROCHINAGI02"
 stateno = 2525
 ID = 2505
 helpertype = normal
-pos = 75,-80
+pos = 65,-80
 postype = p1
 facing = 1
 keyctrl = 0
 ownpal = 1
-size.xscale = 0.4
-size.yscale = 0.4
+size.xscale = 0.35
+size.yscale = 0.35
 
 [State 1000, ヘルパ?を出す]
 type = Helper
@@ -3286,13 +3355,13 @@ name = "MAX OROCHINAGI03"
 stateno = 2530
 ID = 2510
 helpertype = normal
-pos = 90,-80
+pos = 80,-80
 postype = p1
 facing = 1
 keyctrl = 0
 ownpal = 1
-size.xscale = 0.4
-size.yscale = 0.4
+size.xscale = 0.35
+size.yscale = 0.35
 
 [State 2000,]
 type = RemoveExplod
@@ -3332,14 +3401,63 @@ flag = noshadow
 [State 1201, キャラ?体に引っ付く位置]
 type = BindToParent
 trigger1 = time = [0,20]
-pos = 102,-50
+pos = 65,-50
 ;pos = 63,-7
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 300
+anim = 13017
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.2,0.2
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 250
+anim = 13018
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+vel = 2,-1
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 150
+anim = 13019
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
 
 [State 200, ヒット定?]
 type = HitDef
 triggerall = root,var(15) = 0
 trigger1 = time = 0
-attr = S, HP
+attr = , HP
 damage = 150,25
 getpower = 0,0
 givepower = 15,15
@@ -3348,9 +3466,9 @@ guardflag = M
 hitflag = MAFP
 priority = 7, Hit
 pausetime = 0,12
-sparkno = 3
-guard.sparkno = s4120
-sparkxy = -25, -70
+sparkno = s13004            
+guard.sparkno = s13022 
+sparkxy = -25, 0
 hitsound = s12,10
 guardsound = s2,1
 ground.type = High
@@ -3373,79 +3491,6 @@ air.cornerpush.veloff = 0
 guard.velocity = -12
 id = 2520
 p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
-
-[State 1000, Helper]
-type = Helper
-trigger1 = time = 0
-helpertype = normal
-name = "Colicion"
-stateno = 2535
-pos = 0,0
-postype = p1
-facing = 1
-keyctrl = 0
-ownpal = 0
-supermove = 1
-pausemove = 1
-
-;KO Flash Effect
-[State -2, Helper]
-type = Helper
-triggerall = numhelper(9910) <= 0
-trigger1 = winKo = 1 && movehit
-helpertype = normal
-name = "KO Flash"
-Id = 9910
-stateno = 9910
-pos = 0,0
-postype = p1
-facing = 1
-ignorehitpause = 1
-supermove = 1
-pausemove = 1
-pausemovetime = 99999
-supermovetime = 99999
-ownpal = 1
-
-[State 1000, Helper]
-type = Helper
-triggerall = numhelper(2010) <= 0
-trigger1 = movehit = 1
-helpertype = normal
-name = "Slow Motion"
-stateno = 2026
-id = 2010
-pos = 0,0
-postype = p1
-facing = 1
-keyctrl = 0
-ownpal = 1
-
-[State 1000,explods]
-type = Explod
-triggerall = p2movetype = H
-trigger1 = Random < 100
-trigger1 = Movehit
-anim = f4130
-pos = 0,-50
-postype = p2
-sprpriority = 9
-bindtime = 1
-random = 100,100
-ownpal = 1
-
-[State 1000,explods]
-type = Explod
-triggerall = p2movetype = H
-trigger1 = Random < 100
-trigger1 = Movehit
-anim = f4135
-pos = 0,-50
-postype = p2
-sprpriority = 9
-bindtime = 1
-random = 100,100
-ownpal = 1
 
 [State 2100,]
 type = Envcolor
@@ -3486,14 +3531,63 @@ flag = noshadow
 [State 1201, キャラ?体に引っ付く位置]
 type = BindToParent
 trigger1 = time = [0,20]
-pos = 132,-50
+pos = 80,-50
 ;pos = 90,-5
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 300
+anim = 13017
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.2,0.2
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 250
+anim = 13018
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+vel = 2,-1
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 150
+anim = 13019
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
 
 [State 200, ヒット定?]
 type = HitDef
 triggerall = root,var(15) = 0
 trigger1 = time = 0
-attr = S, HP
+attr = , HP
 damage = 100,15
 getpower = 0,0
 givepower = 15,15
@@ -3502,9 +3596,9 @@ guardflag = M
 hitflag = MAFP
 priority = 7, Hit
 pausetime = 0,12
-sparkno = 3
-guard.sparkno = s4120
-sparkxy = -25, -70
+sparkno = s13004            
+guard.sparkno = s13022 
+sparkxy = -25,0
 hitsound = s12,10
 guardsound = s2,1
 ground.type = High
@@ -3527,79 +3621,6 @@ air.cornerpush.veloff = 0
 guard.velocity = -12
 id = 2525
 p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
-
-[State 1000, Helper]
-type = Helper
-trigger1 = time = 0
-helpertype = normal
-name = "Colicion"
-stateno = 2535
-pos = 0,0
-postype = p1
-facing = 1
-keyctrl = 0
-ownpal = 0
-supermove = 1
-pausemove = 1
-
-;KO Flash Effect
-[State -2, Helper]
-type = Helper
-triggerall = numhelper(9910) <= 0
-trigger1 = winKo = 1 && movehit
-helpertype = normal
-name = "KO Flash"
-Id = 9910
-stateno = 9910
-pos = 0,0
-postype = p1
-facing = 1
-ignorehitpause = 1
-supermove = 1
-pausemove = 1
-pausemovetime = 99999
-supermovetime = 99999
-ownpal = 1
-
-[State 1000, Helper]
-type = Helper
-triggerall = numhelper(2010) <= 0
-trigger1 = movehit = 1
-helpertype = normal
-name = "Slow Motion"
-stateno = 2026
-id = 2010
-pos = 0,0
-postype = p1
-facing = 1
-keyctrl = 0
-ownpal = 1
-
-[State 1000,explods]
-type = Explod
-triggerall = p2movetype = H
-trigger1 = Random < 100
-trigger1 = Movehit
-anim = f4130
-pos = 0,-50
-postype = p2
-sprpriority = 9
-bindtime = 1
-random = 100,100
-ownpal = 1
-
-[State 1000,explods]
-type = Explod
-triggerall = p2movetype = H
-trigger1 = Random < 100
-trigger1 = Movehit
-anim = f4135
-pos = 0,-50
-postype = p2
-sprpriority = 9
-bindtime = 1
-random = 100,100
-ownpal = 1
 
 [State 2100,]
 type = Envcolor
@@ -3640,12 +3661,61 @@ flag = noshadow
 [State 1201, キャラ?体に引っ付く位置]
 type = BindToParent
 trigger1 = time = [0,20]
-pos = 162,-50
+pos = 95,-50
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 300
+anim = 13017
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.2,0.2
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 250
+anim = 13018
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+vel = 2,-1
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 150
+anim = 13019
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
 
 [State 200, ヒット定?]
 type = HitDef
 trigger1 = time = 0
-attr = S, HP
+attr = , HP
 damage = 50,10
 getpower = 0,0
 givepower = 15,15
@@ -3654,9 +3724,9 @@ guardflag = M
 hitflag = MAFP
 priority = 7, Hit
 pausetime = 0,12
-sparkno = 3
-guard.sparkno = s4120
-sparkxy = -25, -70
+sparkno = s13004            
+guard.sparkno = s13022 
+sparkxy = -25, 0
 hitsound = s12,10
 guardsound = s2,1
 ground.type = High
@@ -3679,79 +3749,6 @@ air.cornerpush.veloff = 0
 guard.velocity = -12
 id = 2530
 p2stateno = 116000+enemynear,statetype = C*10+enemynear,statetype = A*20
-
-[State 1000, Helper]
-type = Helper
-trigger1 = time = 0
-helpertype = normal
-name = "Colicion"
-stateno = 2535
-pos = 0,0
-postype = p1
-facing = 1
-keyctrl = 0
-ownpal = 0
-supermove = 1
-pausemove = 1
-
-;KO Flash Effect
-[State -2, Helper]
-type = Helper
-triggerall = numhelper(9910) <= 0
-trigger1 = winKo = 1 && movehit
-helpertype = normal
-name = "KO Flash"
-Id = 9910
-stateno = 9910
-pos = 0,0
-postype = p1
-facing = 1
-ignorehitpause = 1
-supermove = 1
-pausemove = 1
-pausemovetime = 99999
-supermovetime = 99999
-ownpal = 1
-
-[State 1000, Helper]
-type = Helper
-triggerall = numhelper(2010) <= 0
-trigger1 = movehit = 1
-helpertype = normal
-name = "Slow Motion"
-stateno = 2026
-id = 2010
-pos = 0,0
-postype = p1
-facing = 1
-keyctrl = 0
-ownpal = 1
-
-[State 1000,explods]
-type = Explod
-triggerall = p2movetype = H
-trigger1 = Random < 100
-trigger1 = Movehit
-anim = f4130
-pos = 0,-50
-postype = p2
-sprpriority = 9
-bindtime = 1
-random = 100,100
-ownpal = 1
-
-[State 1000,explods]
-type = Explod
-triggerall = p2movetype = H
-trigger1 = Random < 100
-trigger1 = Movehit
-anim = f4135
-pos = 0,-50
-postype = p2
-sprpriority = 9
-bindtime = 1
-random = 100,100
-ownpal = 1
 
 [State 2100,]
 type = Envcolor
@@ -5374,7 +5371,6 @@ supermovetime = 99999
 sprpriority = 8
 ownpal = 1
 ;---------------------------------------------------------
-
 [State 700, エフェクト?示]
 type = Explod
 trigger1 = AnimElem = 1
@@ -6892,17 +6888,54 @@ ctrl     = 0
 sprpriority = 5
 facep2   = 1
 
-[State Helper]
-Type               = Helper 
-Triggerall         = random < 150
-trigger1 		   = animelem >= 40
-Name               = "Skill_Fire" 
-ID                 = 7000 + ID
-Pos                = 0,0
-PosType            = P2 
-StateNo            = 7000
-OwnPal             = 1 
-IgNoreHitPause     = 1 
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 800
+anim = 13017
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.2,0.2
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 550
+anim = 13018
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+vel = 2,-1
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 450
+anim = 13019
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
 
 [State Zoom]
 type = Helper
@@ -6986,10 +7019,114 @@ time = 30
 ampl = -15
 freq = 100
 phase = 100
-
 ;---------------------------------------------------------
-;Super Cancel Effect 1
+;Super Cancel Effect 1  -------------------------------------------------------------------------
+[State 1000, Explod]
+type = Explod
+triggerall = facing = 1
+triggerall = AnimElem = 1
+trigger1 = prevstateno = [2000,2999]
+anim = 7121
+pos = 0,80
+postype = left
+bindtime = -1
+supermove = 1
+pausemove = 1
+scale = .5,.5
+pausemovetime = 99999
+supermovetime = 99999
+sprpriority = 7
+ownpal = 1
 
+[State 1000, Explod]
+type = Explod
+triggerall = facing = 1
+triggerall = AnimElem = 1
+trigger1 = prevstateno = [2000,2999]
+anim = 7129
+pos = 80,80
+postype = left
+bindtime = -1
+supermove = 1
+pausemove = 1
+scale = .5,.5
+pausemovetime = 99999
+supermovetime = 99999
+sprpriority = 8
+ownpal = 1
+
+[State 1000, Explod]
+type = Explod
+triggerall = facing = 1
+triggerall = AnimElem = 1
+trigger1 = prevstateno = [2000,2999]
+anim = 7130
+pos = 80,80
+postype = left
+bindtime = -1
+supermove = 1
+pausemove = 1
+scale = .5,.5
+pausemovetime = 99999
+supermovetime = 99999
+sprpriority = 8
+ownpal = 1
+
+;Super Cancel Effect -1 -------------------------------------------------------------------------
+[State 1000, Explod]
+type = Explod
+triggerall = facing = -1
+triggerall = AnimElem = 1
+trigger1 = prevstateno = [2000,2999]
+facing = -1
+anim = 7121
+pos = 0,80
+postype = right
+bindtime = -1
+supermove = 1
+pausemove = 1
+scale = .5,.5
+pausemovetime = 99999
+supermovetime = 99999
+sprpriority = 7
+ownpal = 1
+
+[State 1000, Explod]
+type = Explod
+triggerall = facing = -1
+triggerall = AnimElem = 1
+trigger1 = prevstateno = [2000,2999]
+anim = 7129
+pos = -80,80
+postype = right
+bindtime = -1
+supermove = 1
+pausemove = 1
+scale = .5,.5
+pausemovetime = 99999
+supermovetime = 99999
+sprpriority = 8
+ownpal = 1
+
+[State 1000, Explod]
+type = Explod
+triggerall = facing = -1
+triggerall = AnimElem = 1
+trigger1 = prevstateno = [2000,2999]
+anim = 7130
+pos = -80,80
+postype = right
+bindtime = -1
+supermove = 1
+pausemove = 1
+scale = .5,.5
+pausemovetime = 99999
+supermovetime = 99999
+sprpriority = 8
+ownpal = 1
+;---------------------------------------------------------
+;---------------------------------------------------------
+;Dream Cancel Effect 1  -------------------------------------------------------------------------
 [State 1000, Explod]
 type = Explod
 triggerall = facing = 1
@@ -7041,8 +7178,7 @@ supermovetime = 99999
 sprpriority = 8
 ownpal = 1
 
-;-------------------------------------------------------------------------
-;Super Cancel Effect -1 
+;Dream Cancel Effect -1 -------------------------------------------------------------------------
 [State 1000, Explod]
 type = Explod
 triggerall = facing = -1
@@ -7096,6 +7232,7 @@ sprpriority = 8
 ownpal = 1
 ;---------------------------------------------------------
 
+
 [State 1000, HitBy]
 type = HitBy
 trigger1 = time = [0,133]
@@ -7126,16 +7263,6 @@ trigger1 = time = 0
 var(24) = -2000
 ignorehitpause = 1
 
-[State 1000, BGPalFX]
-type = BGPalFX
-trigger1 = Time = 0
-time = 40
-add = 0,0,0
-mul = -256,-256,-256
-sinadd =  256,256,256,51
-invertall = 1
-color = 256
-
 [State 1000, EnvColor]
 type = EnvColor
 trigger1 = Time = 0
@@ -7143,30 +7270,10 @@ value = 255,255,255
 time = 2
 under = 1
 
-[State 2000]
-type = Explod
-trigger1 = time = 5
-anim = f104
-pos = 10,-65
-sprpriority = -3
-ownpal = 1
-bindtime = 1
-supermove = 1
-
-[State 2000]
-type = Explod
-trigger1 = time = 5
-anim = f105
-pos = 10,-65
-sprpriority = 20
-ownpal = 1
-bindtime = 1
-supermove = 1
-
 [State 2000,]
 type = PlaySnd
 trigger1 = time = 0
-value = s9,2
+value = s9,1
 
 [State 2000,]
 type = PlaySnd
@@ -7209,10 +7316,11 @@ value = s12,2
 
 [State 700, 小火?]
 type = Explod
-trigger1 = time = 0
+trigger1 = time = 4
 anim = 3005
 postype = P1
-pos = 0,0
+pos = 11,-55
+scale = .6,.6
 bindtime = -1
 sprpriority = 5
 ownpal = 1
@@ -7222,9 +7330,10 @@ removeongethit = 1
 [State 700, 打出去的火?]
 type = Explod
 trigger1 = AnimElem = 20
-anim = 2205
+anim = 8030
 postype = P1
-pos = 60,-25
+scale = .3,.3
+pos = 70,-65
 sprpriority = 10
 ownpal = 1
 
@@ -7234,6 +7343,7 @@ trigger1 = AnimElem = 29
 anim = 1615
 postype = P1
 pos = 45,-65
+scale = 0.35,.35
 sprpriority = 10
 ownpal = 1
 
@@ -7243,7 +7353,7 @@ trigger1 = AnimElem = 40
 persistent = 0
 anim = 13031
 postype = P1
-pos = -10,10
+pos = 30,10
 sprpriority = 10
 ownpal = 1
 
@@ -7296,8 +7406,9 @@ under = 1
 type = Explod
 trigger1 = movehit = 1
 anim = 1425
-pos = 0,-30
+pos = 0,-75
 postype = p2
+scale = 0.3,0.3
 ownpal = 1
 bindtime = 1
 sprpriority = 11
@@ -7704,8 +7815,8 @@ guardflag = M
 hitflag = MAF
 priority = 7, Hit
 pausetime = 23,47
-sparkno = s1430
-guard.sparkno = 50
+sparkno = s13004 
+guard.sparkno = s13022
 sparkxy = -25, -30
 hitsound = s12,5
 guardsound = s2,1
@@ -7752,6 +7863,55 @@ velset   = 0,0
 anim     = 3515
 ctrl     = 0
 sprpriority = 0
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 800
+anim = 13017
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.2,0.2
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 550
+anim = 13018
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+vel = 2,-1
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 450
+anim = 13019
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
 
 [State 1000, PosAdd]
 type = PosAdd
@@ -7871,6 +8031,55 @@ anim     = 3516
 ctrl     = 0
 sprpriority = 0
 
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 800
+anim = 13017
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.2,0.2
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 550
+anim = 13018
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+vel = 2,-1
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 450
+anim = 13019
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
 [State 170, 無敵]
 type = NotHitBy
 trigger1 = 1
@@ -7973,6 +8182,55 @@ velset   = 0,0
 anim     = 3517
 ctrl     = 0
 sprpriority = 0
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 800
+anim = 13017
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.2,0.2
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 550
+anim = 13018
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+vel = 2,-1
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 450
+anim = 13019
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
 
 [State 170, 無敵]
 type = NotHitBy
@@ -8087,6 +8345,55 @@ velset   = 0,0
 anim     = 3520
 ctrl     = 0
 sprpriority = 0
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 800
+anim = 13017
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.2,0.2
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 550
+anim = 13018
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+vel = 2,-1
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
+
+[State -2,explods]
+type = Explod
+trigger1 = movehit
+trigger1 = Random < 450
+anim = 13019
+pos = 0,-50
+postype = p2
+sprpriority = 99999999
+scale = 0.3,0.3
+trans = add
+bindtime = 1
+random = 100,100
+ownpal = 1
+supermove = 1
+ignorehitpause = 1
 
 [State 1000, PosAdd]
 type = PosAdd

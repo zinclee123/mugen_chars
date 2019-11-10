@@ -796,11 +796,6 @@ trigger1 = Time = GetHitvar(slidetime)
 trigger2 = Time >= GetHitvar(hittime)
 x = 0
 
-[State 151, 3]
-type = CtrlSet
-trigger1 = Time = GetHitVar(ctrltime)
-value = 1
-
 [State 151, Hi to Lo]
 type = StateTypeSet
 TriggerAll = StateType = S
@@ -834,13 +829,6 @@ trigger2 = Time = GetHitVar(ctrltime)
 value = SCA
 time = 1
 persistent = 0
-
-[State -3, 4]
-type = ChangeState
-trigger1 = var(59) > 0
-trigger1 = Time >= GetHitvar(hittime)
-value = ifelse(EnemyNear,StateType = C, 11, 0)
-ctrl = 1
 
 [State 151, 4]
 type = ChangeState
@@ -917,11 +905,6 @@ trigger1 = Time = GetHitVar(slidetime)
 trigger2 = HitOver
 x = 0
 
-[State 153, 3]
-type = CtrlSet
-trigger1 = Time = GetHitVar(ctrltime)
-value = 1
-
 [State 153, Hi to Lo]
 type = StateTypeSet
 TriggerAll = StateType = S
@@ -955,13 +938,6 @@ trigger2 = Time = GetHitVar(ctrltime)
 value = SCA
 time = 1
 persistent = 0
-
-[State -3, 4]
-type = ChangeState
-trigger1 = var(59) > 0
-trigger1 = Time >= GetHitvar(hittime)
-value = ifelse(EnemyNear,StateType = C,11,0)
-ctrl = 1
 
 [State 153, 4]
 type = ChangeState

@@ -1491,7 +1491,7 @@ trigger1 = Life > 0
 value = 5201
 
 [State 5050, 6]
-type = ChangeState
+type = SelfState
 trigger1 = Vel Y + Pos Y >= 0
 value = 5100 ;HIT_BOUNCE
 
@@ -1628,8 +1628,9 @@ trigger1 = Time = 3
 
 [State 5100, 10]
 type = PlaySnd
+trigger1 = name = "K'"
 trigger1 = Time = 1
-value = S2+(1*10),9
+value = S12,9
 
 [State 5100, 11]
 type = PosFreeze
@@ -1755,8 +1756,9 @@ sysvar(1) = floor(vel y)
 
 [State 5100, 10]
 type = PlaySnd
+triggerall = Name = "K'"
 trigger1 = Time = 1
-value = S2+(1*10),5
+value = S12,5
 channel = 1
 
 [State 5100, Explod]

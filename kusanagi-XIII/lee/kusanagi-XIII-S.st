@@ -5401,6 +5401,13 @@ anim     = 1000
 ctrl     = 0
 sprpriority = 3
 
+[State -3]
+type = varadd
+trigger1 = var(20) > 0
+trigger1 = time = 0
+var(24) = -500
+ignorehitpause = 1
+
 ;---------------------------------------------------------
 ;Drive Cancel Effect 1  -------------------------------------------------------------------------
 [State 1000, Explod]
@@ -5633,6 +5640,13 @@ velset = 0
 sprpriority = 2
 juggle = 0
 facep2 = 1
+
+[State -3]
+type = varadd
+trigger1 = var(20) > 0
+trigger1 = time = 0
+var(24) = -500
+ignorehitpause = 1
 
 ;---------------------------------------------------------
 ;Drive Cancel Effect 1  -------------------------------------------------------------------------
@@ -5932,7 +5946,7 @@ air.type = High
 air.velocity = -4.5,-7
 air.hittime = 13
 air.juggle = 0
-getpower = 94,94
+getpower = 0,0
 givepower = 16,16
 fall = 1
 air.fall = 1
@@ -5975,7 +5989,7 @@ air.type = High
 air.velocity = -3.5,-7
 air.hittime = 13
 air.juggle = 0
-getpower = 94,94
+getpower = 0,0
 givepower = 16,16
 fall = 1
 air.fall = 1
@@ -6018,7 +6032,7 @@ air.type = High
 air.velocity = -3.5,-7
 air.hittime = 13
 air.juggle = 0
-getpower = 94,94
+getpower = 0,0
 givepower = 16,16
 fall = 1
 air.fall = 1
@@ -6061,7 +6075,7 @@ air.type = High
 air.velocity = -2,-7
 air.hittime = 13
 air.juggle = 0
-getpower = 94,94
+getpower = 0,0
 givepower = 16,16
 fall = 1
 air.fall = 1
@@ -6142,6 +6156,13 @@ velset   = 0,0
 anim     = 1250
 ctrl     = 0
 sprpriority = 5
+
+[State -3]
+type = varadd
+trigger1 = var(20) > 0
+trigger1 = time = 0
+var(24) = -500
+ignorehitpause = 1
 
 ;---------------------------------------------------------
 ;Drive Cancel Effect 1  -------------------------------------------------------------------------
@@ -6506,6 +6527,13 @@ ctrl     = 0
 sprpriority = 5
 facep2 = 1
 
+[State -3]
+type = varadd
+trigger1 = var(20) > 0
+trigger1 = time = 0
+var(24) = -500
+ignorehitpause = 1
+
 
 ;---------------------------------------------------------
 ;Drive Cancel Effect 1  -------------------------------------------------------------------------
@@ -6763,7 +6791,7 @@ palfx.mul = 256,256,256
 palfx.sinadd = 100,100,100,15
 palfx.invertall = 1
 palfx.color = 0
-getpower = 25,25
+getpower = 0,0
 givepower = 16,16
 yaccel = .5
 ground.cornerpush.veloff = -5
@@ -6808,7 +6836,7 @@ palfx.mul = 256,256,256
 palfx.sinadd = 100,100,100,15
 palfx.invertall = 1
 palfx.color = 0
-getpower = 25,25
+getpower = 0,0
 givepower = 16,16
 yaccel = .5
 ground.cornerpush.veloff = 0
@@ -6851,7 +6879,7 @@ palfx.mul = 256,256,256
 palfx.sinadd = 100,100,100,15
 palfx.invertall = 1
 palfx.color = 0
-getpower = 25,25
+getpower = 0,0
 givepower = 16,16
 yaccel = .5
 ground.cornerpush.veloff = 0
@@ -6884,6 +6912,13 @@ velset   = 0,0
 anim     = 1410
 sprpriority = 5
 facep2 = 1
+
+[State -3]
+type = varadd
+trigger1 = var(20) > 0
+trigger1 = time = 0
+var(24) = -500
+ignorehitpause = 1
 
 ;---------------------------------------------------------
 ;Drive Cancel Effect 1  -------------------------------------------------------------------------

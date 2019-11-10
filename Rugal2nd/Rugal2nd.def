@@ -1,0 +1,32 @@
+[Info]
+name = "Rugal2nd"
+displayname = "OMEGA_RUGAL"
+versiondate = 2008/10/4
+mugenversion 
+author = "fxm508"
+pal.defaults = 1,7,5,11,12
+
+
+[Files]
+cmd = Rugal2nd.cmd
+cns = Rugal2nd.st
+st = Rugal2nd.st
+st0 = Rugal2nd_Helper.st
+st1 = Rugal2nd_-2.st
+st2 = Rugal2nd_-3.st
+stcommon = Rugal2nd_Common.st
+sprite = Rugal2nd.sff
+anim = Rugal2nd.air
+sound = Rugal2nd.snd
+pal1 = act/Rugal2nd_02-1.act
+pal2 = act/Rugal2nd_02-2.act
+pal3 = act/Rugal2nd_02-1.act
+pal4 = act/Rugal2nd_02-2.act
+pal5 = act/Rugal2nd_98-1.act
+pal6 = act/Rugal2nd_98-2.act
+pal7 = act/Rugal2nd_98UM-1(omega).act
+pal8 = act/Rugal2nd_98UM-2(omega).act
+pal9 = act/Rugal2nd_98UM-3(omega).act
+pal10 = act/Rugal2nd_98UM-4(omega).act
+pal11 = act/Rugal2nd_94-1.act
+pal12 = act/Rugal2nd_OMEGA.act

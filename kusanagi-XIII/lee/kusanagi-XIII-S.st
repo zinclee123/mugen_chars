@@ -2798,7 +2798,7 @@ trigger1 = 1
 value = SCA
 
 [State 7010, 1]
-type = ChangeAnim
+type = ChangeAnim2
 Trigger1 = Time = 0
 value = 5035
 

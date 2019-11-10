@@ -1407,6 +1407,26 @@ trigger4 = var(54) := 2112
 trigger4 = var(50) := 211074
 value = var(54)
 
+[State -3,鹤摘]
+type = ChangeState
+triggerall = var(59)
+triggerall = var(11) = [1,3]
+triggerall = statetype != A 
+triggerall = EnemyNear,MoveType = A
+triggerall = EnemyNear,Vel x >= 0 ;类似Bloo这种空振后退的
+triggerall = !EnemyNear,NumProj && !PlayerIdExist(Helper(33333333),var(3))
+;凹对面必杀、超杀，可能有多段判定，所以必须第一个攻击判定能打到
+trigger1 = P2BodyDist x = [50,80]
+trigger1 = EnemyNear,StateNo = [200,1999]
+trigger1 = EnemyNear,StateType = C
+trigger1 = enemynear,stateno = helper(33000),var(2)
+trigger1 = helper(33000),var(3) - enemynear,time >= 3
+trigger1 = EnemyNear,AnimTime <= -9
+trigger1 = var(50) := 130071
+value = 1300
+IgnoreHitPause = 1
+
+
 [State -3,大升龙]
 type = ChangeState
 triggerall = var(59)
@@ -1430,25 +1450,6 @@ trigger2 = P2BodyDist x - fvar(37) * 6 = [-10,60]
 trigger2 = EnemyNear,AnimTime <= -6 || EnemyNear,Time < 4
 trigger2 = var(50) := 115071
 value = 1150
-IgnoreHitPause = 1
-
-[State -3,鹤摘]
-type = ChangeState
-triggerall = var(59)
-triggerall = var(11) = [1,3]
-triggerall = statetype != A 
-triggerall = EnemyNear,MoveType = A
-triggerall = EnemyNear,Vel x >= 0 ;类似Bloo这种空振后退的
-triggerall = !EnemyNear,NumProj && !PlayerIdExist(Helper(33333333),var(3))
-;凹对面必杀、超杀，可能有多段判定，所以必须第一个攻击判定能打到
-trigger1 = P2BodyDist x = [50,80]
-trigger1 = EnemyNear,StateNo = [200,1999]
-trigger1 = EnemyNear,StateType = C
-trigger1 = enemynear,stateno = helper(33000),var(2)
-trigger1 = helper(33000),var(3) - enemynear,time >= 3
-trigger1 = EnemyNear,AnimTime <= -9
-trigger1 = var(50) := 130071
-value = 1300
 IgnoreHitPause = 1
 
 ;=================================================================================
@@ -1577,6 +1578,7 @@ Triggerall = !EnemyNear,Ctrl
 TriggerAll = var(20) = 0
 TriggerAll = StateType != A
 TriggerAll = P2BodyDist X < 90
+TriggerAll = helper(33000),var(14) != 3110 ;避免4气的时候重复发招
 Trigger1 = EnemyNear,StateNo = 116101 && EnemyNear,Pos Y >= -10
 Trigger2 = EnemyNear,StateNo = 116110 && EnemyNear,Time < 10
 Value = 3100
@@ -1786,7 +1788,7 @@ trigger2 = StateNo = 1405 && AnimElemtime(4) >= 0 && AnimElemtime(5) < 0 && Move
 trigger2 = var(50) := 200067
 trigger3 = StateNo = 1460 && MoveHit
 trigger3 = var(50) := 200068
-value = ifelse((power >= 4000 || (random < 400 && EnemyNear,BackEdgeBodyDist < 32)), 2100, 2000)
+value = ifelse(power >= 4000 || EnemyNear,BackEdgeBodyDist > 32 || random < 400, 2100, 2000)
 
 [State -3,版中零式]
 type = ChangeState

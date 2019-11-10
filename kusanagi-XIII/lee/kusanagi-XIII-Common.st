@@ -2476,11 +2476,6 @@ type = ChangeState
 trigger1 = time = 4
 value = 5101
 
-[State 5100, 15]
-type = NotHitBy
-trigger1 = 1
-value = SCA
-
 [State 5100, 16]
 type = ForceFeedback
 trigger1 = Time = 0
@@ -2528,11 +2523,6 @@ y = -7
 type = VelAdd
 trigger1 = 1
 y = 0.610
-
-[State 5101, 6]
-type = NotHitBy
-trigger1 = 1
-value = SCA
 
 [State 5101, 7] ;Hit ground
 type = ChangeState

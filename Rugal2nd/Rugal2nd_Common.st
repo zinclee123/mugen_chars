@@ -51,58 +51,6 @@ trigger1 = !alive
 value = 5050
 
 ;---------------------------------------------------------------------------
-; 待機
-[Statedef 1]
-type = S
-physics = S
-sprpriority = 2
-velset = 0,0
-Ctrl = 0
-
-[State -2]
-type = DestroySelf
-trigger1 = IsHelper
-ignorehitpause = 1
-
-[State 0]
-type = Turn
-trigger1 = P2Dist X < 0
-
-[State 0, 1]
-type = ChangeAnim
-trigger1 = Anim != (0+(fvar(29)=3||fvar(29)=6)) && Anim != 5
-trigger2 = Anim = 5 && AnimTime = 0 ;Turn anim over
-value = (0+(fvar(29)=3||fvar(29)=6))
-
-[State 0, 2]
-type = VelSet
-trigger1 = Time = 0
-y = 0
-
-[State 0, 3] ;Stop moving if low velocity or 4 ticks pass
-type = VelSet
-trigger1 = abs(vel x) < 2
-trigger2 = Time = 4
-x = 0
-
-[State 0, 4] ;Are you dead?
-type = ChangeState
-trigger1 = !alive
-value = 5050
-
-[State 0]
-type = CtrlSet
-trigger1 = EnemyNear(var(2)),MoveType != H
-trigger2 = EnemyNear(var(2)),StateType = L
-value = 1
-
-[State 0]
-type = ChangeState
-trigger1 = Ctrl
-value = 0
-ctrl = 1
-
-;---------------------------------------------------------------------------
 ; Stand to Crouch
 [Statedef 10]
 type    = C
@@ -207,128 +155,6 @@ trigger1 = Anim != 21 && Anim != 5
 trigger2 = Anim = 5 && AnimTime = 0
 value = 21
 
-;---------------------------------------------------------------------------
-; 前進
-[Statedef 21]
-type    = S
-physics = S
-sprpriority = 2
-ctrl = 0
-
-[State -2, Player Only]
-type = ChangeState
-triggerall = !(var(59) || fvar(39))
-trigger1 = Time = 0
-value = 0
-ctrl = 1
-
-[State 20]
-type = VarSet
-trigger1 = Time = 0
-trigger1 = EnemyNear(var(2)),BackEdgeBodyDist <= 0
-trigger1 = EnemyNear(var(2)),StateType != A
-trigger1 = PrevStateNo = 52
-fvar(1) = Vel X
-
-[State 20]
-type = VelAdd
-triggerall = fvar(1)
-trigger1 = Floor(fvar(1)*0.82**(Time)) < 0
-x = Floor(fvar(1)*0.82**(Time))
-
-[State 20, 1]
-type = VelSet
-trigger1 = 1
-x = const(velocity.walk.fwd.x)*(1+(fvar(32)=2||!(fvar(29)=1||fvar(29)=4))*IfElse((fvar(29)=3||fvar(29)=6),0.5,0.3))
-
-[State 20, 3]
-type = ChangeAnim
-triggerall = vel x > 0
-trigger1 = Anim != 20 && Anim != 5
-trigger2 = Anim = 5 && AnimTime = 0
-value = 20
-
-[State 21]
-type = CtrlSet
-trigger1 = !(EnemyNear(var(2)),MoveType = H) && fvar(4) < 100
-value = 1
-
-[State 21, end]
-type = ChangeState
-triggerall = !(EnemyNear(var(2)),MoveType = H)
-trigger1 = fvar(4) <= -15 || fvar(2) < -5 || FrontEdgeBodyDist < 5
-trigger2 = InGuardDist || var(36)
-trigger3 = Random%400 = 0
-value = 0
-ctrl = 1
-
-[State 21, end]
-type = ChangeState
-trigger1 = RoundState != 2
-trigger2 = FrontEdgeBodyDist < 5
-trigger3 = !(EnemyNear(var(2)),StateType = A)
-trigger3 = fvar(4) = [-15,5]
-value = 0
-ctrl = 1
-
-;---------------------------------------------------------------------------
-; 後退
-[Statedef 22]
-type    = S
-physics = S
-sprpriority = 2
-ctrl = 0
-
-[State -2, Player Only]
-type = ChangeState
-triggerall = !(var(59) || fvar(39))
-trigger1 = Time = 0
-value = 0
-ctrl = 1
-
-[State 20]
-type = VarSet
-trigger1 = Time = 0
-trigger1 = EnemyNear(var(2)),BackEdgeBodyDist <= 0
-trigger1 = EnemyNear(var(2)),StateType != A
-trigger1 = PrevStateNo = 52
-fvar(1) = Vel X
-
-[State 20]
-type = VelAdd
-triggerall = fvar(1)
-trigger1 = Floor(fvar(1)*0.82**(Time)) < 0
-x = Floor(fvar(1)*0.82**(Time))
-
-[State 20, 1]
-type = VelSet
-trigger1 = 1
-x = const(velocity.walk.back.x)*(1+(fvar(32)=2||!(fvar(29)=1||fvar(29)=4))*IfElse((fvar(29)=3||fvar(29)=6),0.5,0.3))
-
-[State 20, 4]
-type = ChangeAnim
-triggerall = vel x < 0
-trigger1 = Anim != 21 && Anim != 5
-trigger2 = Anim = 5 && AnimTime = 0
-value = 21
-
-[State 22, end]
-type = ChangeState
-triggerall = !(EnemyNear(var(2)),MoveType = H)
-trigger1 = fvar(2) < -5 || BackEdgeBodyDist < 5
-trigger2 = InGuardDist || var(36)
-trigger3 = Random%400 = 0
-value = 0
-ctrl = 1
-
-[State 22, end]
-type = ChangeState
-trigger1 = RoundState != 2
-trigger2 = BackEdgeBodyDist < 5
-trigger3 = fvar(2) < 0
-value = 0
-ctrl = 1
-
 
 ;---------------------------------------------------------------------------
 ;ジャンプ開始
@@ -392,213 +218,6 @@ var(4) = 0
 [State 40, v4]
 type = VarSet
 trigger1 = command != "holdup"
-var(4) = 1
-
-[State 40, vel x]
-type = VelSet
-trigger1 = AnimTime = 0
-trigger1 = !var(3)
-x = ifelse(sysvar(1)=0, 0, ifelse(sysvar(1)=1, const(velocity.jump.fwd.x), const(velocity.jump.back.x)))*(1+(fvar(29)=3||fvar(29)=6)*0.5)
-
-[State 40, vel x]
-type = VelSet
-trigger1 = AnimTime = 0
-trigger1 = var(3)
-x = ifelse(sysvar(1)=0, 0, ifelse(sysvar(1)=1, const(velocity.runjump.fwd.x), const(velocity.runjump.back.x)))*(1+(fvar(29)=3||fvar(29)=6)*0.5)
-
-[State 40, 8]
-type = VelSet
-trigger1 = AnimTime = 0
-y = const(velocity.jump.y)*IfElse(var(4),0.75,1)
-
-[State 40, end]
-type = ChangeState
-trigger1 = AnimTime = 0
-value = 50
-ctrl = 1
-
-
-;---------------------------------------------------------------------------
-;垂直ジャンプ開始
-[Statedef 41]
-type    = S
-physics = S
-anim = 40
-ctrl = 0
-velset = 0,0
-sprpriority = 2
-
-[State -2, AI Only]
-type = ChangeState
-triggerall = !(var(59) || fvar(39))
-trigger1 = Time = 0
-value = 0
-ctrl = 1
-
-[State 40]
-type = NotHitBy
-trigger1 = 1
-value = ,AT
-time = 1
-
-[State 40, turn]
-type = ChangeAnim
-trigger1 = Time = 0
-trigger1 = P2Dist X < -20
-value = 45
-
-[State 40, 1]
-type = VarSet
-trigger1 = Time = 0
-sysvar(1) = 0
-
-[State 40, v3];大ジャンプ
-type = VarSet
-trigger1 = Time = 0
-var(3) = 0
-
-[State 40, v4];小ジャンプ
-type = VarSet
-trigger1 = Time = 0
-var(4) = 1
-
-[State 40, vel x]
-type = VelSet
-trigger1 = AnimTime = 0
-trigger1 = !var(3)
-x = ifelse(sysvar(1)=0, 0, ifelse(sysvar(1)=1, const(velocity.jump.fwd.x), const(velocity.jump.back.x)))*(1+(fvar(29)=3||fvar(29)=6)*0.5)
-
-[State 40, vel x]
-type = VelSet
-trigger1 = AnimTime = 0
-trigger1 = var(3)
-x = ifelse(sysvar(1)=0, 0, ifelse(sysvar(1)=1, const(velocity.runjump.fwd.x), const(velocity.runjump.back.x)))*(1+(fvar(29)=3||fvar(29)=6)*0.5)
-
-[State 40, 8]
-type = VelSet
-trigger1 = AnimTime = 0
-y = const(velocity.jump.y)*IfElse(var(4),0.75,1)
-
-[State 40, end]
-type = ChangeState
-trigger1 = AnimTime = 0
-value = 50
-ctrl = 1
-
-;---------------------------------------------------------------------------
-;前方ジャンプ開始【AI】
-[Statedef 42]
-type    = S
-physics = S
-anim = 40
-ctrl = 0
-velset = 0,0
-sprpriority = 2
-
-[State -2, AI Only]
-type = ChangeState
-triggerall = !(var(59) || fvar(39))
-trigger1 = Time = 0
-value = 0
-ctrl = 1
-
-[State 40]
-type = NotHitBy
-trigger1 = 1
-value = ,AT
-time = 1
-
-[State 40, turn]
-type = ChangeAnim
-trigger1 = Time = 0
-trigger1 = P2Dist X < -20
-value = 45
-
-[State 40, 1]
-type = VarSet
-trigger1 = Time = 0
-sysvar(1) = 1
-
-[State 40, v3];大ジャンプ
-type = VarSet
-trigger1 = Time = 0
-var(3) = 1
-
-[State 40, v4];小ジャンプ
-type = VarSet
-trigger1 = Time = 0
-var(4) = 0
-
-[State 40, v4]
-type = VarSet
-trigger1 = !(EnemyNear(var(2)),StateType = L)
-var(4) = 1
-
-[State 40, vel x]
-type = VelSet
-trigger1 = AnimTime = 0
-trigger1 = !var(3)
-x = ifelse(sysvar(1)=0, 0, ifelse(sysvar(1)=1, const(velocity.jump.fwd.x), const(velocity.jump.back.x)))*(1+(fvar(29)=3||fvar(29)=6)*0.5)
-
-[State 40, vel x]
-type = VelSet
-trigger1 = AnimTime = 0
-trigger1 = var(3)
-x = ifelse(sysvar(1)=0, 0, ifelse(sysvar(1)=1, const(velocity.runjump.fwd.x), const(velocity.runjump.back.x)))*(1+(fvar(29)=3||fvar(29)=6)*0.5)
-
-[State 40, 8]
-type = VelSet
-trigger1 = AnimTime = 0
-y = const(velocity.jump.y)*IfElse(var(4),0.75,1)
-
-[State 40, end]
-type = ChangeState
-trigger1 = AnimTime = 0
-value = 50
-ctrl = 1
-
-;---------------------------------------------------------------------------
-;後方ジャンプ開始【AI】
-[Statedef 43]
-type    = S
-physics = S
-anim = 40
-ctrl = 0
-velset = 0,0
-sprpriority = 2
-
-[State -2, AI Only]
-type = ChangeState
-triggerall = !(var(59) || fvar(39))
-trigger1 = Time = 0
-value = 0
-ctrl = 1
-
-[State 40]
-type = NotHitBy
-trigger1 = 1
-value = ,AT
-time = 1
-
-[State 40, turn]
-type = ChangeAnim
-trigger1 = Time = 0
-trigger1 = P2Dist X < -20
-value = 45
-
-[State 40, 1]
-type = VarSet
-trigger1 = Time = 0
-sysvar(1) = -1
-
-[State 40, v3];大ジャンプ
-type = VarSet
-trigger1 = Time = 0
-var(3) = 1
-
-[State 40, v4];小ジャンプ
-type = VarSet
-trigger1 = Time = 0
 var(4) = 1
 
 [State 40, vel x]
@@ -788,44 +407,9 @@ flag = NoAutoTurn
 [State 100, 4];要調整
 type = ChangeState
 triggerall = Time > 12
-trigger1 = !(var(59) || fvar(39))
+trigger1 = var(59) = 0
 trigger1 = command != "holdfwd"
 value = 101
-
-[State 100, 4];要調整
-type = ChangeState
-triggerall = Time > 12
-triggerall = (var(59) || fvar(39))
-Triggerall = var(6) = 1
-trigger1 = fvar(4) < 5
-trigger2 = EnemyNear(var(2)),MoveType != H
-trigger2 = Time > 60 + (EnemyNear(var(2)),MoveType = I)*120
-trigger3 = EnemyNear(var(2)),MoveType != H
-trigger3 = Random%30 = 1
-trigger4 = EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),MoveType = H
-trigger4 = EnemyNear(var(2)),StateNo = [1470,1471]
-trigger4 = fvar(4) - EnemyNear(var(2)),Vel X*var(6)*10 = [20,70]
-value = 101
-
-[State 100, 4];要調整
-type = ChangeState
-triggerall = Time > 12
-triggerall = (var(59) || fvar(39))
-Triggerall = var(6) = -1
-trigger1 = fvar(4) < 5
-trigger2 = EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),MoveType = H
-trigger2 = EnemyNear(var(2)),StateNo = [1470,1471]
-trigger2 = fvar(4) - EnemyNear(var(2)),Vel X*var(6)*10 = [20,70]
-value = 101
-
-[State 100, 4];要調整
-type = ChangeState
-triggerall = Time > 12
-triggerall = (var(59) || fvar(39))
-trigger1 = !(EnemyNear(var(2)),StateType = A)
-trigger1 = fvar(4) = [-15,5]
-value = 101
-
 
 ;ダッシュ停止
 [Statedef 101]
@@ -1036,79 +620,15 @@ physics = A
 
 [State 120, Hi to Lo]
 type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
 statetype = C
 physics = C
 
 [State 120, Lo to Hi]
 type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
-statetype = S
-physics = S
-
-[State 120, Hi to Lo]
-type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
-trigger1 = statetype = S && command = "holddown"
-statetype = C
-physics = C
-
-[State 120, Lo to Hi]
-type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
-trigger1 = statetype = C && command != "holddown"
-statetype = S
-physics = S
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),NumProj > 0 || var(37))
-Triggerall = StateType != A
-Trigger1 = EnemyNear(var(2)),HitDefAttr = C,AA,AP || EnemyNear(var(2)),HitDefAttr = SA,AP 
-Trigger2 = EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0 
-Trigger3 = EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0 
-Trigger4 = EnemyNear(var(2)),PrevStateNo = 52
-statetype = C
-physics = C
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = EnemyNear(var(2)),NumProj > 0 || var(37)
-Triggerall = StateType != A
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),HitDefAttr = A,AA)
-statetype = C
-physics = C
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),NumProj > 0 || var(37)) 
-Triggerall = StateType != A
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = C,AA,AP || EnemyNear(var(2)),HitDefAttr = SA,AP)
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0) 
-Trigger1 = !(EnemyNear(var(2)),PrevStateNo = 52)
-statetype = S
-physics = S
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = EnemyNear(var(2)),NumProj > 0 || var(37)
-Triggerall = StateType != A
-Trigger1 = EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0
-Trigger2 = EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0
-Trigger3 = EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),HitDefAttr = A,AA
 statetype = S
 physics = S
 
@@ -1119,15 +639,9 @@ value = 130 + (statetype = C) + (statetype = A)*2
 
 [State 120, Stop Guarding]
 type = ChangeState
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = command != "holdback"
 trigger2 = !inguarddist
-value = 140
-
-[State 120, Stop Guarding]
-type = ChangeState
-triggerall = (var(59) || fvar(39) = 4)
-trigger1 = !(inguarddist || var(36))
 value = 140
 
 ;---------------------------------------------------------------------------
@@ -1144,56 +658,16 @@ value = 130
 
 [State 130, Hi to Lo]
 type = ChangeState
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),HitDefAttr = SCA,AT)
-triggerall = Time > 0
-Triggerall = !(EnemyNear(var(2)),NumProj > 0 || var(37))
-Trigger1 = EnemyNear(var(2)),HitDefAttr = C,AA,AP || EnemyNear(var(2)),HitDefAttr = SA,AP 
-Trigger2 = EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0 
-Trigger3 = EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0 
-Trigger4 = EnemyNear(var(2)),PrevStateNo = 52
-value = 131
-
-[State 130, Hi to Lo]
-type = ChangeState
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),HitDefAttr = SCA,AT)
-triggerall = Time > 0
-Triggerall = EnemyNear(var(2)),NumProj > 0 || var(37)
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),HitDefAttr = A,AA)
-value = 131
-
-[State 130, Hi to Lo]
-type = ChangeState
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-triggerall = Time > 0
-trigger1 = EnemyNear(var(2)),HitDefAttr = SCA,AT
-trigger1 = Time > 5
-value = 131
-
-[State 130, Hi to Lo]
-type = ChangeState
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 triggerall = Time > 0
 trigger1 = var(13) && Command = "holddown" && Command = "holdback"
 value = 131
 
 [State 130, Stop Guarding]
 type = ChangeState
-triggerall = !(var(59) || fvar(39) = 4) && !var(13)
+triggerall = var(59) = 0
 trigger1 = command != "holdback"
 trigger2 = !inguarddist
-value = 140
-
-[State 130, Stop Guarding]
-type = ChangeState
-triggerall = (var(59) || fvar(39) = 4)
-trigger1 = !(inguarddist || var(36))
 value = 140
 
 ;---------------------------------------------------------------------------
@@ -1210,57 +684,17 @@ value = 131
 
 [State 131, Lo to Hi]
 type = ChangeState
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),HitDefAttr = SCA,AT)
-triggerall = Time > 0
-Triggerall = !(EnemyNear(var(2)),NumProj > 0 || var(37))
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = C,AA,AP || EnemyNear(var(2)),HitDefAttr = SA,AP)
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0) 
-Trigger1 = !(EnemyNear(var(2)),PrevStateNo = 52)
-value = 130
-
-[State 131, Lo to Hi]
-type = ChangeState
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),HitDefAttr = SCA,AT)
-triggerall = Time > 0
-Triggerall = EnemyNear(var(2)),NumProj > 0 || var(37)
-Trigger1 = (EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger2 = (EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger3 = EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),HitDefAttr = A,AA
-value = 130
-
-[State 131, Lo to Hi]
-type = ChangeState
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-triggerall = Time > 0
-trigger1 = EnemyNear(var(2)),HitDefAttr = SCA,AT
-trigger1 = Time > 5
-value = 130
-
-[State 131, Lo to Hi]
-type = ChangeState
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 triggerall = Time > 0
 trigger1 = var(13) && Command != "holddown" && Command = "holdback"
 value = 130
 
 [State 131, Stop Guarding]
 type = ChangeState
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = command != "holdback"
 trigger2 = !var(13)
 trigger2 = !inguarddist
-value = 140
-
-[State 131, Stop Guarding]
-type = ChangeState
-triggerall = (var(59) || fvar(39) = 4)
-trigger1 = !(inguarddist || var(36))
 value = 140
 
 ;---------------------------------------------------------------------------
@@ -1297,11 +731,9 @@ y = 0
 [State 132, 6]
 type = ChangeState
 triggerall = sysvar(0)
-trigger1 = !(var(59) || fvar(39) = 4)
+trigger1 = var(59) = 0
 trigger1 = inguarddist
 trigger1 = command = "holdback"
-trigger2 = (var(59) || fvar(39) = 4)
-trigger2 = inguarddist || var(36)
 value = 130
 
 [State 132, 7]
@@ -1311,15 +743,9 @@ value = 52
 
 [State 132, Stop Guarding]
 type = ChangeState
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = command != "holdback"
 trigger2 = !inguarddist
-value = 140
-
-[State 132, Stop Guarding]
-type = ChangeState
-triggerall = (var(59) || fvar(39) = 4)
-trigger1 = !(inguarddist || var(36))
 value = 140
 
 ;---------------------------------------------------------------------------
@@ -1351,14 +777,14 @@ physics = A
 
 [State 140, Hi to Lo]
 type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
 statetype = C
 physics = C
 
 [State 140, Lo to Hi]
 type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
 statetype = S
 physics = S
@@ -1433,12 +859,14 @@ value = 150
 
 [State 150, 2]
 type = ChangeState
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = HitShakeOver
 value = 151 + 2*(command = "holddown")
 
+
+;这里有点疑问
 [State 150, 2]
-type = ChangeState
+type = Null;ChangeState
 triggerall = (var(59) || fvar(39) = 4)
 trigger1 = HitShakeOver
 value = 151 + 2*(statetype = C)
@@ -1451,61 +879,15 @@ ignorehitpause = 1
 
 [State 150, Hi to Lo]
 type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
 statetype = C
 physics = C
 
 [State 150, Lo to Hi]
 type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
-statetype = S
-physics = S
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),NumProj > 0 || var(37))
-Trigger1 = EnemyNear(var(2)),HitDefAttr = C,AA,AP || EnemyNear(var(2)),HitDefAttr = SA,AP 
-Trigger2 = EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0 
-Trigger3 = EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0 
-Trigger4 = EnemyNear(var(2)),PrevStateNo = 52
-statetype = C
-physics = C
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = EnemyNear(var(2)),NumProj > 0 || var(37)
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),HitDefAttr = A,AA)
-statetype = C
-physics = C
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),NumProj > 0 || var(37)) 
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = C,AA,AP || EnemyNear(var(2)),HitDefAttr = SA,AP)
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0) 
-Trigger1 = !(EnemyNear(var(2)),PrevStateNo = 52)
-statetype = S
-physics = S
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = EnemyNear(var(2)),NumProj > 0 || var(37)
-Trigger1 = EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0
-Trigger2 = EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0
-Trigger3 = EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),HitDefAttr = A,AA
 statetype = S
 physics = S
 
@@ -1539,62 +921,17 @@ type = CtrlSet
 trigger1 = Time = GetHitVar(ctrltime)
 value = 1
 
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),NumProj > 0 || var(37))
-Trigger1 = EnemyNear(var(2)),HitDefAttr = C,AA,AP || EnemyNear(var(2)),HitDefAttr = SA,AP 
-Trigger2 = EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0 
-Trigger3 = EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0 
-Trigger4 = EnemyNear(var(2)),PrevStateNo = 52
-statetype = C
-physics = C
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = EnemyNear(var(2)),NumProj > 0 || var(37)
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),HitDefAttr = A,AA)
-statetype = C
-physics = C
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),NumProj > 0 || var(37)) 
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = C,AA,AP || EnemyNear(var(2)),HitDefAttr = SA,AP)
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0) 
-Trigger1 = !(EnemyNear(var(2)),PrevStateNo = 52)
-statetype = S
-physics = S
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = EnemyNear(var(2)),NumProj > 0 || var(37)
-Trigger1 = EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0
-Trigger2 = EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0
-Trigger3 = EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),HitDefAttr = A,AA
-statetype = S
-physics = S
 
 [State 151, Hi to Lo]
 type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
 statetype = C
 physics = C
 
 [State 151, Lo to Hi]
 type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
 statetype = S
 physics = S
@@ -1665,12 +1002,13 @@ value = 151
 
 [State 152, 3]
 type = ChangeState
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = HitShakeOver
 value = 151 + 2*(command = "holddown")
 
+;这里有疑问
 [State 152, 3]
-type = ChangeState
+type = Null;ChangeState
 triggerall = (var(59) || fvar(39) = 4)
 trigger1 = HitShakeOver
 value = 151 + 2*(statetype = C)
@@ -1681,62 +1019,16 @@ trigger1 = var(52) = IfElse((fvar(34) = 2 && var(53)),1560,1080)
 value = 151 + 2*(statetype = C)
 ignorehitpause = 1
 
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),NumProj > 0 || var(37))
-Trigger1 = EnemyNear(var(2)),HitDefAttr = C,AA,AP || EnemyNear(var(2)),HitDefAttr = SA,AP 
-Trigger2 = EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0 
-Trigger3 = EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0 
-Trigger4 = EnemyNear(var(2)),PrevStateNo = 52
-statetype = C
-physics = C
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = EnemyNear(var(2)),NumProj > 0 || var(37)
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),HitDefAttr = A,AA)
-statetype = C
-physics = C
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),NumProj > 0 || var(37)) 
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = C,AA,AP || EnemyNear(var(2)),HitDefAttr = SA,AP)
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0) 
-Trigger1 = !(EnemyNear(var(2)),PrevStateNo = 52)
-statetype = S
-physics = S
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = EnemyNear(var(2)),NumProj > 0 || var(37)
-Trigger1 = EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0
-Trigger2 = EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0
-Trigger3 = EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),HitDefAttr = A,AA
-statetype = S
-physics = S
-
 [State 152, Hi to Lo]
 type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
 statetype = C
 physics = C
 
 [State 152, Lo to Hi]
 type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
 statetype = S
 physics = S
@@ -1771,62 +1063,16 @@ type = CtrlSet
 trigger1 = Time = GetHitVar(ctrltime)
 value = 1
 
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),NumProj > 0 || var(37))
-Trigger1 = EnemyNear(var(2)),HitDefAttr = C,AA,AP || EnemyNear(var(2)),HitDefAttr = SA,AP 
-Trigger2 = EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0 
-Trigger3 = EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0 
-Trigger4 = EnemyNear(var(2)),PrevStateNo = 52
-statetype = C
-physics = C
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = EnemyNear(var(2)),NumProj > 0 || var(37)
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),HitDefAttr = A,AA)
-statetype = C
-physics = C
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = !(EnemyNear(var(2)),NumProj > 0 || var(37)) 
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = C,AA,AP || EnemyNear(var(2)),HitDefAttr = SA,AP)
-Trigger1 = !(EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0)
-Trigger1 = !(EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0) 
-Trigger1 = !(EnemyNear(var(2)),PrevStateNo = 52)
-statetype = S
-physics = S
-
-[State 130, Hi to Lo]
-type = StateTypeSet
-triggerall = (var(59) || fvar(39) = 4)
-triggerall = Random < var(59)*100 || fvar(39) = 4
-Triggerall = EnemyNear(var(2)),NumProj > 0 || var(37)
-Trigger1 = EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time <= 16 && EnemyNear(var(2)),Vel Y <= 0
-Trigger2 = EnemyNear(var(2)),StateType != S && EnemyNear(var(2)),HitDefAttr = S,AA && EnemyNear(var(2)),Time > 16 && EnemyNear(var(2)),Vel Y <= 0
-Trigger3 = EnemyNear(var(2)),StateType = A && EnemyNear(var(2)),HitDefAttr = A,AA
-statetype = S
-physics = S
-
 [State 153, Hi to Lo]
 type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
 statetype = C
 physics = C
 
 [State 153, Lo to Hi]
 type = StateTypeSet
-triggerall = !(var(59) || fvar(39) = 4)
+triggerall = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
 statetype = S
 physics = S
@@ -1954,11 +1200,9 @@ y = 0
 [State 155, 6]
 type = ChangeState
 triggerall = sysvar(0)
-trigger1 = !(var(59) || fvar(39) = 4)
+trigger1 = var(59) = 0
 trigger1 = command = "holdback"
 trigger1 = inguarddist
-trigger2 = (var(59) || fvar(39) = 4)
-trigger2 = inguarddist || var(36)
 value = 130
 
 [State 155, 7]
@@ -2652,26 +1896,6 @@ triggerall = Pos Y < -20
 triggerall = alive
 triggerall = CanRecover
 trigger1 = Command = "recovery"
-value = 5210 ;HITFALL_AIRRECOVER
-
-[State 5050, 4] ;Recover near ground
-type = ChangeState
-triggerall = var(59) || fvar(39)
-triggerall = Vel Y > 0
-triggerall = Pos Y >= -20
-triggerall = alive
-triggerall = CanRecover
-trigger1 = var(35) <= var(59)*2 || fvar(39)
-value = 5200 ;HITFALL_RECOVER
-
-[State 5050, 5]; Recover in mid air
-type = ChangeState
-trirggerall = var(59) || fvar(39)
-triggerall = Vel Y > -1
-triggerall = Pos Y < -20
-triggerall = alive
-triggerall = CanRecover
-trigger1 = var(35) <= var(59)*2 || fvar(39)
 value = 5210 ;HITFALL_AIRRECOVER
 
 [State 5050, 6]
@@ -3433,22 +2657,6 @@ value = 5500
 ; Initialize (at the start of the round)
 [Statedef 5900]
 type = S
-
-[State 0, AI起動用ヘルパー]
-Type = Helper
-Trigger1 = !NumHelper(60000)
-Trigger1 = !var(59)
-Trigger1 = RoundsExisted = 0
-Trigger1 = !var(7)
-helpertype = normal
-name = "AI_Switch"
-stateno = 60000
-ID = 60000
-pos = 0,0;-999,-999
-keyctrl = 1
-pausemovetime = 2147483647
-supermovetime = 2147483647
-persistent = 0
 
 [State -2];対フライング
 type = NotHitBy

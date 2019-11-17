@@ -14,10 +14,10 @@ StCommon =lee/kusanagi-XIII-Common.st
 Sprite   =lee/kusanagi-XIII.sff
 Anim     =lee/kusanagi-XIII.air
 Sound    =kusanagi-XIII.snd
-pal1=KUSANAGI01.act
-pal2=KUSANAGI02.act
+pal1=KUSANAGI07.act
+pal2=KUSANAGI08.act
 pal3=KUSANAGI03.act
-pal4=KUSANAGI04.act
+pal4=KUSANAGI01.act
 pal5=KUSANAGI05.act
 pal6=KUSANAGI06.act
 

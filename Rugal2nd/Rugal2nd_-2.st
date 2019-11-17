@@ -1,5 +1,26 @@
 [Statedef -2]
 
+
+;-----------------------------------------------------------
+;打逆不可防用
+[State -2, 打逆不可防用]
+type = AssertSpecial
+triggerall = !(StateNo = [1800,1899])
+triggerall = StateNo = [200,4999]
+triggerall = MoveType = A
+trigger1 = Enemynear,P2Dist x < 0
+flag = unguardable
+IgnoreHitPause = 1
+
+;-----------------------------------------------------------
+;锁气用
+[State -2,锁气用]
+type = powerset
+triggerall = fvar(26) = 1
+trigger1 = var(52) > 0
+value = fvar(5)
+
+
 ;****************************************************************
 ;*************************【Config】*****************************
 ;****************************************************************
@@ -887,6 +908,7 @@ ignorehitpause = 1
 
 [State -2, 残像消去]
 type = AfterImageTime
+trigger1 = !(StateNo = 38)
 trigger1 = !(StateNo = 50)
 trigger1 = !(StateNo = 900 || StateNo = 905)
 trigger1 = !(StateNo = 910 || StateNo = 915)
@@ -1034,7 +1056,7 @@ trigger2 = ProjContactTime(1001) = 0
 trigger3 = ProjContactTime(1002) = 0
 trigger4 = ProjContactTime(1100) = 0
 trigger5 = ProjContactTime(1150) = 0
-value = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+value = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,135)
 ignorehitpause = 1
 
 ;==================================================================
@@ -1109,8 +1131,6 @@ trigger2 = fvar(34) = 2
 trigger2 = NumHelper(27000)
 trigger2 = Helper(27000),StateNo = 27001
 trigger2 = Helper(27000),Time = 1
-trigger3 = fvar(29) = 1
-trigger3 = var(52) = 780
 value = -1000
 ignorehitpause = 1
 
@@ -1125,6 +1145,7 @@ type = VarSet
 trigger1 = var(52) < 0
 var(52) = 0
 ignorehitpause = 1
+
 
 [State -2, MAX発動中点滅]
 type = PalFX
@@ -1654,6 +1675,7 @@ ignorehitpause = 1
 
 [State -2, 超必殺命中判定(EXゲージ専用）]
 type = VarSet
+triggerall = fvar(26) != 1
 triggerall = fvar(29) = 4
 triggerall = StateNo = [2000,3000)
 triggerall = fvar(34) = 2 && var(51) && var(53)
@@ -1664,6 +1686,7 @@ ignorehitpause = 1
 
 [State -2, 超必殺命中判定(EXゲージ専用）]
 type = VarSet
+triggerall = fvar(26) != 1
 triggerall = fvar(29) = 4
 triggerall = var(50)
 trigger1 = !var(51)
@@ -2668,20 +2691,231 @@ ID = 7741
 ignorehitpause = 1
 
 
+;===========================================================================
+; 破防计算
+;===========================================================================
+[State -2]
+type = TargetState
+TriggerAll = fvar(26) = 1
+TriggerAll = numtarget
+TriggerAll = target,alive
+TriggerAll = fvar(9) >= 10000
+TriggerAll = target,StateType = S || target,StateType = C
+TriggerAll = target,MoveType = H && target,StateNo = [120,159]
+Trigger1 = MoveGuarded = 1
+Trigger2 = ProjGuarded = 1
+value = 5700
+
+[State -2]
+type = VarSet
+TriggerAll = fvar(26) = 1
+TriggerAll = fvar(9) < 0
+Trigger1 = 1
+fvar(9) = 0
+ignorehitpause = 1
+
+[State -2]
+type = VarAdd
+TriggerAll = fvar(26) = 1
+TriggerAll = fvar(9) >= 1
+Trigger1 = GameTime%37 = 0
+fvar(9) = -100
+ignorehitpause = 1
+
+[State -2]
+type = VarSet
+TriggerAll = fvar(26) = 1
+TriggerAll = fvar(9) != 0
+Trigger1 = roundstate != 2
+Trigger2 = enemy,StateNo = 5700
+fvar(9) = 0
+ignorehitpause = 1
+
+[State -2]
+type = VarAdd
+TriggerAll = fvar(26) = 1
+TriggerAll = RoundState = 2
+TriggerAll = EnemyNear,MoveType = H
+TriggerAll = EnemyNear,time = 0
+Trigger1 = !(ProjGuarded = 1)
+Trigger1 = moveguarded = 1
+fvar(9) = ifelse(stateno < 1000, 500, ifelse((StateNo = [1700,1899]),600,1200))
+ignorehitpause = 1
+persistent = 0
+
+[State -2]
+type = VarAdd
+TriggerAll = fvar(26) = 1
+TriggerAll = RoundState = 2
+TriggerAll = EnemyNear,MoveType = H
+TriggerAll = EnemyNear,time = 0
+Trigger1 = ProjGuarded = 1
+fvar(9) = ifelse((StateNo = [1700,1899]),600,1200)
+ignorehitpause = 1
+persistent = 0
+
+[State -2,]
+type = Helper
+TriggerAll = fvar(26) = 1
+triggerall = NumHelper(6510) = 0
+trigger1 = p2stateno = 5700 && enemy,time = 1
+trigger1 = p2movetype = H
+name="crush"
+id = 6510
+pos = 0,0
+postype = back
+stateno = 6510
+helpertype = normal
+ownpal = 1
+keyctrl = 0
+size.xscale = 1
+size.yscale = 1
+supermovetime = 999
+pausemovetime = 999
+
+
+
+;--------------------------------------
+;显血
+[State -2,]
+type = Explod
+trigger1 = roundState = 2
+anim = F310+life%10
+pos = IfElse(TeamSide=1,122,204), 28
+postype = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+
+
+[State -2,]
+type = Explod
+trigger1 = roundState = 2
+anim = F310+floor(life/10)%10
+pos = IfElse(TeamSide=1,118,200), 28
+postype = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+
+
+[State -2,]
+type =  Explod
+trigger1 = roundState = 2
+anim = F310+floor(life/100)%10
+pos = IfElse(TeamSide=1,114,196), 28
+postype = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1 
+
+
+[State -2,]
+type =  Explod
+trigger1 = roundState = 2
+anim = F310+floor(life/1000)%10
+pos = IfElse(TeamSide=1,110,192), 28
+postype = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+
+;--------------------------------------
+;显气
+
+[State -2,]
+type = Explod
+trigger1 = roundState = 2
+anim = F300+Power%10
+pos = IfElse(TeamSide=1,122,208), 4
+postype = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+
+[State -2,]
+type =  Explod
+trigger1 = roundState = 2
+anim = F300+floor(Power/10)%10
+pos = IfElse(TeamSide=1,118,204), 4
+postype = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+
+[State -2,]
+type =  Explod
+trigger1 = roundState = 2
+anim = F300+floor(Power/100)%10
+pos = IfElse(TeamSide=1,114,200), 4
+postype = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1 
+
+[State -2,]
+type =  Explod
+trigger1 = roundState = 2
+anim = F300+floor(Power/1000)%10
+pos = IfElse(TeamSide=1,110,196), 4
+postype = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+
+[State -2,]
+type =  Explod
+trigger1 = roundState = 2
+anim = F300+floor(Power/10000)%10
+pos = IfElse(TeamSide=1,106,192), 4
+postype = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+;--------------------------------------
+
+
 ;===================================================================================
 ;Print
 ;===================================================================================
-[State -2]
-Type = DisplayToClipBoard
+[State -2, Debug]
+type = displaytoclipboard
 Trigger1 = 1
-Text = "f(4)=%f,(40)=%d,(55)=%d,SPX=%d,P2Back=%d\n"
-Params = fvar(4),var(40),(var(55)),Floor(ScreenPos X),(EnemyNear,BackEdgeBodyDist)
-IgnoreHitPause = 1
+text = "P2StateNo = %d p2HitTime = %d hittime = %d X = %d, Y = %d var(4) = %d"
+params = P2StateNo, EnemyNear,GetHitVar(hittime), GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, var(4)
+ignorehitpause = 1
 
-[State -2]
-type = AppendToClipboard
-trigger1 = 1
-text =  "P2X=%f,P2DY=%f,P2VelX=%f,f(22)=%f,(2)=%d\n"
-params = P2BodyDist X, P2Dist Y, (EnemyNear,Vel X),(fvar(22)),var(2)
-IgnoreHitPause = 1
+[State -2, Debug]
+type = appendtoclipboard
+Trigger1 = 1
+text="\nTRACE = %d fvar(12) = %f fvar(13) = %f p2AnimTime = %d"  
+params= var(50), fvar(12) , fvar(13), EnemyNear,AnimTime
+ignorehitpause = 1 
 

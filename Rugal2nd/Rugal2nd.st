@@ -1500,6 +1500,7 @@ movetype = I
 physics = S
 ctrl = 0
 velset = 0,0
+poweradd = -1000
 anim = 950
 sprpriority = 2
 
@@ -1519,6 +1520,12 @@ type = VarSet
 trigger1 = fvar(29) = 1
 trigger1 = AnimElem = 1
 var(52) = 780
+
+[State 951, 锁气用]
+type = varset
+trigger1 = Time = 0
+trigger1 = fvar(26) = 1		;只针对02UM模式
+fvar(5) = power 
 
 [State -2, MAX発動音]
 type = PlaySnd
@@ -1599,7 +1606,7 @@ anim = anim
 velset = 0,0
 ctrl = 0
 sprpriority = 2
-poweradd = -IfElse(fvar(29)=1,1000,2000)
+poweradd = -2000
 ignorehitpause = 1
 
 [State 951, nothitby]
@@ -1612,6 +1619,12 @@ time = 1
 type = varset
 trigger1 = Time = 0
 var(52) = 780
+
+[State 951, 锁气用]
+type = varset
+trigger1 = Time = 0
+trigger1 = fvar(26) = 1		;只针对02UM模式
+fvar(5) = power 
 
 [State 951, snd]
 type = PlaySnd
@@ -1714,30 +1727,11 @@ value = 981
 
 [State 980, end]
 type = ChangeState
-triggerall = !(var(59) || fvar(39))
+triggerall = var(59) = 0
 triggerall = AnimElem = 2, > 0
 trigger1 = command != "holdx"
 trigger2 = command != "holdy"
 trigger3 = command != "holda"
-value = 981
-
-[State 980, end]
-type = ChangeState
-triggerall = (var(59) || fvar(39))
-triggerall = AnimElem = 2, > 0
-trigger1 = EnemyNear(var(2)),MoveType = A && EnemyNear(var(2)),StateNo >= 1000
-trigger2 = EnemyNear(var(2)),MoveType = H
-trigger2 = fvar(4) <= 50
-trigger3 = EnemyNear(var(2)),StateType = L && EnemyNear(var(2)),MoveType != H
-trigger3 = EnemyNear(var(2)),StateNo = 5120 && EnemyNear(var(2)),AnimTime >= -11
-trigger3 = fvar(4) <= 120
-trigger4 = EnemyNear(var(2)),StateType = L && EnemyNear(var(2)),MoveType != H
-trigger4 = EnemyNear(var(2)),StateNo != [5100,5300)
-trigger5 = !(EnemyNear(var(2)),StateType = L || EnemyNear(var(2)),MoveType = H)
-trigger5 = fvar(2) = [0,EnemyNear(var(2)),Const(size.attack.dist)]
-trigger6 = fvar(2) - EnemyNear(var(2)),Vel X*var(6)*10 <= 0
-trigger7 = var(6) = -1 && fvar(2) < 0
-trigger8 = InGuardDist || var(36)
 value = 981
 
 
@@ -1861,7 +1855,7 @@ triggerall = fvar(29) = 1 && fvar(26)
 triggerall = !var(9)
 trigger1 = AnimElem = 4, = 1
 attr = S,NA
-damage = Ceil(IfElse(fvar(28)=0,11,15)*fvar(10)*fvar(35)/12)
+damage = 90*fvar(39)
 animtype = Back
 ground.type = High
 guardflag = M
@@ -1888,7 +1882,7 @@ air.cornerpush.veloff = 0
 fall = 1
 fall.recover = !(fvar(29) = 3 || fvar(29) = 6)
 fall.recovertime = 26+11+Ceil((-EnemyNear(var(2)),Pos Y)/10)
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,150),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,150)
 givepower = 15,15
 ID = 240
 
@@ -2376,7 +2370,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 4, = 1
 attr = S,NA
-damage = Ceil(IfElse(fvar(28)=0,3,8)*fvar(10)*fvar(35)/12)
+damage = 25*fvar(39)
 animtype = Light
 air.animtype = Back
 ground.type = Low
@@ -2399,7 +2393,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75)
 givepower = 15,15
 ID = 200
 
@@ -2526,7 +2520,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 2, = 1
 attr = S,NA
-damage = Ceil(IfElse(fvar(28)=0,3,8)*fvar(10)*fvar(35)/12)
+damage = 25*fvar(39)
 animtype = Light
 air.animtype = Back
 ground.type = Low
@@ -2549,7 +2543,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75)
 givepower = 15,15
 ID = 205
 
@@ -2683,7 +2677,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 7, = 1
 attr = S,NA
-damage = Ceil(IfElse(fvar(28)=0,9,14)*fvar(10)*fvar(35)/12)
+damage = 70*fvar(39)
 animtype = Hard
 air.animtype = Back
 ground.type = Low
@@ -2706,7 +2700,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 210
 
@@ -2879,7 +2873,7 @@ triggerall = fvar(26)
 triggerall = !var(9)
 trigger1 = AnimElem = 4, = 1
 attr = S,NA
-damage = Ceil((Ceil(IfElse(fvar(28)=0,7,10)*0.5**(var(21)))-1)*fvar(10)*fvar(35)/12)
+damage = 65*fvar(39)
 animtype = Hard
 air.animtype = Back
 ground.type = Low
@@ -2902,7 +2896,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 215
 
@@ -2912,7 +2906,7 @@ triggerall = fvar(26)
 triggerall = !var(9)
 trigger1 = AnimElem = 6
 attr = S,NA
-damage = Ceil((Ceil(IfElse(fvar(28)=0,7,10)*0.5**(var(21)))-1)*fvar(10)*fvar(35)/12)
+damage = 25*fvar(39)
 animtype = Hard
 air.animtype = Back
 ground.type = High
@@ -2935,7 +2929,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 216
 
@@ -3096,7 +3090,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 4, = 1
 attr = S,NA
-damage = Ceil(IfElse(fvar(28)=0,2,6)*fvar(10)*fvar(35)/12)
+damage = 25*fvar(39)
 animtype = Light
 air.animtype = Back
 ground.type = Low
@@ -3119,7 +3113,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75)
 givepower = 15,15
 ID = 220
 
@@ -3247,7 +3241,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 3, = 1
 attr = S,NA
-damage = Ceil(IfElse(fvar(28)=0,4,7)*fvar(10)*fvar(35)/12)
+damage = 35*fvar(39)
 animtype = Light
 air.animtype = Back
 ground.type = Low
@@ -3270,7 +3264,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75)
 givepower = 15,15
 ID = 225
 
@@ -3443,7 +3437,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 5, = 1
 attr = S,NA
-damage = Ceil((Ceil(IfElse(fvar(28)=0,9,14)*0.5**(var(21)))-1)*fvar(10)*fvar(35)/12)
+damage = 80*fvar(39)
 animtype = Hard
 air.animtype = Back
 ground.type = High
@@ -3466,7 +3460,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 230
 
@@ -3476,7 +3470,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 7
 attr = S,NA
-damage = Ceil((Ceil(IfElse(fvar(28)=0,9,14)*0.5**(var(21)))-1)*fvar(10)*fvar(35)/12)
+damage = 80*fvar(39)
 animtype = Hard
 air.animtype = Back
 ground.type = High
@@ -3499,7 +3493,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 231
 
@@ -3672,7 +3666,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 4, = 1
 attr = S,NA
-damage = Ceil((Ceil(IfElse(fvar(28)=0,8,10)*0.5**(var(21)))-1)*fvar(10)*fvar(35)/12)
+damage = 60*fvar(39)
 animtype = Hard
 air.animtype = Back
 ground.type = Low
@@ -3695,7 +3689,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 235
 
@@ -3705,7 +3699,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 11
 attr = S,NA
-damage = Ceil((Ceil(IfElse(fvar(28)=0,8,10)*0.5**(var(21)))-1)*fvar(10)*fvar(35)/12)
+damage = 30*fvar(39)
 animtype = Hard
 air.animtype = Back
 ground.type = High
@@ -3728,7 +3722,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 236
 
@@ -3993,7 +3987,7 @@ triggerall = fvar(26)
 triggerall = !var(9)
 trigger1 = AnimElem = 4, = 1
 attr = S,NA
-damage = Ceil(IfElse(fvar(28)=0,4,6)*fvar(10)*fvar(35)/12)
+damage = 40*fvar(39)
 animtype = Hard
 air.animtype = Back
 ground.type = Low
@@ -4019,7 +4013,7 @@ fall.recover = !(fvar(29) = 3 || fvar(29) = 6)
 fall.recovertime = 26+11+Ceil((-EnemyNear(var(2)),Pos Y)/10)
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,60),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,60)
 givepower = 15,15
 ID = 260
 
@@ -4030,7 +4024,7 @@ triggerall = !var(9)
 trigger1 = AnimElem = 12
 trigger1 = !(PrevStateNo = 261)
 attr = S,NA
-damage = Ceil(IfElse(fvar(28)=0,4,6)*fvar(10)*fvar(35)/12)
+damage = 30*fvar(39)
 animtype = Hard
 air.animtype = Back
 ground.type = Low
@@ -4056,7 +4050,7 @@ fall.recover = !(fvar(29) = 3 || fvar(29) = 6)
 fall.recovertime = 26+11+Ceil((-EnemyNear(var(2)),Pos Y)/10)
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,60),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,60)
 givepower = 15,15
 ID = 261
 
@@ -4067,7 +4061,7 @@ triggerall = !var(9)
 trigger1 = AnimElem = 12
 trigger1 = PrevStateNo = 261
 attr = S,NA
-damage = Ceil(IfElse(fvar(28)=0,4,6)*fvar(10)*fvar(35)/12)
+damage = 30*fvar(39)
 animtype = Hard
 air.animtype = Back
 ground.type = Low
@@ -4093,7 +4087,7 @@ fall.recover = !(fvar(29) = 3 || fvar(29) = 6)
 fall.recovertime = 26+11+Ceil((-EnemyNear(var(2)),Pos Y)/10)
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,60),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,60)
 givepower = 15,15
 ID = 261
 
@@ -4313,7 +4307,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 2, = 1
 attr = C,NA
-damage = Ceil(IfElse(fvar(28)=0,2,5)*fvar(10)*fvar(35)/12)
+damage = 25*fvar(39)
 animtype = Light
 air.animtype = Back
 ground.type = Low
@@ -4336,7 +4330,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,80),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,80)
 givepower = 15,15
 ID = 400
 
@@ -4463,7 +4457,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 5, = 1
 attr = C,NA
-damage = Ceil(IfElse(fvar(28)=0,8,10)*fvar(10)*fvar(35)/12)
+damage = 65*fvar(39)
 animtype = Hard
 air.animtype = Back
 ground.type = Low
@@ -4486,7 +4480,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 410
 
@@ -4614,7 +4608,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 2, = 1
 attr = C,NA
-damage = Ceil(IfElse(fvar(28)=0,2,6)*fvar(10)*fvar(35)/12)
+damage = 25*fvar(39)
 animtype = Light
 air.animtype = Back
 ground.type = Low
@@ -4637,7 +4631,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,80),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,80)
 givepower = 15,15
 ID = 420
 
@@ -4768,7 +4762,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 6, = 1
 attr = C,NA
-damage = Ceil(IfElse(fvar(28)=0,8,14)*fvar(10)*fvar(35)/12)
+damage = 70*fvar(39)
 animtype = Back
 air.animtype = Back
 ground.type = Low
@@ -4795,7 +4789,7 @@ fall.recover = 0
 ground.cornerpush.veloff = 0
 guard.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 430
 
@@ -4911,7 +4905,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 3, = 1
 attr = A,NA
-damage = Ceil(IfElse(fvar(28)=0,4,9)*fvar(10)*fvar(35)/12)
+damage = 25*fvar(39)
 animtype = Middle
 air.animtype = Back
 ground.type = Low
@@ -4934,7 +4928,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75)
 givepower = 15,15
 ID = 600
 
@@ -5040,7 +5034,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 3, = 1
 attr = A,NA
-damage = Ceil(IfElse(fvar(28)=0,3,8)*fvar(10)*fvar(35)/12)
+damage = 25*fvar(39)
 animtype = Middle
 air.animtype = Back
 ground.type = Low
@@ -5063,7 +5057,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75)
 givepower = 15,15
 ID = 605
 
@@ -5168,7 +5162,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 4, = 1
 attr = A,NA
-damage = Ceil(IfElse(fvar(28)=0,9,14)*fvar(10)*fvar(35)/12)
+damage = 75*fvar(39)
 animtype = Middle
 air.animtype = Back
 ground.type = Low
@@ -5191,7 +5185,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 610
 
@@ -5296,7 +5290,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 4, = 1
 attr = A,NA
-damage = Ceil(IfElse(fvar(28)=0,9,14)*fvar(10)*fvar(35)/12)
+damage = 75*fvar(39)
 animtype = Middle
 air.animtype = Back
 ground.type = Low
@@ -5319,7 +5313,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 615
 
@@ -5424,7 +5418,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 3, = 1
 attr = A,NA
-damage = Ceil(IfElse(fvar(28)=0,3,7)*fvar(10)*fvar(35)/12)
+damage = 25*fvar(39)
 animtype = Middle
 air.animtype = Back
 ground.type = Low
@@ -5447,7 +5441,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75)
 givepower = 15,15
 ID = 620
 
@@ -5552,7 +5546,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 3, = 1
 attr = A,NA
-damage = Ceil(IfElse(fvar(28)=0,3,7)*fvar(10)*fvar(35)/12)
+damage = 25*fvar(39)
 animtype = Middle
 air.animtype = Back
 ground.type = Low
@@ -5575,7 +5569,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,59)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,75)
 givepower = 15,15
 ID = 625
 
@@ -5726,7 +5720,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 4, = 1
 attr = A,NA
-damage = Ceil((Ceil(IfElse(fvar(28)=0,9,10)*0.5**(var(21)))-1)*fvar(10)*fvar(35)/12)
+damage = 75*fvar(39)
 animtype = Middle
 air.animtype = Back
 ground.type = Low
@@ -5749,7 +5743,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 630
 
@@ -5759,7 +5753,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 6
 attr = A,NA
-damage = Ceil((Ceil(IfElse(fvar(28)=0,9,10)*0.5**(var(21)))-1)*fvar(10)*fvar(35)/12)
+damage = 75*fvar(39)
 animtype = Middle
 air.animtype = Back
 ground.type = Low
@@ -5782,7 +5776,7 @@ air.velocity = -4,-7
 yaccel = .55
 ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,100)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
 givepower = 15,15
 ID = 631
 
@@ -6052,7 +6046,7 @@ triggerall = fvar(26)
 trigger1 = !var(9)
 trigger1 = AnimElem = 3, = 1
 attr = A,NA
-damage = Ceil(IfElse(var(4)=0,IfElse(fvar(28)=0,11,15),IfElse(fvar(28)=0,9,12))*fvar(10)*fvar(35)/12)
+damage = 90*fvar(39)
 animtype = Back
 air.animtype = Back
 ground.type = Low
@@ -6079,7 +6073,7 @@ air.cornerpush.veloff = 0
 fall = 1
 fall.recover = !(fvar(29) = 3 || fvar(29) = 6)
 fall.recovertime = 26+11+Ceil((-EnemyNear(var(2)),Pos Y)/10)
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,125)
+getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,150),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,150)
 givepower = 15,15
 ID = 640
 
@@ -7276,20 +7270,6 @@ type = VarSet
 trigger1 = AnimElem = 12
 var(31) = 1
 
-[State 1000, end];バグ光弾狙い
-type = ChangeState
-Triggerall = var(59) || fvar(39)
-triggerall = !fvar(26)
-triggerall = !(EnemyNear(var(2)),StateType = L)
-triggerall = !(EnemyNear(var(2)),MoveType = I && EnemyNear(var(2)),StateNo >= 700)
-triggerall = !(EnemyNear(var(2)),MoveType = A && EnemyNear(var(2)),StateNo >= 1000)
-triggerall = var(59) >= 9 || fvar(39) = 1
-triggerall = !(var(59) = 9 && Random%2 = 1)
-trigger1 = var(31)
-trigger1 = fvar(4) = [-120,-39]
-trigger1 = fvar(3) = [-100,20]
-value = 1010
-
 [State 1000, varreset];バグ光弾出現判定
 type = VarSet
 trigger1 = Time = 0
@@ -7298,65 +7278,11 @@ var(31) = 0
 
 [State 1000, end]
 type = ChangeState
-triggerall = !(var(59) || fvar(39))
+trigger1 = var(59) = 0
 trigger1 = !(Command = "holdx" || Command = "holdy")
 trigger2 = AnimTime = 0
 value = 1010
 
-[State 1000, end]
-type = ChangeState
-Triggerall = var(59) || fvar(39)
-Triggerall = !NumTarget(1000)
-Triggerall = fvar(2) >= 0
-triggerall = !(EnemyNear(var(2)),StateType = A || EnemyNear(var(2)),StateType = L)
-triggerall = !(EnemyNear(var(2)),StateNo = [5200,5201])
-trigger1 = EnemyNear(var(2)),MoveType = H && EnemyNear(var(2)),StateNo != [120,160)
-trigger1 = EnemyNear(var(2)),GetHitVar(hittime) >= var(25)
-trigger2 = fvar(4) < 70
-trigger2 = var(30) = 1
-trigger3 = var(30) = 0 && Random%50 = 0
-trigger4 = var(30) = 1 && Random%200 = 0
-trigger5 = var(30) = 2 && Random%5 = 0
-trigger6 = var(30) != 1 && EnemyNear(var(2)),MoveType = A && !(InGuardDist || var(36))
-value = 1010
-
-[State 1000, end]
-type = ChangeState
-Triggerall = var(59) || fvar(39)
-Triggerall = !NumTarget(1000)
-Triggerall = fvar(2) >= 0
-triggerall = !(EnemyNear(var(2)),StateType = A)
-triggerall = (EnemyNear(var(2)),StateNo = [5200,5201])
-trigger1 = EnemyNear(var(2)),StateNo = 5201
-trigger1 = EnemyNear(var(2)),AnimTime >= -var(25)-2-Random%2
-value = 1010
-
-[State 1000, end]
-type = ChangeState
-Triggerall = var(59) || fvar(39)
-Triggerall = !NumTarget(1000)
-triggerall = EnemyNear(var(2)),StateType = A
-triggerall = !var(9)
-trigger1 = fvar(2) - EnemyNear(var(2)),Vel X >= 0
-trigger1 = !(EnemyNear(var(2)),MoveType = H && EnemyNear(var(2)),StateNo = [120,160))
-trigger1 = fvar(25) = [-30,10)
-value = 1010
-
-[State 1000, end]
-type = ChangeState
-Triggerall = var(59) || fvar(39)
-Triggerall = !NumTarget(1000)
-Triggerall = fvar(2) >= 0
-triggerall = EnemyNear(var(2)),StateType = L
-triggerall = EnemyNear(var(2)),StateNo = 5120
-trigger1 = EnemyNear(var(2)),AnimTime >= -var(25)+(fvar(4)<120)*(2+Random%2)
-value = 1010
-
-[State 1000, end]
-type = ChangeState
-Triggerall = var(59) || fvar(39)
-trigger1 = AnimTime = 0
-value = 1010
 
 [Statedef 1010];カイザーウェイブ発射
 type = S
@@ -7721,7 +7647,7 @@ projremove = 1
 offset = 96-16,0
 postype = p1
 velocity = 16,0
-damage = Ceil(IfElse(fvar(28)=0,18,24)*fvar(10)*fvar(37)/12),Ceil(IfElse(fvar(28)=0,1,2)*fvar(10)*fvar(37)/12)
+damage = 150*root,fvar(39),Ceil(IfElse(fvar(28)=0,1,2)*fvar(10)*fvar(37)/12)
 projedgebound = 100
 projstagebound = 100
 pausetime = 0,3
@@ -7763,7 +7689,7 @@ projremove = 1
 offset = -80-16,-72
 postype = p1
 velocity = 16,0
-damage = Ceil(fvar(24)*fvar(10)*fvar(37)/12),Ceil(IfElse(HitCount=0,2,1)*fvar(10)*fvar(37)/12)
+damage = 110*root,fvar(39),Ceil(IfElse(HitCount=0,2,1)*fvar(10)*fvar(37)/12)
 projedgebound = 100
 projstagebound = 100
 pausetime = 0,12
@@ -7804,7 +7730,7 @@ projremove = 1
 offset = 112-16,-72
 postype = p1
 velocity = 16,0
-damage = Ceil(fvar(24)*fvar(10)*fvar(37)/12),Ceil(IfElse(HitCount=0,2,1)*fvar(10)*fvar(37)/12)
+damage = 120*root,fvar(39),Ceil(IfElse(HitCount=0,2,1)*fvar(10)*fvar(37)/12)
 projedgebound = 100
 projstagebound = 100
 pausetime = 0,12
@@ -8279,7 +8205,7 @@ projedgebound = 50
 projstagebound = 50
 offset = 60-4,1
 postype = p1
-damage = Ceil(IfElse(fvar(28)=0,5,12)*fvar(10)*fvar(37)/12),Ceil(1*fvar(10)*fvar(37)/12)
+damage = 50*root,fvar(39),10
 pausetime = 0,12
 guard.pausetime = 0,10
 sparkno = S7253
@@ -8422,7 +8348,7 @@ projedgebound = 50
 projstagebound = 50
 offset = 60-7,1
 postype = p1
-damage = Ceil(IfElse(fvar(28)=0,7,14)*fvar(10)*fvar(37)/12),Ceil(1*fvar(10)*fvar(37)/12)
+damage = 60*fvar(39),10
 pausetime = 0,12
 guard.pausetime = 0,10
 sparkno = S7253
@@ -8474,7 +8400,7 @@ movetype = A
 ctrl = 0
 anim = 1200
 sprpriority = 2
-poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,IfElse(fvar(29)=1,59,63))
+poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,IfElse(fvar(29)=1,70,63))
 
 [State -2, velset]
 type = VelSet
@@ -8512,6 +8438,7 @@ channel = 1
 
 [State 1200, hitdef]
 type = HitDef
+triggerall = fvar(26) != 1
 trigger1 = !var(9)
 trigger1 = AnimElem = 5
 attr = S,SA
@@ -8539,6 +8466,38 @@ yaccel = .55
 ID = 1200
 kill = 0
 getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,IfElse(fvar(29)=1,100,125)),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,IfElse(fvar(29)=1,100,125))
+givepower = 15,15
+
+[State 1200, hitdef 02um]
+type = HitDef
+triggerall = fvar(26) = 1
+trigger1 = !var(9)
+trigger1 = AnimElem = 5
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Back
+priority = 7,hit
+guard.pausetime = 0,0
+hitsound = S5,1
+sparkno = S7255
+guard.sparkno = -1
+sparkxy = 0,-60
+ground.type = High
+guard.slidetime = 17
+guard.hittime = 17
+guard.ctrltime = 17
+ground.velocity = -4,-7.5
+air.velocity = -4,-7.5
+guard.velocity = -5
+p2facing = 1
+fall = 1
+fall.recover = !(fvar(29) = 3 || fvar(29) = 6)
+fall.recovertime = 26+11+Ceil((-EnemyNear(var(2)),Pos Y)/10)
+yaccel = .55
+ID = 1200
+kill = 0
+getpower = 130,130
 givepower = 15,15
 
 [State 1200, targetdrop]
@@ -8603,7 +8562,7 @@ movetype = A
 ctrl = 0
 anim = 1250
 sprpriority = 2
-poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,IfElse(fvar(29)=1,59,63))
+poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,IfElse(fvar(29)=1,70,63))
 
 [State -2, velset]
 type = VelSet
@@ -8641,6 +8600,7 @@ channel = 1
 
 [State 1200, hitdef]
 type = HitDef
+triggerall = fvar(26) != 1
 trigger1 = !var(9)
 trigger1 = AnimElem = 5
 attr = S,SA
@@ -8668,6 +8628,38 @@ yaccel = .55
 ID = 1250
 kill = 0
 getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,IfElse(fvar(29)=1,100,125)),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,IfElse(fvar(29)=1,100,125))
+givepower = 15,15
+
+[State 1200, hitdef 02um]
+type = HitDef
+triggerall = fvar(26) = 1
+trigger1 = !var(9)
+trigger1 = AnimElem = 5
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Back
+priority = 7,hit
+guard.pausetime = 0,0
+hitsound = S5,1
+sparkno = S7255
+guard.sparkno = -1
+sparkxy = 0,-60
+ground.type = High
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+ground.velocity = -4,-7.5
+air.velocity = -4,-7.5
+guard.velocity = -5
+p2facing = 1
+fall = 1
+fall.recover = !(fvar(29) = 3 || fvar(29) = 6)
+fall.recovertime = 26+11+Ceil((-EnemyNear(var(2)),Pos Y)/10)
+yaccel = .55
+ID = 1250
+kill = 0
+getpower = 130,130
 givepower = 15,15
 
 [State 1200, targetdrop]
@@ -8865,7 +8857,7 @@ ID = 1250
 type = TargetLifeAdd
 triggerall = fvar(26)
 trigger1 = Animelem = 2
-value = -Ceil(IfElse(fvar(28)=0,8,16)*fvar(10)*fvar(37)/12)
+value = -90
 kill = 1
 ID = 1200
 
@@ -8873,7 +8865,7 @@ ID = 1200
 type = TargetLifeAdd
 triggerall = fvar(26)
 trigger1 = Animelem = 2
-value = -Ceil(IfElse(fvar(28)=0,9,18)*fvar(10)*fvar(37)/12)
+value = -100
 kill = 1
 ID = 1250
 
@@ -9264,7 +9256,7 @@ movetype = A
 ctrl = 0
 anim = 1300
 sprpriority = 2
-poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,91)
+poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,100)
 
 [State -2, velset]
 type = VelSet
@@ -9869,7 +9861,7 @@ movetype = A
 ctrl = 0
 anim = 1350
 sprpriority = 2
-poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,91)
+poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,100)
 
 [State -2, velset]
 type = VelSet
@@ -11316,7 +11308,7 @@ movetype = A
 ctrl = 0
 anim = 1400
 sprpriority = 2
-poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,91)
+poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,120)
 
 [State -2, velset]
 type = VelSet
@@ -11568,7 +11560,7 @@ animtype = Hard
 air.animtype = Back
 ground.type = High
 priority = 7,hit
-damage = Ceil(IfElse(fvar(28)=0,2,2)*fvar(10)*fvar(37)/12),Ceil(1*fvar(10)*fvar(37)/12)
+damage = 20*fvar(39),5
 pausetime = 0,0
 guard.pausetime = 0,0
 sparkxy = -10,-100
@@ -11591,7 +11583,7 @@ guard.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
 ID = 1400
 kill = 1
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30)
+getpower = 40,40
 givepower = 15,15
 
 [State 1400, hitdef2]
@@ -11606,7 +11598,7 @@ animtype = Hard
 air.animtype = Back
 ground.type = High
 priority = 7,hit
-damage = Ceil((Ceil(IfElse(fvar(28)=0,4,14)*0.5**(var(21)))-1)*fvar(10)*fvar(37)/12),Ceil(1*fvar(10)*fvar(37)/12)
+damage = 20*fvar(39),5
 pausetime = 0,0
 guard.pausetime = 0,0
 sparkno = S7255
@@ -11630,7 +11622,7 @@ guard.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
 ID = 1401
 kill = 1
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30)
+getpower = 40,40
 givepower = 15,15
 
 [State 1400, hitdef3]
@@ -11645,7 +11637,7 @@ animtype = Hard
 air.animtype = Hard
 ground.type = Low
 priority = 7,hit
-damage = Ceil((Ceil(IfElse(fvar(28)=0,4,14)*0.5**(var(21)))-1)*fvar(10)*fvar(37)/12),Ceil(1*fvar(10)*fvar(37)/12)
+damage = 20*fvar(39),5
 pausetime = 11,11
 guard.pausetime = 11,11
 sparkxy = -10,-100
@@ -11668,7 +11660,7 @@ guard.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
 ID = 1402
 kill = 1
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30)
+getpower = 40,40
 givepower = 15,15
 
 [State 1400, hit]
@@ -11705,7 +11697,7 @@ movetype = A
 ctrl = 0
 anim = 1450
 sprpriority = 2
-poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,91)
+poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,120)
 
 [State -2, velset]
 type = VelSet
@@ -12031,7 +12023,7 @@ animtype = Hard
 air.animtype = Back
 ground.type = High
 priority = 7,hit
-damage = Ceil(IfElse(fvar(28)=0,2,2)*fvar(10)*fvar(37)/12),Ceil(1*fvar(10)*fvar(37)/12)
+damage = 20*fvar(39),5
 pausetime = 0,0
 guard.pausetime = 0,0
 sparkxy = -10,-100
@@ -12054,7 +12046,7 @@ guard.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
 ID = 1450
 kill = 1
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30)
+getpower = 40,40
 givepower = 15,15
 
 [State 1450, hitdef2]
@@ -12069,7 +12061,7 @@ animtype = Hard
 air.animtype = Back
 ground.type = High
 priority = 7,hit
-damage = Ceil((Ceil(IfElse(fvar(28)=0,3,11)*0.5**(var(21)))-1)*fvar(10)*fvar(37)/12),Ceil(1*fvar(10)*fvar(37)/12)
+damage = 20*fvar(39),5
 pausetime = 0,0
 guard.pausetime = 0,0
 sparkno = S7255
@@ -12093,7 +12085,7 @@ guard.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
 ID = 1451
 kill = 1
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30)
+getpower = 40,40
 givepower = 15,15
 
 [State 1450, hitdef3]
@@ -12108,7 +12100,7 @@ animtype = Hard
 air.animtype = Hard
 ground.type = Low
 priority = 7,hit
-damage = Ceil((Ceil(IfElse(fvar(28)=0,3,11)*0.5**(var(21)))-1)*fvar(10)*fvar(37)/12),Ceil(1*fvar(10)*fvar(37)/12)
+damage = 20*fvar(39),5
 pausetime = 11,11
 guard.pausetime = 11,11+(fvar(29)=3||fvar(29)=6)*19
 sparkxy = -10,-100
@@ -12131,7 +12123,7 @@ guard.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
 ID = 1452
 kill = 1
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30)
+getpower = 40,40
 givepower = 15,15
 
 [State 1450, hitdef4]
@@ -12146,7 +12138,7 @@ animtype = Hard
 air.animtype = Back
 ground.type = High
 priority = 7,hit
-damage = Ceil((Ceil(IfElse(fvar(28)=0,3,11)*0.5**(var(21)))-1)*fvar(10)*fvar(37)/12),Ceil(1*fvar(10)*fvar(37)/12)
+damage = 10*fvar(39),5
 pausetime = (fvar(29)!=1)*11,(fvar(29)!=1)*11
 guard.pausetime = 11,9
 sparkno = S7253
@@ -12168,7 +12160,7 @@ ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
 ID = 1453
 kill = 1
-getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,30)
+getpower = 40,40
 givepower = 15,15
 p2facing = 1
 
@@ -12293,7 +12285,7 @@ movetype = A
 ctrl = 0
 anim = 1500+!(fvar(29)=1||fvar(29)=4)*10
 sprpriority = 2
-poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,IfElse(fvar(29)=1,59,125))
+poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,IfElse(fvar(29)=1,80,125))
 
 [State -2, velset]
 type = VelSet
@@ -12726,7 +12718,7 @@ movetype = A
 ctrl = 0
 anim = 1500+!(fvar(29)=1||fvar(29)=4)*10
 sprpriority = 2
-poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,IfElse(fvar(29)=1,59,125))
+poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,IfElse(fvar(29)=1,80,125))
 
 [State -2, velset]
 type = VelSet
@@ -13546,27 +13538,10 @@ ownpal = 1
 [State 1700, end]
 type = ChangeState
 trigger1 = Time >= 120
-Trigger2 = !(var(59) || fvar(39))
+Trigger2 = var(59) = 0
 trigger2 = Time >= 30
 trigger2 = !(Command = "holdx")
 Value = 1701
-
-
-[State 1700, end]
-type = ChangeState
-Triggerall = (var(59) || fvar(39))
-triggerall = Time >= 30
-trigger1 = EnemyNear(var(2)),StateType = L
-trigger1 = EnemyNear(var(2)),StateNo = 5120
-trigger1 = EnemyNear(var(2)),AnimTime = [2-(Floor((fvar(2)-24)/4)),4-(Floor((fvar(2)-24)/4))]
-trigger2 = EnemyNear(var(2)),StateType = L
-trigger2 = EnemyNear(var(2)),StateNo = 5110
-trigger2 = fvar(2)-24 > 200
-trigger2 = Random%10 = 1
-trigger3 = !(EnemyNear(var(2)),StateType = A || EnemyNear(var(2)),StateType = L)
-trigger4 = EnemyNear(var(2)),Vel Y <= 0 && fvar(3)>= -70
-Value = 1701
-
 
 [Statedef 1701]
 type = S
@@ -13746,10 +13721,11 @@ trigger1 = Floor(20*0.5**var(1))-1 < 1
 fvar(24) = 1
 ignorehitpause = 1
 
-[State 1710]
+[State 1710 98]
 type = HitDef
 triggerall = !var(9)
 triggerall = !Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = time%17 = 0
 attr = S,SP
 hitflag = MAF
@@ -13789,10 +13765,11 @@ palfx.mul = 200,200,200
 palfx.sinadd = 128,128,128,3
 palfx.color = 255
 
-[State 1710]
+[State 1710 98]
 type = HitDef
 triggerall = !var(9)
 triggerall = Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = time%17 = 0
 attr = S,SP
 hitflag = MAF
@@ -13832,6 +13809,52 @@ palfx.mul = 200,200,200
 palfx.sinadd = 128,128,128,3
 palfx.color = 255
 
+
+
+[State 1710 02UM]
+type = HitDef
+triggerall = !var(9)
+triggerall = Root,fvar(26) = 1
+trigger1 = time%17 = 0
+attr = S,SP
+hitflag = MAF
+guardflag = M
+animtype = Back
+ID = 1700
+priority = 7,hit
+damage = 110 * root,fvar(39), 15
+pausetime = 0,12
+guard.pausetime = 0,10
+sparkno = S7256
+guard.sparkno = S7262
+sparkxy = -10,-20+(P2StateType = C)*30
+hitsound = S5,22
+guardsound = S6,1
+ground.type = High
+ground.slidetime = 17
+ground.hittime = 17
+guard.ctrltime = 17
+air.hittime = 60
+ground.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+guard.velocity = -13.75-(Root,fvar(29)=4&&Root,var(52)>0)*2.25
+air.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+yaccel = .55
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+fall = 1
+fall.recover = !(Root,fvar(29) = 3 || Root,fvar(29) = 6)
+fall.recovertime = 27+12+Ceil((-EnemyNear(var(2)),Pos Y)/10)
+getpower = 0,0
+givepower = 15,15
+sprpriority = 4
+palfx.time = 60
+palfx.add = 128,128,128
+palfx.mul = 200,200,200
+palfx.sinadd = 128,128,128,3
+palfx.color = 255
+
+
 [State -2, グラビティスマッシュ、ヒットエフェクト]
 type = Helper
 triggerall = NumHelper(1795) = 0
@@ -13853,6 +13876,11 @@ type = DestroySelf
 trigger1 = Parent,MoveType = H
 trigger2 = !(Parent,StateNo = 1700 || Parent,StateNo = 1701)
 ignorehitpause = 1
+
+[State 1710, Guard Crush Calculation]
+type = ParentVarAdd
+trigger1 = MoveGuarded = 1
+fvar(9) = 600
 
 [State 1710, end]
 type = ChangeState
@@ -13981,10 +14009,11 @@ trigger1 = Floor(20*0.5**var(1))-1 < 1
 fvar(24) = 1
 ignorehitpause = 1
 
-[State 1711]
+[State 1711   98]
 type = HitDef
 triggerall = !var(9)
 triggerall = !Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = 1
 attr = S,SP
 hitflag = MAF
@@ -14024,10 +14053,11 @@ palfx.mul = 200,200,200
 palfx.sinadd = 128,128,128,3
 palfx.color = 255
 
-[State 1711]
+[State 1711  98]
 type = HitDef
 triggerall = !var(9)
 triggerall = Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = 1
 attr = S,SP
 hitflag = MAF
@@ -14066,6 +14096,58 @@ palfx.add = 128,128,128
 palfx.mul = 200,200,200
 palfx.sinadd = 128,128,128,3
 palfx.color = 255
+
+
+
+[State 1711   02UM]
+type = HitDef
+triggerall = !var(9)
+triggerall = Root,fvar(26) = 1
+trigger1 = 1
+attr = S,SP
+hitflag = MAF
+guardflag = M
+animtype = Back
+ID = 1700
+priority = 7,hit
+damage = 110 * root,fvar(39), 15
+pausetime = 0,12
+guard.pausetime = 0,10
+sparkno = S7256
+guard.sparkno = S7262
+sparkxy = -10,-20
+hitsound = S5,22
+guardsound = S6,1
+ground.type = High
+ground.slidetime = 17
+ground.hittime = 17
+guard.ctrltime = 17
+air.hittime = 60
+ground.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+guard.velocity = -13.75-(Root,fvar(29)=4&&Root,var(52)>0)*2.25
+air.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+yaccel = .55
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+fall = 1
+fall.recover = !(Root,fvar(29) = 3 || Root,fvar(29) = 6)
+fall.recovertime = 27+12+Ceil((-EnemyNear(var(2)),Pos Y)/10)
+getpower = 0,0
+givepower = 15,15
+sprpriority = 4
+palfx.time = 60
+palfx.add = 128,128,128
+palfx.mul = 200,200,200
+palfx.sinadd = 128,128,128,3
+palfx.color = 255
+
+
+[State 1710, Guard Crush Calculation]
+type = ParentVarAdd
+triggerall = root,fvar(26) = 1
+trigger1 = MoveGuarded = 1
+fvar(9) = 1200
 
 [State -2, グラビティスマッシュ、ヒットエフェクト]
 type = Helper
@@ -14334,20 +14416,9 @@ ownpal = 1
 [State 1700, end]
 type = ChangeState
 trigger1 = Time >= 120
-Trigger2 = !(var(59) || fvar(39))
+Trigger2 = var(59) = 0
 trigger2 = Time >= 30
 trigger2 = !(Command = "holdy")
-Value = 1701
-
-[State 1700, end]
-type = ChangeState
-Triggerall = (var(59) || fvar(39))
-triggerall = Time >= 30
-trigger1 = EnemyNear(var(2)),StateType = L
-trigger1 = EnemyNear(var(2)),StateNo = 5120
-trigger1 = EnemyNear(var(2)),AnimTime = [2-(Floor((fvar(2)-24)/10)),4-(Floor((fvar(2)-24)/10))]
-trigger2 = !(EnemyNear(var(2)),StateType = A || EnemyNear(var(2)),StateType = L)
-trigger3 = EnemyNear(var(2)),Vel Y <= 0 && fvar(3)>= -70
 Value = 1701
 
 
@@ -14477,6 +14548,7 @@ ignorehitpause = 1
 type = HitDef
 triggerall = !var(9)
 triggerall = !Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = time%17 = 0
 attr = S,SP
 hitflag = MAF
@@ -14520,6 +14592,7 @@ palfx.color = 255
 type = HitDef
 triggerall = !var(9)
 triggerall = Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = time%17 = 0
 attr = S,SP
 hitflag = MAF
@@ -14558,6 +14631,55 @@ palfx.add = 128,128,128
 palfx.mul = 200,200,200
 palfx.sinadd = 128,128,128,3
 palfx.color = 255
+
+
+[State 1710  02UM]
+type = HitDef
+triggerall = !var(9)
+triggerall = Root,fvar(26) = 1
+trigger1 = time%17 = 0
+attr = S,SP
+hitflag = MAF
+guardflag = M
+animtype = Up
+ID = 1700
+priority = 7,hit
+damage = 110 * root,fvar(39), 15
+pausetime = 0,12
+guard.pausetime = 0,10
+sparkno = S7256
+guard.sparkno = S7262
+sparkxy = -10,-20+(P2StateType = C)*30
+hitsound = S5,22
+guardsound = S6,1
+ground.type = High
+ground.slidetime = 17
+ground.hittime = 17
+guard.ctrltime = 17
+air.hittime = 60
+ground.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+guard.velocity = -13.75-(Root,fvar(29)=4&&Root,var(52)>0)*2.25
+air.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+yaccel = .55
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+fall = 1
+fall.recover = !(Root,fvar(29) = 3 || Root,fvar(29) = 6)
+fall.recovertime = 27+12+Ceil((-EnemyNear(var(2)),Pos Y)/10)
+getpower = 0,0
+givepower = 15,15
+sprpriority = 4
+palfx.time = 60
+palfx.add = 128,128,128
+palfx.mul = 200,200,200
+palfx.sinadd = 128,128,128,3
+palfx.color = 255
+
+[State 1710, Guard Crush Calculation]
+type = ParentVarAdd
+trigger1 = MoveGuarded = 1
+fvar(9) = 600
 
 [State -2, グラビティスマッシュ、ヒットエフェクト]
 type = Helper
@@ -14712,6 +14834,7 @@ ignorehitpause = 1
 type = HitDef
 triggerall = !var(9)
 triggerall = !Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = 1
 attr = S,SP
 hitflag = MAF
@@ -14755,6 +14878,7 @@ palfx.color = 255
 type = HitDef
 triggerall = !var(9)
 triggerall = Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = 1
 attr = S,SP
 hitflag = MAF
@@ -14762,7 +14886,7 @@ guardflag = M
 animtype = Up
 ID = 1700
 priority = 7,hit
-damage = Ceil(fvar(24)*100*(Root,fvar(10))*(Root,fvar(37))/10/119),Ceil(IfElse(var(1)>0,1,2)*100*(Root,fvar(10))*(Root,fvar(37))/10/119)
+damage = 100 * fvar(39), 15
 pausetime = 0,12
 guard.pausetime = 0,10
 sparkno = S7206
@@ -14793,6 +14917,56 @@ palfx.add = 128,128,128
 palfx.mul = 200,200,200
 palfx.sinadd = 128,128,128,3
 palfx.color = 255
+
+
+[State 1711  02UM]
+type = HitDef
+triggerall = !var(9)
+triggerall = Root,fvar(26) = 1
+trigger1 = 1
+attr = S,SP
+hitflag = MAF
+guardflag = M
+animtype = Up
+ID = 1700
+priority = 7,hit
+damage = 110 * root,fvar(39), 15
+pausetime = 0,12
+guard.pausetime = 0,10
+sparkno = S7256
+guard.sparkno = S7262
+sparkxy = -10,-20
+hitsound = S5,22
+guardsound = S6,1
+ground.type = High
+ground.slidetime = 17
+ground.hittime = 17
+guard.ctrltime = 17
+air.hittime = 60
+ground.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+guard.velocity = -13.75-(Root,fvar(29)=4&&Root,var(52)>0)*2.25
+air.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+yaccel = .55
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+fall = 1
+fall.recover = !(Root,fvar(29) = 3 || Root,fvar(29) = 6)
+fall.recovertime = 27+12+Ceil((-EnemyNear(var(2)),Pos Y)/10)
+getpower = 0,0
+givepower = 15,15
+sprpriority = 4
+palfx.time = 60
+palfx.add = 128,128,128
+palfx.mul = 200,200,200
+palfx.sinadd = 128,128,128,3
+palfx.color = 255
+
+[State 1710, Guard Crush Calculation]
+type = ParentVarAdd
+triggerall = root,fvar(26) = 1
+trigger1 = MoveGuarded = 1
+fvar(9) = 1200
 
 [State -2, グラビティスマッシュ、ヒットエフェクト]
 type = Helper
@@ -15040,17 +15214,11 @@ Value = 1751
 
 [State 1750, end]
 type = ChangeState
-triggerall = !(var(59) || fvar(39))
+triggerall = var(59) = 0
 triggerall = Time >= 11
 trigger1 = !(Command = "holdx")
 Value = 1751
 
-[State 1750, end]
-type = ChangeState
-triggerall = (var(59) || fvar(39))
-triggerall = Time >= 11
-trigger1 = !(EnemyNear(var(2)),StateType = L)
-Value = 1751
 
 [Statedef 1751]
 type = A
@@ -15228,6 +15396,7 @@ ignorehitpause = 1
 type = HitDef
 triggerall = !var(9)
 triggerall = !Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = time%17 = 0
 attr = A,SP
 hitflag = MAF
@@ -15271,6 +15440,7 @@ palfx.color = 255
 type = HitDef
 triggerall = !var(9)
 triggerall = Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = time%17 = 0
 attr = A,SP
 hitflag = MAF
@@ -15309,6 +15479,55 @@ palfx.add = 128,128,128
 palfx.mul = 200,200,200
 palfx.sinadd = 128,128,128,3
 palfx.color = 255
+
+
+[State 1760, hitdef 02um]
+type = HitDef
+triggerall = !var(9)
+triggerall = Root,fvar(26) = 1
+trigger1 = time%17 = 0
+attr = A,SP
+hitflag = MAF
+guardflag = M
+animtype = Up
+ID = 1700
+priority = 7,hit
+damage = 110 * root,fvar(39), 15
+pausetime = 0,12
+guard.pausetime = 0,10
+sparkno = S7256
+guard.sparkno = S7262
+sparkxy = -10,-20+(P2StateType = C)*30
+hitsound = S5,22
+guardsound = S6,1
+ground.type = High
+ground.slidetime = 17
+ground.hittime = 17
+guard.ctrltime = 17
+air.hittime = 60
+ground.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+guard.velocity = -13.75-(Root,fvar(29)=4&&Root,var(52)>0)*2.25
+air.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+yaccel = .55
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+fall = 1
+fall.recover = !(Root,fvar(29) = 3 || Root,fvar(29) = 6)
+fall.recovertime = 27+12+Ceil((-EnemyNear(var(2)),Pos Y)/10)
+getpower = 0,0
+givepower = 15,15
+sprpriority = 4
+palfx.time = 60
+palfx.add = 128,128,128
+palfx.mul = 200,200,200
+palfx.sinadd = 128,128,128,3
+palfx.color = 255
+
+[State 1710, Guard Crush Calculation]
+type = ParentVarAdd
+trigger1 = MoveGuarded = 1
+fvar(9) = 600
 
 [State -2, グラビティスマッシュ、ヒットエフェクト]
 type = Helper
@@ -15475,6 +15694,7 @@ ignorehitpause = 1
 type = HitDef
 triggerall = !var(9)
 triggerall = !Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = 1
 attr = A,SP
 hitflag = MAF
@@ -15518,6 +15738,7 @@ palfx.color = 255
 type = HitDef
 triggerall = !var(9)
 triggerall = Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = 1
 attr = A,SP
 hitflag = MAF
@@ -15556,6 +15777,55 @@ palfx.add = 128,128,128
 palfx.mul = 200,200,200
 palfx.sinadd = 128,128,128,3
 palfx.color = 255
+
+[State 1761, hitdef 02um]
+type = HitDef
+triggerall = !var(9)
+triggerall = Root,fvar(26) = 1
+trigger1 = 1
+attr = A,SP
+hitflag = MAF
+guardflag = M
+animtype = Up
+ID = 1700
+priority = 7,hit
+damage = 110 * root,fvar(39), 15
+pausetime = 0,12
+guard.pausetime = 0,10
+sparkno = S7256
+guard.sparkno = S7262
+sparkxy = -10,-20
+hitsound = S5,22
+guardsound = S6,1
+ground.type = High
+ground.slidetime = 17
+ground.hittime = 17
+guard.ctrltime = 17
+air.hittime = 60
+ground.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+guard.velocity = -13.75-(Root,fvar(29)=4&&Root,var(52)>0)*2.25
+air.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+yaccel = .55
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+fall = 1
+fall.recover = !(Root,fvar(29) = 3 || Root,fvar(29) = 6)
+fall.recovertime = 27+12+Ceil((-EnemyNear(var(2)),Pos Y)/10)
+getpower = 0,0
+givepower = 15,15
+sprpriority = 4
+palfx.time = 60
+palfx.add = 128,128,128
+palfx.mul = 200,200,200
+palfx.sinadd = 128,128,128,3
+palfx.color = 255
+
+[State 1710, Guard Crush Calculation]
+type = ParentVarAdd
+triggerall = root,fvar(26) = 1
+trigger1 = MoveGuarded = 1
+fvar(9) = 1200
 
 [State -2, グラビティスマッシュ、ヒットエフェクト]
 type = Helper
@@ -15950,6 +16220,7 @@ ignorehitpause = 1
 type = HitDef
 triggerall = !var(9)
 triggerall = !Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = time%17 = 0
 attr = A,SP
 hitflag = MAF
@@ -15993,6 +16264,7 @@ palfx.color = 255
 type = HitDef
 triggerall = !var(9)
 triggerall = Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = time%17 = 0
 attr = A,SP
 hitflag = MAF
@@ -16031,6 +16303,54 @@ palfx.add = 128,128,128
 palfx.mul = 200,200,200
 palfx.sinadd = 128,128,128,3
 palfx.color = 255
+
+[State 1760, hitdef 02um]
+type = HitDef
+triggerall = !var(9)
+triggerall = Root,fvar(26) = 1
+trigger1 = time%17 = 0
+attr = A,SP
+hitflag = MAF
+guardflag = M
+animtype = Up
+ID = 1700
+priority = 7,hit
+damage = 110 * root,fvar(39), 15
+pausetime = 0,12
+guard.pausetime = 0,10
+sparkno = S7256
+guard.sparkno = S7262
+sparkxy = -10,-20+(P2StateType = C)*30
+hitsound = S5,22
+guardsound = S6,1
+ground.type = High
+ground.slidetime = 17
+ground.hittime = 17
+guard.ctrltime = 17
+air.hittime = 60
+ground.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+guard.velocity = -13.75-(Root,fvar(29)=4&&Root,var(52)>0)*2.25
+air.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+yaccel = .55
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+fall = 1
+fall.recover = !(Root,fvar(29) = 3 || Root,fvar(29) = 6)
+fall.recovertime = 27+12+Ceil((-EnemyNear(var(2)),Pos Y)/10)
+getpower = 0,0
+givepower = 15,15
+sprpriority = 4
+palfx.time = 60
+palfx.add = 128,128,128
+palfx.mul = 200,200,200
+palfx.sinadd = 128,128,128,3
+palfx.color = 255
+
+[State 1710, Guard Crush Calculation]
+type = ParentVarAdd
+trigger1 = MoveGuarded = 1
+fvar(9) = 600
 
 [State -2, グラビティスマッシュ、ヒットエフェクト]
 type = Helper
@@ -16197,6 +16517,7 @@ ignorehitpause = 1
 type = HitDef
 triggerall = !var(9)
 triggerall = !Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = 1
 attr = A,SP
 hitflag = MAF
@@ -16240,6 +16561,7 @@ palfx.color = 255
 type = HitDef
 triggerall = !var(9)
 triggerall = Root,var(52)
+triggerall = Root,fvar(26) != 1
 trigger1 = 1
 attr = A,SP
 hitflag = MAF
@@ -16278,6 +16600,56 @@ palfx.add = 128,128,128
 palfx.mul = 200,200,200
 palfx.sinadd = 128,128,128,3
 palfx.color = 255
+
+
+[State 1761, hitdef 02um]
+type = HitDef
+triggerall = !var(9)
+triggerall = Root,fvar(26) = 1
+trigger1 = 1
+attr = A,SP
+hitflag = MAF
+guardflag = M
+animtype = Up
+ID = 1700
+priority = 7,hit
+damage = 110 * root,fvar(39), 15
+pausetime = 0,12
+guard.pausetime = 0,10
+sparkno = S7256
+guard.sparkno = S7262
+sparkxy = -10,-20
+hitsound = S5,22
+guardsound = S6,1
+ground.type = High
+ground.slidetime = 17
+ground.hittime = 17
+guard.ctrltime = 17
+air.hittime = 60
+ground.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+guard.velocity = -13.75-(Root,fvar(29)=4&&Root,var(52)>0)*2.25
+air.velocity = -4-(Root,fvar(29)=4&&Root,var(52)>0),-7.5
+yaccel = .55
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+fall = 1
+fall.recover = !(Root,fvar(29) = 3 || Root,fvar(29) = 6)
+fall.recovertime = 27+12+Ceil((-EnemyNear(var(2)),Pos Y)/10)
+getpower = 0,0
+givepower = 15,15
+sprpriority = 4
+palfx.time = 60
+palfx.add = 128,128,128
+palfx.mul = 200,200,200
+palfx.sinadd = 128,128,128,3
+palfx.color = 255
+
+[State 1710, Guard Crush Calculation]
+type = ParentVarAdd
+triggerall = root,fvar(26) = 1
+trigger1 = MoveGuarded = 1
+fvar(9) = 1200
 
 [State -2, グラビティスマッシュ、ヒットエフェクト]
 type = Helper
@@ -16532,7 +16904,7 @@ anim = 1800
 velset = 0,0
 ctrl = 0
 sprpriority = 2
-poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,125)
+poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0, ifelse(fvar(26)=1,50,125))
 
 [State 1800]
 type = VarSet
@@ -16584,6 +16956,7 @@ value = S3,4
 [State 1801, hitdef]
 type = HitDef
 triggerall = !(var(9) || var(28))
+triggerall = fvar(26) != 1
 trigger1 = Time = 0
 attr = S,SA
 hitflag = MAF
@@ -16608,6 +16981,37 @@ guard.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
 ID = 1800
 getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,47),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,47)
+givepower = 15,15
+
+
+[State 1801, hitdef 02um]
+type = HitDef
+triggerall = !(var(9) || var(28))
+triggerall = fvar(26) = 1
+trigger1 = Time = 0
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Hard
+air.animtype = Back
+ground.type = High
+priority = 7,hit
+damage = 20*fvar(39),5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 0,Floor(EnemyNear,Const(size.head.pos.y)*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+ID = 1800
+getpower = 50,50
 givepower = 15,15
 
 [State 1801, helper]
@@ -16684,6 +17088,7 @@ volume = 150
 
 [State 1880, hit2]
 type = Projectile
+triggerall = Root,fvar(26) != 1
 trigger1 = Time = 0
 projID = 1880
 projhits = 1
@@ -16717,6 +17122,7 @@ givepower = 15,15
 
 [State 1880, hit3]
 type = Projectile
+triggerall = Root,fvar(26) != 1
 trigger1 = Time = 8
 projID = 1881
 projhits = 1
@@ -16750,6 +17156,7 @@ givepower = 15,15
 
 [State 1880, hit4]
 type = Projectile
+triggerall = Root,fvar(26) != 1
 trigger1 = Time = 16
 projID = 1882
 projhits = 1
@@ -16783,6 +17190,7 @@ givepower = 15,15
 
 [State 1880, hit5]
 type = Projectile
+triggerall = Root,fvar(26) != 1
 trigger1 = Time = 24
 projID = 1883
 projhits = 1
@@ -16816,6 +17224,7 @@ givepower = 15,15
 
 [State 1880, hit6]
 type = Projectile
+triggerall = Root,fvar(26) != 1
 triggerall = !Root,var(52)
 trigger1 = Time = 32
 projID = 1884
@@ -16856,6 +17265,7 @@ p2stateno = 1320
 
 [State 1880, hit6]
 type = Projectile
+triggerall = Root,fvar(26) != 1
 triggerall = Root,var(52)
 trigger1 = Time = 32
 projID = 1884
@@ -16894,6 +17304,239 @@ getpower = IfElse(((Root,var(52)||Root,fvar(34)=2)&&(Root,fvar(29)=1||Root,fvar(
 givepower = 15,15
 p2stateno = 1320
 
+
+
+
+
+
+;----------------------------------------------------------------------------------\
+;02UM
+
+[State 1880, hit2]
+type = Projectile
+triggerall = Root,fvar(26) = 1
+trigger1 = Time = 0
+projID = 1880
+projhits = 1
+projremovetime = 1
+projanim = 1880
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Hard
+air.animtype = Back
+ground.type = Low
+priority = 7,hit
+damage = 20*root,fvar(39),5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 15,Floor(EnemyNear,Const(size.mid.pos.y)*0.8*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+offset = 0,0
+postype = p2
+getpower = 50,50
+givepower = 15,15
+
+[State 1880, hit3]
+type = Projectile
+triggerall = Root,fvar(26) = 1
+trigger1 = Time = 8
+projID = 1881
+projhits = 1
+projremovetime = 1
+projanim = 1880
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Hard
+air.animtype = Back
+ground.type = High
+priority = 7,hit
+damage = 20*root,fvar(39),5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 25,Floor(EnemyNear,Const(size.mid.pos.y)*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+offset = 0,0
+postype = p2
+getpower = 50,50
+givepower = 15,15
+
+[State 1880, hit4]
+type = Projectile
+triggerall = Root,fvar(26) = 1
+trigger1 = Time = 16
+projID = 1882
+projhits = 1
+projremovetime = 1
+projanim = 1880
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Hard
+air.animtype = Back
+ground.type = Low
+priority = 7,hit
+damage = 20*root,fvar(39),5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 15,Floor(EnemyNear,Const(size.mid.pos.y)*0.8*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+offset = 0,0
+postype = p2
+getpower = 50,50
+givepower = 15,15
+
+[State 1880, hit5]
+type = Projectile
+triggerall = Root,fvar(26) = 1
+trigger1 = Time = 24
+projID = 1883
+projhits = 1
+projremovetime = 1
+projanim = 1880
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Hard
+air.animtype = Back
+ground.type = High
+priority = 7,hit
+damage = 20*root,fvar(39),5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 10,Floor(EnemyNear,Const(size.head.pos.y)*0.8*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+offset = 0,0
+postype = p2
+getpower = 50,50
+givepower = 15,15
+
+[State 1880, hit6]
+type = Projectile
+triggerall = !Root,var(52)
+triggerall = Root,fvar(26) = 1
+trigger1 = Time = 32
+projID = 1884
+projhits = 1
+projremovetime = 1
+projanim = 1880
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Back
+ground.type = High
+priority = 7,hit
+damage = 20*root,fvar(39),5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 15,Floor(EnemyNear,Const(size.mid.pos.y)*0.8*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.velocity = -2,-11
+air.velocity = -2,-11
+yaccel = .55
+fall = 1
+fall.recover = !(Root,fvar(29) = 3 || Root,fvar(29) = 6)
+fall.recovertime = 39+9+Ceil((-EnemyNear,Pos Y)/10)
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+offset = 0,0
+postype = p2
+getpower = 50,50
+givepower = 15,15
+p2stateno = 1320
+
+[State 1880, hit6]
+type = Projectile
+triggerall = Root,var(52)
+triggerall = Root,fvar(26) = 1
+trigger1 = Time = 32
+projID = 1884
+projhits = 1
+projremovetime = 1
+projanim = 1880
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = UP
+ground.type = High
+priority = 7,hit
+damage = 20*root,fvar(39),5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 15,Floor(EnemyNear,Const(size.mid.pos.y)*0.8*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.velocity = -2,-11
+air.velocity = -2,-11
+yaccel = .55
+fall = 1
+fall.recover = !(Root,fvar(29) = 3 || Root,fvar(29) = 6)
+fall.recovertime = 39+9+Ceil((-EnemyNear,Pos Y)/10)
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+offset = 0,0
+postype = p2
+getpower = 50,50
+givepower = 15,15
+p2stateno = 1320
+
+
+
+
+
+
+
+
 [State 1880, end]
 type = DestroySelf
 trigger1 = Time < 9
@@ -16911,7 +17554,7 @@ anim = 1800
 velset = 0,0
 ctrl = 0
 sprpriority = 2
-poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,125)
+poweradd = IfElse(((var(52)&&fvar(29)=1)||fvar(34)=2),0,ifelse(fvar(26)=1,50,125))
 
 [State 1800]
 type = VarSet
@@ -16962,6 +17605,7 @@ value = S3,4
 
 [State 1801, hitdef]
 type = HitDef
+triggerall = fvar(26) != 1
 trigger1 = !(var(9) || var(28))
 trigger1 = Time = 0
 attr = S,SA
@@ -16987,6 +17631,39 @@ guard.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
 ID = 1850
 getpower = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,47),IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,47)
+givepower = 15,15
+
+
+
+
+[State 1801, hitdef 02um]
+type = HitDef
+triggerall = fvar(26) = 1
+trigger1 = !(var(9) || var(28))
+trigger1 = Time = 0
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Hard
+air.animtype = Back
+ground.type = High
+priority = 7,hit
+damage = 20*fvar(39), 5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 0,Floor(EnemyNear,Const(size.head.pos.y)*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+ID = 1850
+getpower = 50,50
 givepower = 15,15
 
 [State 1801, helper]
@@ -17063,6 +17740,7 @@ volume = 150
 
 [State 1890, hit2]
 type = Projectile
+triggerall = root,fvar(26) != 1
 trigger1 = Time = 0
 projID = 1890
 projhits = 1
@@ -17096,6 +17774,7 @@ givepower = 15,15
 
 [State 1890, hit3]
 type = Projectile
+triggerall = root,fvar(26) != 1
 trigger1 = Time = 8
 projID = 1891
 projhits = 1
@@ -17129,6 +17808,7 @@ givepower = 15,15
 
 [State 1890, hit4]
 type = Projectile
+triggerall = root,fvar(26) != 1
 trigger1 = Time = 16
 projID = 1892
 projhits = 1
@@ -17162,6 +17842,7 @@ givepower = 15,15
 
 [State 1890, hit5]
 type = Projectile
+triggerall = root,fvar(26) != 1
 trigger1 = Time = 24
 projID = 1893
 projhits = 1
@@ -17195,6 +17876,7 @@ givepower = 15,15
 
 [State 1890, hit6]
 type = Projectile
+triggerall = root,fvar(26) != 1
 triggerall = !Root,var(52)
 trigger1 = Time = 32
 projID = 1894
@@ -17235,6 +17917,7 @@ p2stateno = 1320
 
 [State 1890, hit6]
 type = Projectile
+triggerall = root,fvar(26) != 1
 triggerall = Root,var(52)
 trigger1 = Time = 32
 projID = 1894
@@ -17270,6 +17953,228 @@ air.cornerpush.veloff = 0
 offset = 0,0
 postype = p2
 getpower = IfElse(((Root,var(52)||Root,fvar(34)=2)&&(Root,fvar(29)=1||Root,fvar(29)=4)),0,47),IfElse(((Root,var(52)||Root,fvar(34)=2)&&(Root,fvar(29)=1||Root,fvar(29)=4)),0,47)
+givepower = 15,15
+p2stateno = 1320
+
+
+;-----------------------------------------------------------------------------------------------------
+;02UM
+
+[State 1890, hit2]
+type = Projectile
+triggerall = root,fvar(26) = 1
+trigger1 = Time = 0
+projID = 1890
+projhits = 1
+projremovetime = 1
+projanim = 1880
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Hard
+air.animtype = Back
+ground.type = Low
+priority = 7,hit
+damage = 20*root,fvar(39), 5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 15,Floor(EnemyNear,Const(size.mid.pos.y)*0.8*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+offset = 0,0
+postype = p2
+getpower = 50,50
+givepower = 15,15
+
+[State 1890, hit3]
+type = Projectile
+triggerall = root,fvar(26) = 1
+trigger1 = Time = 8
+projID = 1891
+projhits = 1
+projremovetime = 1
+projanim = 1880
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Hard
+air.animtype = Back
+ground.type = High
+priority = 7,hit
+damage = 20*root,fvar(39), 5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 25,Floor(EnemyNear,Const(size.mid.pos.y)*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+offset = 0,0
+postype = p2
+getpower = 50,50
+givepower = 15,15
+
+[State 1890, hit4]
+type = Projectile
+triggerall = root,fvar(26) = 1
+trigger1 = Time = 16
+projID = 1892
+projhits = 1
+projremovetime = 1
+projanim = 1880
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Hard
+air.animtype = Back
+ground.type = Low
+priority = 7,hit
+damage = 20*root,fvar(39), 5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 15,Floor(EnemyNear,Const(size.mid.pos.y)*0.8*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+offset = 0,0
+postype = p2
+getpower = 50,50
+givepower = 15,15
+
+[State 1890, hit5]
+type = Projectile
+triggerall = root,fvar(26) = 1
+trigger1 = Time = 24
+projID = 1893
+projhits = 1
+projremovetime = 1
+projanim = 1880
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Hard
+air.animtype = Back
+ground.type = High
+priority = 7,hit
+damage = 20*root,fvar(39), 5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 10,Floor(EnemyNear,Const(size.head.pos.y)*0.8*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+offset = 0,0
+postype = p2
+getpower = 50,50
+givepower = 15,15
+
+[State 1890, hit6]
+type = Projectile
+triggerall = root,fvar(26) = 1
+triggerall = !Root,var(52)
+trigger1 = Time = 32
+projID = 1894
+projhits = 1
+projremovetime = 1
+projanim = 1880
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = Back
+ground.type = High
+priority = 7,hit
+damage = 20*root,fvar(39), 5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 15,Floor(EnemyNear,Const(size.mid.pos.y)*0.8*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.velocity = -2,-11
+air.velocity = -2,-11
+yaccel = .55
+fall = 1
+fall.recover = !(Root,fvar(29) = 3 || Root,fvar(29) = 6)
+fall.recovertime = 39+9+Ceil((-EnemyNear,Pos Y)/10)
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+offset = 0,0
+postype = p2
+getpower = 50,50
+givepower = 15,15
+p2stateno = 1320
+
+[State 1890, hit6]
+type = Projectile
+triggerall = root,fvar(26) = 1
+triggerall = Root,var(52)
+trigger1 = Time = 32
+projID = 1894
+projhits = 1
+projremovetime = 1
+projanim = 1880
+attr = S,SA
+hitflag = MAF
+guardflag = M
+animtype = UP
+ground.type = High
+priority = 7,hit
+damage = 20*root,fvar(39), 5
+pausetime = 0,9
+guard.pausetime = 0,7
+ground.slidetime = 17
+ground.hittime = 17
+ground.ctrltime = 17
+sparkno = S7254
+guard.sparkno = S7262
+sparkxy = 15,Floor(EnemyNear,Const(size.mid.pos.y)*0.8*(1-(P2StateType = C)*0.5))
+hitsound = S5,1
+guardsound = S6,1
+ground.velocity = -2,-11
+air.velocity = -2,-11
+yaccel = .55
+fall = 1
+fall.recover = !(Root,fvar(29) = 3 || Root,fvar(29) = 6)
+fall.recovertime = 39+9+Ceil((-EnemyNear,Pos Y)/10)
+ground.cornerpush.veloff = 0
+guard.cornerpush.veloff = 0
+air.cornerpush.veloff = 0
+offset = 0,0
+postype = p2
+getpower = 50,50
 givepower = 15,15
 p2stateno = 1320
 
@@ -18640,7 +19545,7 @@ ID = 2000
 type = TargetLifeAdd
 triggerall = fvar(29) = 1 && fvar(26)
 trigger1 = Animelem = 2
-value = -Ceil(IfElse(fvar(28)=0,23,36)*fvar(10)*fvar(38)/12)
+value = -230;Ceil(IfElse(fvar(28)=0,23,36)*fvar(10)*fvar(38)/12)
 kill = 1
 ID = 2000
 
@@ -19613,7 +20518,7 @@ ID = 2100
 type = TargetLifeAdd
 triggerall = fvar(29) = 1 && fvar(26)
 trigger1 = Animelem = 2
-value = -Ceil(IfElse(fvar(28)=0,20,28)*fvar(10)*fvar(38)/12)
+value = -190;Ceil(IfElse(fvar(28)=0,20,28)*fvar(10)*fvar(38)/12)
 kill = 1
 ID = 2100
 
@@ -20658,6 +21563,7 @@ under = 1
 
 [State 2200, damage]
 type = TargetLifeAdd
+triggerall = fvar(26) != 1
 trigger1 = AnimElem = 5, > 7 && AnimElem = 5, < 168
 trigger1 = Time%8= 5
 value = -Ceil(2*100*fvar(10)*fvar(38)/10/119)
@@ -20666,6 +21572,7 @@ ID = 2200
 
 [State 2200, damage]
 type = TargetLifeAdd
+triggerall = fvar(26) != 1
 triggerall = !var(20)
 trigger1 = AnimElem = 5, = 168
 value = -Ceil(2*100*fvar(10)*fvar(38)/10/119)
@@ -20679,6 +21586,27 @@ trigger1 = AnimElem = 5, = 168
 value = -999999
 kill = 1
 ID = 2200
+
+;----------------------------------------------------
+;02um
+[State 2200, damage]
+type = TargetLifeAdd
+triggerall = fvar(26) = 1
+trigger1 = AnimElem = 5, > 7 && AnimElem = 5, < 168
+trigger1 = Time%8= 5
+value = -10
+kill = 0
+ID = 2200
+
+[State 2200, damage]
+type = TargetLifeAdd
+triggerall = fvar(26) = 1
+triggerall = !var(20)
+trigger1 = AnimElem = 5, = 168
+value = -40
+kill = 1
+ID = 2200
+
 
 [State 2210, snd]
 type = PlaySnd
@@ -20939,9 +21867,16 @@ value = IfElse((fvar(34)=1&&var(58)=1),-3000,-1000)
 
 [State -2, power 2002]
 type = PowerAdd
+triggerall = fvar(26) != 1
 triggerall = fvar(29) = 1
 trigger1 = Time = 0
 value = -1000
+
+[State -2, power 02um]
+type = PowerAdd
+triggerall = fvar(26) = 1
+trigger1 = Time = 0
+value = ifelse(var(52)>0,-1000,-3000)
 
 [State -2, power S]
 type = PowerAdd
@@ -21291,6 +22226,7 @@ under = 1
 
 [State 2200, damage];35
 type = TargetLifeAdd
+triggerall = fvar(26) != 1
 trigger1 = AnimElem = 5, > 5 && AnimElem = 5, < 130
 trigger1 = Time%4= 3
 value = -Ceil(2*100*fvar(10)*fvar(38)/10/119)
@@ -21299,6 +22235,7 @@ ID = 2200
 
 [State 2200, damage]
 type = TargetLifeAdd
+triggerall = fvar(26) != 1
 triggerall = !var(20)
 trigger1 = AnimElem = 5, = 130
 value = -Ceil(2*100*fvar(10)*fvar(38)/10/119)
@@ -21312,6 +22249,27 @@ trigger1 = AnimElem = 5, = 130
 value = -999999
 kill = 1
 ID = 2200
+
+;--------------------------------------------------------------------------
+;02um
+[State 2200, damage 02um]
+type = TargetLifeAdd
+triggerall = fvar(26) = 1
+trigger1 = AnimElem = 5, > 5 && AnimElem = 5, < 130
+trigger1 = Time%4= 3
+value = -12
+kill = 0
+ID = 2200
+
+[State 2200, damage]
+type = TargetLifeAdd
+triggerall = fvar(26) = 1
+triggerall = !var(20)
+trigger1 = AnimElem = 5, = 130
+value = -30
+kill = 1
+ID = 2200
+
 
 [State 2210, snd]
 type = PlaySnd
@@ -21581,7 +22539,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103/IfElse(NumEnemy=1,2,1)),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103/IfElse(NumEnemy=1,2,1))),
+         Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -21626,7 +22585,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103/IfElse(NumEnemy=1,2,1)),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103/IfElse(NumEnemy=1,2,1))),
+         Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -21671,7 +22631,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103/IfElse(NumEnemy=1,2,1)),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103/IfElse(NumEnemy=1,2,1))),
+         Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -21716,7 +22677,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103/IfElse(NumEnemy=1,2,1)),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103/IfElse(NumEnemy=1,2,1))),
+         Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -21761,7 +22723,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103)),
+		 Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -21806,7 +22769,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103)),
+		 Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -21851,7 +22815,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103)),
+		 Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -21896,7 +22861,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103)),
+		 Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -21941,7 +22907,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103)),
+		 Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -21986,7 +22953,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103)),
+		 Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -22031,7 +22999,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103)),
+		 Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -22076,7 +23045,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103)),
+		 Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -22121,7 +23091,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103)),
+		 Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -22166,7 +23137,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103)),
+		 Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -22211,7 +23183,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103)),
+		 Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -22257,7 +23230,8 @@ guardflag = M
 animtype = UP
 ground.type = High
 priority = 7,hit
-damage = Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103),Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
+damage = ifelse(fvar(26)=1,17,Ceil(fvar(24)*(100-Random%11)*fvar(10)*fvar(38)/10/103)),
+		 Ceil(IfElse(var(21)=0,2,1)*fvar(10)*(100-Random%11)*fvar(38)/10/103)
 pausetime = 1,14
 guard.pausetime = 1,12
 ground.slidetime = 17
@@ -22997,7 +23971,7 @@ triggerall = fvar(26)
 trigger1 = AnimElem = 32, = 1
 trigger2 = AnimElem = 39, = 1
 trigger3 = AnimElem = 47, = 1
-value = -Ceil(IfElse(fvar(28)=0,1,1)*fvar(10)*fvar(38)/12)
+value = -15;-Ceil(IfElse(fvar(28)=0,1,1)*fvar(10)*fvar(38)/12)
 kill = 0
 ID = 2500
 
@@ -24390,6 +25364,7 @@ value = S8,1
 
 [State -2, explod 98UM]
 type = Explod
+triggerall = fvar(26) != 1
 trigger1 = Time = 0 + 6;要調整
 anim = 7600
 ID = 7600
@@ -24404,9 +25379,42 @@ ignorehitpause = 1
 
 [State -2, explod]
 type = Explod
+triggerall = fvar(26) != 1
 trigger1 = Time = 8 + 6;要調整
 anim = 7605
 ID = 7605
+pos = 10,-80
+postype = p1
+facing = 1
+removetime = -2
+sprpriority = 4
+pausemovetime = 2147483647
+supermovetime = 2147483647
+ignorehitpause = 1
+
+;----------------------------------------------------
+;02um
+[State -2, explod 02UM]
+type = Explod
+triggerall = fvar(26) = 1
+trigger1 = Time = 2 + 6;要調整
+anim = 7620
+ID = 7620
+pos = 10,-80
+postype = p1
+facing = 1
+removetime = -2
+sprpriority = -1
+pausemovetime = 2147483647
+supermovetime = 2147483647
+ignorehitpause = 1
+
+[State -2, explod]
+type = Explod
+triggerall = fvar(26) = 1
+trigger1 = Time = 2 + 6;要調整
+anim = 7560
+ID = 7560
 pos = 10,-80
 postype = p1
 facing = 1
@@ -24709,6 +25717,7 @@ value = S8,1
 
 [State -2, explod 98UM]
 type = Explod
+triggerall = fvar(26) != 1
 trigger1 = Time = 0 + 6;要調整
 anim = 7600
 ID = 7600
@@ -24723,6 +25732,7 @@ ignorehitpause = 1
 
 [State -2, explod]
 type = Explod
+triggerall = fvar(26) != 1
 trigger1 = Time = 8 + 6;要調整
 anim = 7605
 ID = 7605
@@ -24734,6 +25744,40 @@ sprpriority = 4
 pausemovetime = 2147483647
 supermovetime = 2147483647
 ignorehitpause = 1
+
+;---------------------------------------------------------
+;02um
+[State -2, explod 98UM]
+type = Explod
+triggerall = fvar(26) = 1
+trigger1 = Time = 2 + 6;要調整
+anim = 7620
+ID = 7620
+pos = 10,-80
+postype = p1
+facing = 1
+removetime = -2
+sprpriority = -1
+pausemovetime = 2147483647
+supermovetime = 2147483647
+ignorehitpause = 1
+
+[State -2, explod]
+type = Explod
+triggerall = fvar(26) = 1
+trigger1 = Time = 10 + 6;要調整
+anim = 7560
+ID = 7560
+pos = 10,-80
+postype = p1
+facing = 1
+removetime = -2
+sprpriority = 4
+pausemovetime = 2147483647
+supermovetime = 2147483647
+ignorehitpause = 1
+
+
 
 [State -2]
 type = ScreenBound
@@ -25051,11 +26095,23 @@ var(20) = 1
 
 [State 2711, damage]
 type = TargetLifeAdd
+triggerall = fvar(26) != 1
 trigger1 = Time = 0
 trigger2 = var(33) = 0
 trigger2 = AnimElem = 9
 trigger3 = AnimElem = 12
 value = -Ceil(2*100*fvar(10)*fvar(38)/10/119)
+kill = 0
+ID = 2700
+
+[State 2711, damage 02um]
+type = TargetLifeAdd
+triggerall = fvar(26) = 1
+trigger1 = Time = 0
+trigger2 = var(33) = 0
+trigger2 = AnimElem = 9
+trigger3 = AnimElem = 12
+value = -12
 kill = 0
 ID = 2700
 
@@ -25368,9 +26424,16 @@ value = IfElse((fvar(34)=1&&var(58)=1),-3000,-1000)
 
 [State -2, power 2002]
 type = PowerAdd
+triggerall = fvar(26) != 1
 triggerall = fvar(29) = 1
 trigger1 = Time = 0
 value = -1000
+
+[State -2, power 2002]
+type = PowerAdd
+triggerall = fvar(26) = 1
+trigger1 = Time = 0
+value = ifelse(var(52)>0,-1000,-3000)
 
 [State -2, power S]
 type = PowerAdd
@@ -25423,6 +26486,7 @@ value = S8,1
 
 [State -2, explod 98UM]
 type = Explod
+triggerall = fvar(26) != 1
 trigger1 = Time = 0 + 6;要調整
 anim = 7610
 ID = 7610
@@ -25437,9 +26501,42 @@ ignorehitpause = 1
 
 [State -2, explod]
 type = Explod
+triggerall = fvar(26) != 1
 trigger1 = Time = 8 + 6;要調整
 anim = 7615
 ID = 7615
+pos = 10,-80
+postype = p1
+facing = 1
+removetime = -2
+sprpriority = 4
+pausemovetime = 2147483647
+supermovetime = 2147483647
+ignorehitpause = 1
+
+;------------------------------------------------------------
+;02um
+[State -2, explod 02UM]
+type = Explod
+triggerall = fvar(26) = 1
+trigger1 = Time = 2 + 6;要調整
+anim = 7630
+ID = 7630
+pos = 10,-80
+postype = p1
+facing = 1
+removetime = -2
+sprpriority = -1
+pausemovetime = 2147483647
+supermovetime = 2147483647
+ignorehitpause = 1
+
+[State -2, explod]
+type = Explod
+triggerall = fvar(26) = 1
+trigger1 = Time = 10 + 6;要調整
+anim = 7570
+ID = 7570
 pos = 10,-80
 postype = p1
 facing = 1
@@ -25774,6 +26871,7 @@ var(20) = 1
 
 [State 2811, damage]
 type = TargetLifeAdd
+triggerall = fvar(26) != 1
 trigger1 = Time = 0
 value = -Ceil(12*100*fvar(10)*fvar(38)/10/119)
 kill = 0
@@ -25781,10 +26879,33 @@ ID = 2800
 
 [State 2811, damage]
 type = TargetLifeAdd
+triggerall = fvar(26) != 1
 trigger1 = AnimElem = 5
 value = -Ceil(2*100*fvar(10)*fvar(38)/10/119)
 kill = 0
 ID = 2800
+
+;---------------------------------------------------
+;02um
+[State 2811, damage]
+type = TargetLifeAdd
+triggerall = fvar(26) = 1
+trigger1 = Time = 0
+value = -8
+kill = 0
+ID = 2800
+
+[State 2811, damage]
+type = TargetLifeAdd
+triggerall = fvar(26) = 1
+trigger1 = AnimElem = 5
+value = -18
+kill = 0
+ID = 2800
+
+
+
+
 
 [State 2811, varreset]
 type = VarSet
@@ -25894,9 +27015,19 @@ sprpriority = 2
 
 [State 2812, damage]
 type = TargetLifeAdd
+triggerall = fvar(26) != 1
 triggerall = !var(20)
 trigger1 = Time = 0
 value = -Ceil(2*100*fvar(10)*fvar(38)/10/119)
+kill = 1
+ID = 2800
+
+[State 2812, damage 02um]
+type = TargetLifeAdd
+triggerall = fvar(26) = 1
+triggerall = !var(20)
+trigger1 = Time = 0
+value = -20
 kill = 1
 ID = 2800
 
@@ -26289,12 +27420,19 @@ pausemovetime = 99999999
 supermovetime = 99999999
 
 
-[State 3000, varrandom];カイザーフェニックス発射弾数決定
+[State 3000, varrandom];发射弹幕数量
 type = varrandom
+triggerall = fvar(26) != 1
 trigger1 = !(fvar(29) = 3 || fvar(29) = 6)
 trigger1 = time = 0
 v = 33
 range = IfElse(!(fvar(29)=1||fvar(29)=4),12,5),12
+
+[State 3000, varrandom];发射弹幕数量
+type = varset
+triggerall = fvar(26) = 1
+trigger1 = time = 0
+var(33) = 12
 
 [State 3000]
 type = VarSet
@@ -28807,4 +29945,40 @@ sysvar(0) = 0
 type = VelMul
 trigger1 = 1
 x = 0.85
+
+;===========================================================================
+; 破防状态
+;===========================================================================
+[Statedef 5700]
+type     = S
+movetype = H
+physics  = N
+sprpriority = -1
+facep2 = 1
+
+[State 5700, ChangeAnim2]
+type = ChangeAnim2
+trigger1 = Time = 0
+value = 5700
+
+[State 5700, PosSet]
+type = PosSet
+trigger1 = Time = 0
+y = 0
+
+[State 5700, VelSet]
+type = VelSet
+trigger1 = time = 0
+x = -10
+
+[State 5700, VelMul]
+type = VelMul
+trigger1 = 1
+x = .85
+
+[State 5700, SelfState]
+type = SelfState
+trigger1 = time >= 40
+value = 0
+ctrl = 1
 

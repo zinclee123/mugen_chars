@@ -375,6 +375,14 @@ Time = 1
 ;=========================================================
 [Statedef -1]
 
+[State -1,test]
+type = ChangeState
+Triggerall = !var(59)
+trigger1 = ctrl || StateNo = 100
+trigger1 = command = "start"
+trigger1 = var(4):=4
+value = 39
+
 [State -1, ステート奪取判定用]
 type = VarSet
 trigger1 = 1
@@ -1626,14 +1634,6 @@ Trigger10 = StateNo = 410 && (!MoveContact && AnimElem = 5,>= 0 && AnimElem = 7,
 Trigger11 = StateNo = 420 && (!MoveContact && AnimElem = 3, >= 0) && (!(fvar(29) = 1 || fvar(29) = 4) || fvar(26))
 Trigger12 = StateNo = 430 && (!MoveContact && AnimElem = 6,>= 0 && AnimElem = 7, < 0)
 
-
-
-[State -1,test]
-type = ChangeState
-Triggerall = !var(59)
-trigger1 = ctrl
-trigger1 = command = "start"
-value = 1700
 
 [State -1, ダブルトマホーク（キャンセル）]
 Type = ChangeState

@@ -1,3 +1,104 @@
+;=========================================================================================
+; 破防用Helper
+;=========================================================================================
+[Statedef 6510]
+type = A
+movetype = I
+physics = N
+anim = 9999
+velset = 0,0
+ctrl = 0
+
+[State 6510, 0]
+type = EnvColor
+trigger1 = time = 0
+value = 255,255,255
+time = 1
+under = 1
+ignorehitpause = 1
+persistent = 0
+
+[State 6510, VarSet]
+type = VarSet
+trigger1 = time = 0
+var(34) = -52
+
+[State 6510, VarAdd]
+type = VarAdd
+trigger1 = time < 10
+var(34) = 10
+
+[State 6510, VarAdd]
+type = VarAdd
+trigger1 = time > 59
+var(34) = -10
+
+[State 6510, Explod]
+type = Explod
+triggerall = TeamSide = 1
+trigger1 = time < 10
+trigger2 = time > 59
+anim = 6510
+id = 6510
+ontop = 1
+postype = left
+pos = var(34),88
+bindtime = -1
+supermove = 1
+pausemovetime = 99999999999999
+ownpal = 1
+scale = .5,.5
+
+[State 6510, Explod]
+type = Explod
+triggerall = TeamSide = 1
+trigger1 = time = 10
+anim = 6511
+id = 6510
+ontop = 1
+postype = left
+pos = var(34),88
+bindtime = -1
+supermove = 1
+pausemovetime = 99999999999999
+ownpal = 1
+scale = .5,.5
+
+[State 6510, Explod]
+type = Explod
+triggerall = TeamSide = 2
+trigger1 = time < 10
+trigger2 = time > 59
+anim = 6510
+id = 6510
+ontop = 1
+postype = right
+pos = -var(34),88
+bindtime = -1
+supermove = 1
+pausemovetime = 99999999999999
+ownpal = 1
+scale = .5,.5
+
+[State 6510, Explod]
+type = Explod
+triggerall = TeamSide = 2
+trigger1 = time = 10
+anim = 6511
+id = 6510
+ontop = 1
+postype = right
+pos = -var(34),88
+bindtime = -1
+supermove = 1
+pausemovetime = 99999999999999
+ownpal = 1
+scale = .5,.5
+
+[State 6510, DestroySelf]
+type = DestroySelf
+trigger1 = time = 70
+
 ;===============================================================
 ;ゲージ選択ヘルパー
 [Statedef 20000]
@@ -2711,768 +2812,3 @@ trigger2 = var(2) > 10
 var(2) = 0
 
 ;=================================================================
-
-;=================================================================
-
-;画面端測定（左）
-[Statedef 50000]
-type = S
-anim = 9999
-ctrl = 0
-
-[State 50000]
-type = Turn
-trigger1 = Time = 0
-trigger1 = Facing = -1
-
-[State 50000]
-type = AssertSpecial
-trigger1 = 1
-flag = noautoturn
-
-[State 50000, 画面端測定]
-type = Projectile
-triggerall = Root,NumProjID(50000) = 0
-trigger1 = Time = 1
-projanim = 9999
-projID = 50000
-projremovetime = -1
-projremove = 0
-velocity = -20
-offset = 0,0
-postype = p1
-projedgebound = 9999999
-projstagebound = 0
-supermovetime = 9999999
-pausemovetime = 9999999
-persistent = 0
-
-[State 50000, 画面端測定]
-type = VarAdd
-trigger1 = Root,NumProjID(50000) > 0
-var(1) = 1
-
-[State 50000, 画面端測定]
-type = PosAdd
-triggerall = var(1)
-trigger1 = Root,NumProjID(50000) = 0
-x = -20*(var(1)-1)
-persistent = 0
-
-[State 50000, 画面端測定]
-type = VarSet
-triggerall = var(1)
-trigger1 = Root,NumProjID(50000) = 0
-var(1) = 0
-persistent = 0
-
-[State 50000, 画面端測定]
-type = Projectile
-triggerall = Root,NumProjID(50000) = 0
-trigger1 = Time > 1
-trigger1 = !var(1)
-projanim = 9999
-projID = 50000
-projremovetime = -1
-projremove = 0
-velocity = -1
-offset = 0,0
-postype = p1
-projedgebound = 9999999
-projstagebound = 0
-supermovetime = 9999999
-pausemovetime = 9999999
-persistent = 0
-
-[State 50000, 画面端測定]
-type = PosAdd
-triggerall = var(1)
-trigger1 = Root,NumProjID(50000) = 0
-x = -1*(var(1))
-persistent = 0
-
-[State 50010, ScreenBound値検出]
-type = VarSet
-triggerall = RoundState = 2
-trigger1 = Time > 60
-trigger1 = ScreenPos X = [-1,1]
-var(2) = BackEdgeBodyDist
-
-[State 50010]
-type = ParentVarSet
-trigger1 = var(2)
-trigger1 = !Parent,var(42)
-var(42) = -abs(var(2))
-persistent = 0
-
-[State 50010, 画面端微調整]
-type = PosAdd
-triggerall = Time > 120
-trigger1 = Parent,var(42)
-x = -Parent,var(42)
-persistent = 0
-
-[State 50000, 画面端測定]
-type = ParentVarSet
-trigger1 = Root,Facing = -1
-var(40) = Floor(abs(Pos X - Parent,Pos X))
-
-[State 50000, 敵ID]
-type = VarSet
-trigger1 = NumEnemy = 1
-trigger2 = NumEnemy > 1
-trigger2 = abs(Root,Pos X - Enemy(0),Pos X) <= abs(Root,Pos X - Enemy(1),Pos X)
-var(10) = 0
-
-[State 50000, 敵ID]
-type = VarSet
-triggerall = NumEnemy > 1
-trigger1 = abs(Root,Pos X - Enemy(0),Pos X) > abs(Root,Pos X - Enemy(1),Pos X)
-var(10) = 1
-
-[State 50000, 画面端測定（敵）]
-type = ParentVarSet
-trigger1 = Enemy(var(10)),Facing = 1
-var(41) = Floor(abs(Pos X - Enemy(var(10)),Pos X))
-
-[State 50000, destroy]
-type = DestroySelf
-trigger1 = !(Root,var(59) || Root,fvar(39))
-
-
-;=================================================================
-;画面端測定（右）
-[Statedef 50010]
-type = S
-anim = 9999
-ctrl = 0
-
-[State 50010]
-type = Turn
-trigger1 = Time = 0
-trigger1 = Facing = 1
-
-[State 50010]
-type = AssertSpecial
-trigger1 = 1
-flag = noautoturn
-
-[State 50010, 画面端測定]
-type = Projectile
-triggerall = Root,NumProjID(50010) = 0
-trigger1 = Time = 1
-projanim = 9999
-projID = 50010
-projremovetime = -1
-projremove = 0
-velocity = -20
-offset = 0,0
-postype = p1
-projedgebound = 9999999
-projstagebound = 0
-supermovetime = 9999999
-pausemovetime = 9999999
-persistent = 0
-
-[State 50010, 画面端測定]
-type = VarAdd
-trigger1 = Root,NumProjID(50010) > 0
-var(1) = 1
-
-[State 50010, 画面端測定]
-type = PosAdd
-triggerall = var(1)
-trigger1 = Root,NumProjID(50010) = 0
-x = -20*(var(1)-1)
-persistent = 0
-
-[State 50010, 画面端測定]
-type = VarSet
-triggerall = var(1)
-trigger1 = Root,NumProjID(50010) = 0
-var(1) = 0
-persistent = 0
-
-[State 50010, 画面端測定]
-type = Projectile
-triggerall = Root,NumProjID(50010) = 0
-trigger1 = Time > 1
-trigger1 = !var(1)
-projanim = 9999
-projID = 50010
-projremovetime = -1
-projremove = 0
-velocity = -1
-offset = 0,0
-postype = p1
-projedgebound = 9999999
-projstagebound = 0
-supermovetime = 9999999
-pausemovetime = 9999999
-persistent = 0
-
-[State 50010, 画面端測定]
-type = PosAdd
-triggerall = var(1)
-trigger1 = Root,NumProjID(50010) = 0
-x = -1*(var(1))
-persistent = 0
-
-[State 50010, ScreenBound値検出]
-type = VarSet
-triggerall = RoundState = 2
-trigger1 = Time > 60
-trigger1 = ScreenPos X = [319,321]
-var(2) = BackEdgeBodyDist
-
-[State 50010]
-type = ParentVarSet
-trigger1 = var(2)
-trigger1 = !Parent,var(42)
-var(42) = -abs(var(2))
-persistent = 0
-
-[State 50010, 画面端微調整]
-type = PosAdd
-triggerall = Time > 120
-trigger1 = Parent,var(42)
-x = -Parent,var(42)
-persistent = 0
-
-[State 50010, 画面端測定]
-type = ParentVarSet
-trigger1 = Root,Facing = 1
-var(40) = Floor(abs(Pos X - Parent,Pos X))
-
-[State 50000, 敵ID]
-type = VarSet
-trigger1 = NumEnemy = 1
-trigger2 = NumEnemy > 1
-trigger2 = abs(Root,Pos X - Enemy(0),Pos X) <= abs(Root,Pos X - Enemy(1),Pos X)
-var(10) = 0
-
-[State 50000, 敵ID]
-type = VarSet
-triggerall = NumEnemy > 1
-trigger1 = abs(Root,Pos X - Enemy(0),Pos X) > abs(Root,Pos X - Enemy(1),Pos X)
-var(10) = 1
-
-[State 50000, 画面端測定（敵）]
-type = ParentVarSet
-trigger1 = Enemy(var(10)),Facing = -1
-var(41) = Floor(abs(Pos X - Enemy(var(10)),Pos X))
-
-[State 50000, destroy]
-type = DestroySelf
-trigger1 = !(Root,var(59) || Root,fvar(39))
-
-
-
-;ガード補助ヘルパー
-[Statedef 51000]
-type = S
-physics = N
-movetype = I
-anim = 9999
-ctrl = 0
-
-[State 51000, pos]
-type = BindToRoot
-trigger1 = 1
-pos = -60,0
-facing = 1
-;=================================================================
-;敵ヘルパー検知
-
-[State -2];敵Aヘルパー数
-type = varset
-triggerall = RoundState = 2
-trigger1 = !var(50) && Parent,var(7)
-trigger2 = Enemy(0),MoveType = I && !InGuardDist
-var(50) = Enemy(0),NumHelper
-ignorehitpause = 1
-
-[State -2];敵Bヘルパー数
-type = varset
-triggerall = NumEnemy > 1
-triggerall = RoundState = 2
-trigger1 = !var(51) && Parent,var(7)
-trigger2 = Enemy(1),MoveType = I && !InGuardDist
-var(51) = Enemy(1),NumHelper
-ignorehitpause = 1
-
-[State -2]
-type = ParentVarSet
-trigger1 = NumEnemy = 1
-trigger1 = Enemy(0),NumHelper - var(50) > 0
-trigger1 = Enemy(0),MoveType = A || (Enemy(0),MoveType != A && InGuardDist)
-trigger2 = NumEnemy = 2
-trigger2 = Enemy(0),NumHelper - var(50) > 0
-trigger2 = Enemy(0),MoveType = A || (Enemy(0),MoveType != A && InGuardDist)
-trigger3 = NumEnemy = 2
-trigger3 = Enemy(1),NumHelper - var(51) > 0
-trigger3 = Enemy(1),MoveType = A || (Enemy(1),MoveType != A && InGuardDist)
-var(37) = 1
-ignorehitpause = 1
-
-[State -2]
-type = ParentVarSet
-trigger1 = NumEnemy = 1
-trigger1 = !(Enemy(0),NumHelper - var(50) > 0 && (Enemy(0),MoveType = A || (Enemy(0),MoveType != A && InGuardDist)))
-trigger2 = NumEnemy = 2
-trigger2 = !(Enemy(0),NumHelper - var(50) > 0 && (Enemy(0),MoveType = A || (Enemy(0),MoveType != A && InGuardDist)))
-trigger2 = !(Enemy(1),NumHelper - var(51) > 0 && (Enemy(1),MoveType = A || (Enemy(1),MoveType != A && InGuardDist)))
-var(37) = 0
-ignorehitpause = 1
-
-
-
-[State -2];敵AステートNo記録
-type = VarSet
-trigger1 = Enemy,MoveType = A
-var(2) = Enemy,StateNo
-ignorehitpause = 1
-
-[State -2];敵AステートNo記録
-type = VarSet
-trigger1 = var(1) = -1
-trigger1 = Enemy,MoveType = A
-trigger2 = !(var(1) = -1)
-trigger2 = Enemy,MoveType = A
-trigger2 = abs(var(2) - var(1)) > 100
-var(1) = Enemy,StateNo
-ignorehitpause = 1
-
-[State -2];敵AステートNo記録
-type = VarSet
-trigger1 = !(Enemy,MoveType = A)
-var(2) = 0
-ignorehitpause = 1
-
-[State -2];敵AステートNo記録
-type = VarSet
-trigger1 = !(Enemy,MoveType = A)
-var(1) = -1
-ignorehitpause = 1
-
-
-[State -2];敵BステートNo記録
-type = VarSet
-triggerall = NumEnemy > 1
-trigger1 = Enemy(1),MoveType = A
-var(4) = Enemy(1),StateNo
-ignorehitpause = 1
-
-[State -2];敵BステートNo記録
-type = VarSet
-triggerall = NumEnemy > 1
-trigger1 = var(3) = -1
-trigger1 = Enemy(1),MoveType = A
-trigger2 = !(var(3) = -1)
-trigger2 = Enemy(1),MoveType = A
-trigger2 = abs(var(4) - var(3)) > 100
-var(3) = Enemy(1),StateNo
-ignorehitpause = 1
-
-[State -2];敵BステートNo記録
-type = VarSet
-triggerall = NumEnemy > 1
-trigger1 = !(Enemy(1),MoveType = A)
-var(4) = 0
-ignorehitpause = 1
-
-[State -2];敵BステートNo記録
-type = VarSet
-triggerall = NumEnemy > 1
-trigger1 = !(Enemy(1),MoveType = A)
-var(3) = -1
-ignorehitpause = 1
-
-
-[State -2];親ステート
-type = VarSet
-trigger1 = Root,StateNo = 1500 || Root,StateNo = 1550
-var(5) = 1
-
-[State -2]
-type = VarAdd
-trigger1 = var(5)
-trigger1 = !(Root,StateNo = 1500 || Root,StateNo = 1550)
-var(5) = 1
-
-[State -2]
-type = VarSet
-trigger1 = Root,MoveType = I
-trigger2 = var(5) > 5
-var(5) = 0
-
-
-[State -2];敵A ダークバリヤー不可フラグ
-type = VarSet
-triggerall = !var(10)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy,MoveType = A 
-var(10) = var(1)
-ignorehitpause = 1
-
-[State -2];敵A ダークバリヤー不可フラグ2
-type = VarSet
-triggerall = var(10) && !(var(1) = var(10))
-triggerall = !var(11)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy,MoveType = A 
-var(11) = var(1)
-ignorehitpause = 1
-
-[State -2];敵A ダークバリヤー不可フラグ3
-type = VarSet
-triggerall = var(10) && !(var(1) = var(10))
-triggerall = var(11) && !(var(1) = var(11))
-triggerall = !var(12)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy,MoveType = A 
-var(12) = var(1)
-ignorehitpause = 1
-
-[State -2];敵A ダークバリヤー不可フラグ4
-type = VarSet
-triggerall = var(10) && !(var(1) = var(10))
-triggerall = var(11) && !(var(1) = var(11))
-triggerall = var(12) && !(var(1) = var(12))
-triggerall = !var(13)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy,MoveType = A 
-var(13) = var(1)
-ignorehitpause = 1
-
-[State -2];敵A ダークバリヤー不可フラグ5
-type = VarSet
-triggerall = var(10) && !(var(1) = var(10))
-triggerall = var(11) && !(var(1) = var(11))
-triggerall = var(12) && !(var(1) = var(12))
-triggerall = var(13) && !(var(1) = var(13))
-triggerall = !var(14)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy,MoveType = A 
-var(14) = var(1)
-ignorehitpause = 1
-
-[State -2];敵A ダークバリヤー不可フラグ6
-type = VarSet
-triggerall = var(10) && !(var(1) = var(10))
-triggerall = var(11) && !(var(1) = var(11))
-triggerall = var(12) && !(var(1) = var(12))
-triggerall = var(13) && !(var(1) = var(13))
-triggerall = var(14) && !(var(1) = var(14))
-triggerall = !var(15)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy,MoveType = A 
-var(15) = var(1)
-ignorehitpause = 1
-
-[State -2];敵A ダークバリヤー不可フラグ7
-type = VarSet
-triggerall = var(10) && !(var(1) = var(10))
-triggerall = var(11) && !(var(1) = var(11))
-triggerall = var(12) && !(var(1) = var(12))
-triggerall = var(13) && !(var(1) = var(13))
-triggerall = var(14) && !(var(1) = var(14))
-triggerall = var(15) && !(var(1) = var(15))
-triggerall = !var(16)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy,MoveType = A 
-var(16) = var(1)
-ignorehitpause = 1
-
-[State -2];敵A ダークバリヤー不可フラグ8
-type = VarSet
-triggerall = var(10) && !(var(1) = var(10))
-triggerall = var(11) && !(var(1) = var(11))
-triggerall = var(12) && !(var(1) = var(12))
-triggerall = var(13) && !(var(1) = var(13))
-triggerall = var(14) && !(var(1) = var(14))
-triggerall = var(15) && !(var(1) = var(15))
-triggerall = var(16) && !(var(1) = var(16))
-triggerall = !var(17)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy,MoveType = A 
-var(17) = var(1)
-ignorehitpause = 1
-
-[State -2];敵A ダークバリヤー不可フラグ9
-type = VarSet
-triggerall = var(10) && !(var(1) = var(10))
-triggerall = var(11) && !(var(1) = var(11))
-triggerall = var(12) && !(var(1) = var(12))
-triggerall = var(13) && !(var(1) = var(13))
-triggerall = var(14) && !(var(1) = var(14))
-triggerall = var(15) && !(var(1) = var(15))
-triggerall = var(16) && !(var(1) = var(16))
-triggerall = var(17) && !(var(1) = var(17))
-triggerall = !var(18)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy,MoveType = A 
-var(18) = var(1)
-ignorehitpause = 1
-
-[State -2];敵A ダークバリヤー不可フラグ10
-type = VarSet
-triggerall = var(10) && !(var(1) = var(10))
-triggerall = var(11) && !(var(1) = var(11))
-triggerall = var(12) && !(var(1) = var(12))
-triggerall = var(13) && !(var(1) = var(13))
-triggerall = var(14) && !(var(1) = var(14))
-triggerall = var(15) && !(var(1) = var(15))
-triggerall = var(16) && !(var(1) = var(16))
-triggerall = var(17) && !(var(1) = var(17))
-triggerall = var(18) && !(var(1) = var(18))
-triggerall = !var(19)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy,MoveType = A 
-var(19) = var(1)
-ignorehitpause = 1
-
-
-
-
-
-[State -2];敵B ダークバリヤー不可フラグ
-type = VarSet
-triggerall = NumEnemy > 1
-triggerall = !var(20)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy(1),MoveType = A 
-var(20) = var(1)
-ignorehitpause = 1
-
-[State -2];敵B ダークバリヤー不可フラグ2
-type = VarSet
-triggerall = NumEnemy > 1
-triggerall = var(20) && !(var(3) = var(20))
-triggerall = !var(21)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy(1),MoveType = A 
-var(21) = var(3)
-ignorehitpause = 1
-
-[State -2];敵B ダークバリヤー不可フラグ3
-type = VarSet
-triggerall = NumEnemy > 1
-triggerall = var(20) && !(var(3) = var(10))
-triggerall = var(21) && !(var(3) = var(11))
-triggerall = !var(22)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy(1),MoveType = A 
-var(22) = var(3)
-ignorehitpause = 1
-
-[State -2];敵B ダークバリヤー不可フラグ4
-type = VarSet
-triggerall = NumEnemy > 1
-triggerall = var(20) && !(var(3) = var(10))
-triggerall = var(21) && !(var(3) = var(11))
-triggerall = var(22) && !(var(3) = var(12))
-triggerall = !var(23)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy(1),MoveType = A 
-var(23) = var(3)
-ignorehitpause = 1
-
-[State -2];敵B ダークバリヤー不可フラグ5
-type = VarSet
-triggerall = NumEnemy > 1
-triggerall = var(20) && !(var(3) = var(10))
-triggerall = var(21) && !(var(3) = var(11))
-triggerall = var(22) && !(var(3) = var(12))
-triggerall = var(23) && !(var(3) = var(13))
-triggerall = !var(24)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy(1),MoveType = A 
-var(24) = var(3)
-ignorehitpause = 1
-
-
-[State -2];敵B ダークバリヤー不可フラグ6
-type = VarSet
-triggerall = NumEnemy > 1
-triggerall = var(20) && !(var(3) = var(20))
-triggerall = var(21) && !(var(3) = var(21))
-triggerall = var(22) && !(var(3) = var(22))
-triggerall = var(23) && !(var(3) = var(23))
-triggerall = var(24) && !(var(3) = var(24))
-triggerall = !var(25)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy(1),MoveType = A 
-var(29) = var(3)
-ignorehitpause = 1
-
-[State -2];敵B ダークバリヤー不可フラグ7
-type = VarSet
-triggerall = NumEnemy > 1
-triggerall = var(20) && !(var(3) = var(20))
-triggerall = var(21) && !(var(3) = var(21))
-triggerall = var(22) && !(var(3) = var(22))
-triggerall = var(23) && !(var(3) = var(23))
-triggerall = var(24) && !(var(3) = var(24))
-triggerall = var(25) && !(var(3) = var(25))
-triggerall = !var(26)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy(1),MoveType = A 
-var(29) = var(3)
-ignorehitpause = 1
-
-[State -2];敵B ダークバリヤー不可フラグ8
-type = VarSet
-triggerall = NumEnemy > 1
-triggerall = var(20) && !(var(3) = var(20))
-triggerall = var(21) && !(var(3) = var(21))
-triggerall = var(22) && !(var(3) = var(22))
-triggerall = var(23) && !(var(3) = var(23))
-triggerall = var(24) && !(var(3) = var(24))
-triggerall = var(25) && !(var(3) = var(25))
-triggerall = var(26) && !(var(3) = var(26))
-triggerall = !var(27)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy(1),MoveType = A 
-var(29) = var(3)
-ignorehitpause = 1
-
-[State -2];敵B ダークバリヤー不可フラグ9
-type = VarSet
-triggerall = NumEnemy > 1
-triggerall = var(20) && !(var(3) = var(20))
-triggerall = var(21) && !(var(3) = var(21))
-triggerall = var(22) && !(var(3) = var(22))
-triggerall = var(23) && !(var(3) = var(23))
-triggerall = var(24) && !(var(3) = var(24))
-triggerall = var(25) && !(var(3) = var(25))
-triggerall = var(26) && !(var(3) = var(26))
-triggerall = var(27) && !(var(3) = var(27))
-triggerall = !var(28)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy(1),MoveType = A 
-var(29) = var(3)
-ignorehitpause = 1
-
-[State -2];敵B ダークバリヤー不可フラグ10
-type = VarSet
-triggerall = NumEnemy > 1
-triggerall = var(20) && !(var(3) = var(20))
-triggerall = var(21) && !(var(3) = var(21))
-triggerall = var(22) && !(var(3) = var(22))
-triggerall = var(23) && !(var(3) = var(23))
-triggerall = var(24) && !(var(3) = var(24))
-triggerall = var(25) && !(var(3) = var(25))
-triggerall = var(26) && !(var(3) = var(26))
-triggerall = var(27) && !(var(3) = var(27))
-triggerall = var(28) && !(var(3) = var(28))
-triggerall = !var(29)
-triggerall = var(5)
-trigger1 = Root,MoveType = H && Enemy(1),MoveType = A 
-var(29) = var(3)
-ignorehitpause = 1
-
-
-
-
-
-
-[State -2];ダークバリヤー不可フラグ
-type = ParentVarSet
-trigger1 = Enemy,MoveType = A && (Enemy,StateNo = var(10) || Enemy,StateNo = var(11) || Enemy,StateNo = var(12) || Enemy,StateNo = var(13) || Enemy,StateNo = var(14))
-trigger2 = Enemy,MoveType = A && (Enemy,StateNo = var(15) || Enemy,StateNo = var(16) || Enemy,StateNo = var(17) || Enemy,StateNo = var(18) || Enemy,StateNo = var(19))
-trigger3 = NumEnemy > 1
-trigger3 = Enemy(1),MoveType = A && (Enemy(1),StateNo = var(20) || Enemy(1),StateNo = var(21) || Enemy(1),StateNo = var(22) || Enemy(1),StateNo = var(23) || Enemy(1),StateNo = var(24))
-trigger4 = NumEnemy > 1
-trigger4 = Enemy(1),MoveType = A && (Enemy(1),StateNo = var(25) || Enemy(1),StateNo = var(26) || Enemy(1),StateNo = var(27) || Enemy(1),StateNo = var(28) || Enemy(1),StateNo = var(29))
-fvar(20) = 1
-
-[State -2];ダークバリヤー不可フラグ
-type = ParentVarSet
-trigger1 = NumEnemy = 1
-trigger1 = !(Enemy,MoveType = A && (Enemy,StateNo = var(10) || Enemy,StateNo = var(11) || Enemy,StateNo = var(12) || Enemy,StateNo = var(13) || Enemy,StateNo = var(14)))
-trigger1 = !(Enemy,MoveType = A && (Enemy,StateNo = var(15) || Enemy,StateNo = var(16) || Enemy,StateNo = var(17) || Enemy,StateNo = var(18) || Enemy,StateNo = var(19)))
-trigger1 = !(!(var(1) = -1) && Enemy,MoveType = A && abs(var(2) - var(1)) < 100)
-trigger2 = NumEnemy > 1
-trigger2 = !(Enemy,MoveType = A && (Enemy,StateNo = var(10) || Enemy,StateNo = var(11) || Enemy,StateNo = var(12) || Enemy,StateNo = var(13) || Enemy,StateNo = var(14)))
-trigger2 = !(Enemy,MoveType = A && (Enemy,StateNo = var(15) || Enemy,StateNo = var(16) || Enemy,StateNo = var(17) || Enemy,StateNo = var(18) || Enemy,StateNo = var(19)))
-trigger2 = !(!(var(1) = -1) && Enemy,MoveType = A && abs(var(2) - var(1)) < 100)
-trigger2 = !(Enemy(1),MoveType = A && (Enemy(1),StateNo = var(20) || Enemy(1),StateNo = var(21) || Enemy(1),StateNo = var(22) || Enemy(1),StateNo = var(23) || Enemy(1),StateNo = var(24)))
-trigger2 = !(Enemy(1),MoveType = A && (Enemy(1),StateNo = var(25) || Enemy(1),StateNo = var(26) || Enemy(1),StateNo = var(27) || Enemy(1),StateNo = var(28) || Enemy(1),StateNo = var(29)))
-trigger2 = !(!(var(3) = -1) && Enemy(1),MoveType = A && abs(var(4) - var(3)) < 100)
-fvar(20) = 0
-
-
-
-[State -2]
-Type = DisplayToClipBoard
-Trigger1 = 1
-Text = "(1)=%d,(10)=%d,(11)=%d,(12)=%d\n"
-Params = var(1),var(10),var(11),var(12)
-IgnoreHitPause = 1
-
-[State 51000]
-type = DestroySelf
-trigger1 = !(Root,var(59) || Root,fvar(39))
-
-
-
-;=================================================================
-;AI起動用ヘルパー
-[Statedef 60000]
-anim = 9999
-ctrl = 0
-
-[State 60000]
-type = selfstate
-trigger1 = !ishelper
-value = 0
-
-[State 60000,プレイヤー判定]
-type = varset
-trigger1 = command = "up" && root,command = "up"
-trigger2 = command = "down" && root,command = "down"
-trigger3 = command = "back" && root,command = "back"
-trigger4 = command = "fwd" && root,command = "fwd"
-trigger5 = command = "a" && root,command = "a"
-trigger6 = command = "b" && root,command = "b"
-trigger7 = command = "c" && root,command = "c"
-trigger8 = command = "x" && root,command = "x"
-trigger9 = command = "y" && root,command = "y"
-trigger10 = command = "z" && root,command = "z"
-trigger11 = command = "start" && root,command = "start"
-var(59) = -1
-
-[State 60000,立ったら消失]
-Type = DestroySelf
-triggerAll = isHelper
-Trigger1 = root,var(59) || var(59) = -1
-trigger2 = command = "up" && root,command = "up"
-trigger3 = command = "down" && root,command = "down"
-trigger4 = command = "back" && root,command = "back"
-trigger5 = command = "fwd" && root,command = "fwd"
-trigger6 = command = "a" && root,command = "a"
-trigger7 = command = "b" && root,command = "b"
-trigger8 = command = "c" && root,command = "c"
-trigger9 = command = "x" && root,command = "x"
-trigger10 = command = "y" && root,command = "y"
-trigger11 = command = "z" && root,command = "z"
-trigger12 = command = "start" && root,command = "start"
-
-[State 60000,ﾌﾗｸﾞON]
-type = varset
-triggerall = var(59) != -1
-triggerall = root,var(7)
-trigger1 = root,command = "up"
-trigger2 = root,command = "down"
-trigger3 = root,command = "back"
-trigger4 = root,command = "fwd"
-trigger5 = root,command = "a"
-trigger6 = root,command = "b"
-trigger7 = root,command = "c"
-trigger8 = root,command = "x"
-trigger9 = root,command = "y"
-trigger10 = root,command = "z"
-trigger11 = root,command = "start"
-var(59) = 1
-

@@ -1,6 +1,6 @@
 [Info]
 name = "Rugal2nd"
-displayname = "OMEGA_RUGAL"
+displayname = "RUGAL"
 versiondate = 2008/10/4
 mugenversion 
 author = "fxm508"
@@ -10,10 +10,11 @@ pal.defaults = 1,7,5,11,12
 [Files]
 cmd = Rugal2nd.cmd
 cns = Rugal2nd.st
-st = Rugal2nd.st
+st =  Rugal2nd.st
 st0 = Rugal2nd_Helper.st
 st1 = Rugal2nd_-2.st
 st2 = Rugal2nd_-3.st
+st3 = Rugal2nd_AI_Helper.st
 stcommon = Rugal2nd_Common.st
 sprite = Rugal2nd.sff
 anim = Rugal2nd.air

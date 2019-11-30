@@ -3,7 +3,7 @@ name = "Rugal2nd"
 displayname = "RUGAL"
 versiondate = 2008/10/4
 mugenversion 
-author = "fxm508"
+author = "fxm508"; AI Patch By Mr.Lee
 pal.defaults = 1,7,5,11,12
 
 
@@ -19,15 +19,15 @@ stcommon = Rugal2nd_Common.st
 sprite = Rugal2nd.sff
 anim = Rugal2nd.air
 sound = Rugal2nd.snd
-pal1 = act/Rugal2nd_02-1.act
-pal2 = act/Rugal2nd_02-2.act
-pal3 = act/Rugal2nd_02-1.act
+pal1 = act/Rugal2nd_02-4.act
+pal2 = act/Rugal2nd_02-1.act
+pal3 = act/Rugal2nd_02-3.act
 pal4 = act/Rugal2nd_02-2.act
-pal5 = act/Rugal2nd_98-1.act
-pal6 = act/Rugal2nd_98-2.act
-pal7 = act/Rugal2nd_98UM-1(omega).act
-pal8 = act/Rugal2nd_98UM-2(omega).act
-pal9 = act/Rugal2nd_98UM-3(omega).act
-pal10 = act/Rugal2nd_98UM-4(omega).act
-pal11 = act/Rugal2nd_94-1.act
-pal12 = act/Rugal2nd_OMEGA.act
+;pal5 = act/Rugal2nd_98-1.act
+;pal6 = act/Rugal2nd_98-2.act
+;pal7 = act/Rugal2nd_98UM-1(omega).act
+;pal8 = act/Rugal2nd_98UM-2(omega).act
+;pal9 = act/Rugal2nd_98UM-3(omega).act
+;pal10 = act/Rugal2nd_98UM-4(omega).act
+;pal11 = act/Rugal2nd_94-1.act
+;pal12 = act/Rugal2nd_OMEGA.act

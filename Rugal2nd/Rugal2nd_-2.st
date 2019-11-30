@@ -1,5 +1,37 @@
 [Statedef -2]
 
+;---------------------------------------------------------------------------------
+;AI跳跃限制用
+;---------------------------------------------------------------------------------
+[State -2]
+type = varset
+Trigger1 = RoundState < 2
+var(44) = 300
+
+[State -2]
+type = varadd
+Trigger1 = RoundState = 2
+Trigger1 = var(44) > 0
+var(44) = -1
+ignorehitpause = 1
+
+;限制跳跃
+[State -2]
+type = varadd
+Triggerall = name = "Rugal2nd"
+Triggerall = EnemyNear,StateType != A
+TriggerAll = EnemyNear,MoveHit = 1 && Time = 1
+TriggerAll = MoveType = H
+;空中攻击被打
+Trigger1 = var(50)/100 = [600,699]
+;起跳被打
+Trigger2 = var(50)/100 = 39
+;被抓落地
+Trigger3 = prevStateNo = 52
+Trigger4 = var(50)/100 = 330
+Trigger5 = var(50)/100 = 120 && StateType = A
+Trigger6 = var(50)/10000 = 39
+var(44) = 120 + EnemyNear,GetHitVar(damage)
 
 ;-----------------------------------------------------------
 ;打逆不可防用
@@ -19,6 +51,36 @@ type = powerset
 triggerall = fvar(26) = 1
 trigger1 = var(52) > 0
 value = fvar(5)
+ignorehitpause = 1
+
+;-----------------------------------------------------------
+;提前停止鞭尸炮
+[State -2,锁气用]
+type = varset
+triggerall = fvar(26) = 1
+triggerall = var(33) = [1,5]
+trigger1 = EnemyNear,StateNo = 3055
+trigger1 = EnemyNear,Pos Y < -30
+var(33) = 0
+ignorehitpause = 1
+
+;-----------------------------------------------------------
+;当身记录，会传递到Helper11990里面
+[State -2]
+type = varset
+triggerall = MoveReversed = 1
+trigger1 = enemynear,movetype = A || enemynear,movetype = I
+trigger1 = EnemyNear,StateNo  < 2000
+var(18) = EnemyNear,StateNo 
+ignorehitpause = 1
+
+[State -2]
+type = varset
+triggerall = MoveReversed = 1
+trigger1 = enemynear,movetype = A || enemynear,movetype = I
+trigger1 = EnemyNear,PrevStateNo  < 2000
+var(19) = EnemyNear,PrevStateNo 
+ignorehitpause = 1
 
 
 ;****************************************************************
@@ -29,14 +91,14 @@ value = fvar(5)
 [State -2, Display Power Gauge]
 type = varset
 trigger1 = 1
-fvar(30) = 0;(1:on/0:off)
+fvar(30) = 1;(1:on/0:off)
 ignorehitpause = 1
 ;パワーゲージの表示の有無を切り替えます。
 
 [State -2, Display AI s Lv]
 type = varset
 trigger1 = 1
-fvar(31) = 0;(1:on/0:off)
+fvar(31) = 1;(1:on/0:off)
 ignorehitpause = 1
 ;AILvの表示の有無を切り替えます。
 
@@ -138,11 +200,7 @@ trigger2 = !(Partner,AuthorName = "fxm508" && Partner,Name = "Rugal2nd" && Partn
 var(56) = 0
 
 
-[State -2, モード設定(1～4P)]
-type = varset
-trigger1 = PalNo = [1,4]
-fvar(29) = 1
-ignorehitpause = 1
+
 
 [State -2, モード設定(7～10P)]
 type = varset
@@ -150,9 +208,17 @@ trigger1 = PalNo = [7,10]
 fvar(29) = 4
 ignorehitpause = 1
 
+[State -2, モード設定(1～4P)]
+type = varset
+trigger1 = PalNo = [1,4]
+trigger2 = 1
+fvar(29) = 1
+ignorehitpause = 1
+
 [State -2, 02UM Mode]
 type = varset
 trigger1 = PalNo = [1,2]
+trigger2 = 1
 fvar(26) = 1
 ignorehitpause = 1
 
@@ -160,7 +226,7 @@ ignorehitpause = 1
 
 [State -2, EnemyNear]
 type = VarSet
-triggerall = !(var(59) || fvar(39))
+triggerall = !var(59)
 trigger1 = NumEnemy = 1
 trigger2 = NumEnemy > 1
 trigger2 = EnemyNear(0),Life > 0
@@ -169,7 +235,7 @@ ignorehitpause = 1
 
 [State -2, EnemyNear]
 type = VarSet
-triggerall = !(var(59) || fvar(39))
+triggerall = !var(59)
 trigger1 = NumEnemy > 1
 trigger1 = EnemyNear(0),Life <= 0
 var(2) = 1
@@ -350,6 +416,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左右裏（自分地上、相手空中）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = 1
 trigger1 = EnemyNear(var(2)),StateType = A && StateType != A 
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X < 0
@@ -358,6 +425,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左右正面（自分空中、相手地上）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = 1
 trigger1 = EnemyNear(var(2)),StateType != A && StateType = A
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X >= 0
@@ -366,6 +434,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左右裏（自分空中、相手地上）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = 1
 trigger1 = EnemyNear(var(2)),StateType != A && StateType = A
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X < 0
@@ -374,6 +443,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左右正面（自分空中、相手空中）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = 1
 trigger1 = EnemyNear(var(2)),StateType = A && StateType = A 
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X >= 0
@@ -382,6 +452,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左右裏（自分空中、相手空中）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = 1
 trigger1 = EnemyNear(var(2)),StateType = A && StateType = A 
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X < 0
@@ -390,6 +461,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左左正面（自分地上、相手地上）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = -1
 trigger1 = EnemyNear(var(2)),StateType != A && StateType != A
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X >= 0
@@ -398,6 +470,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左左裏（自分地上、相手地上）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = -1
 trigger1 = EnemyNear(var(2)),StateType != A && StateType != A
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X < 0
@@ -406,6 +479,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左左正面（自分地上、相手空中）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = -1
 trigger1 = EnemyNear(var(2)),StateType = A && StateType != A 
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X >= 0
@@ -414,6 +488,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左左裏（自分地上、相手空中）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = -1
 trigger1 = EnemyNear(var(2)),StateType = A && StateType != A 
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X < 0
@@ -422,6 +497,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左左正面（自分空中、相手地上）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = -1
 trigger1 = EnemyNear(var(2)),StateType != A && StateType = A
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X >= 0
@@ -430,6 +506,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左左裏（自分空中、相手地上）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = -1
 trigger1 = EnemyNear(var(2)),StateType != A && StateType = A
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X < 0
@@ -438,6 +515,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左左正面（自分空中、相手空中）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = -1
 trigger1 = EnemyNear(var(2)),StateType = A && StateType = A 
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X >= 0
@@ -446,6 +524,7 @@ ignorehitpause = 1
 
 [State -2, P2BodyDist X];左左裏（自分空中、相手空中）
 type = VarSet
+
 triggerall = Facing = -1 && EnemyNear(var(2)),Facing = -1
 trigger1 = EnemyNear(var(2)),StateType = A && StateType = A 
 trigger1 = ScreenPos X - EnemyNear(var(2)),ScreenPos X < 0
@@ -455,6 +534,7 @@ ignorehitpause = 1
 
 [State -2, EnemyNear(Target代用)]
 type = VarSet
+
 trigger1 = NumEnemy = 1 || NumTarget = 1
 trigger2 = NumEnemy > 1 && NumTarget > 1
 trigger2 = EnemyNear(0),MoveType = H && EnemyNear(1),MoveType = H
@@ -466,6 +546,7 @@ ignorehitpause = 1
 
 [State -2, EnemyNear(Target代用)]
 type = VarSet
+
 trigger1 = NumEnemy > 1 && NumTarget > 1
 trigger1 = EnemyNear(0),MoveType = H && EnemyNear(1),MoveType = H
 trigger1 = EnemyNear(0),Const(size.head.pos.y) < EnemyNear(1),Const(size.head.pos.y) 
@@ -477,6 +558,7 @@ ignorehitpause = 1
 
 [State -2, Facing];1で対峙、-1で同一方向
 type = VarSet
+
 trigger1 = 1
 var(6) = -(Facing)*(EnemyNear(var(2)),Facing)
 ignorehitpause = 1
@@ -485,17 +567,20 @@ ignorehitpause = 1
 
 [State -2, ラウンド開始時間]
 type = varset
+
 trigger1 = RoundState != 2
 var(7) = 0
 
 [State -2]
 type = varset
+
 triggerall = !var(7)
 trigger1 = Ctrl
 var(7) = GameTime
 
 [State -2, ステート奪取判定用]
 type = VarSet
+
 trigger1 = 1
 var(23) = GameTime
 ignorehitpause = 1
@@ -504,6 +589,7 @@ ignorehitpause = 1
 
 [State -2, ランダム変数(1-10)]
 type = varrandom
+
 trigger1 = 1
 v = 10
 range = 1,10
@@ -529,25 +615,10 @@ ignorehitpause = 1
 
 [State -2, ガード中投げ無敵]
 type = NotHitBy
-trigger1 = (StateNo = [130,140)) || (StateNo = (140,160))
+trigger1 = (StateNo = [130,140]) || (StateNo = [140,160))
 value = ,AT
 time = 1
 ignorehitpause = 1
-
-
-[State -2, 相手起き上がり時無敵]
-type = NotHitBy
-trigger1 = P2StateNo = 5120
-trigger1 = EnemyNear(var(2)),AnimTime = -1
-value = SCA
-time = 4
-
-[State -2, 相手起き上がり時無敵]
-type = NotHitBy
-trigger1 = P2StateNo = 5120
-trigger1 = EnemyNear(var(2)),AnimTime = -1
-value = ,AT
-time = 13
 
 
 [State -2]
@@ -568,6 +639,7 @@ ignorehitpause = 1
 
 [State -2]
 type = VarSet
+triggerall = PalNo = 12
 trigger1 = var(16)
 trigger1 = !(MoveType = H)
 var(16) = 0
@@ -631,7 +703,7 @@ trigger1 = !(EnemyNear(var(2)),MoveType = A)
 ;==================================================================
 
 [State -2, DefenceMulSet]
-type = DefenceMulSet
+type = Null;DefenceMulSet
 triggerall = fvar(29) != 4 && !fvar(26)
 triggerall = !fvar(28)
 trigger1 = 1
@@ -639,7 +711,7 @@ value = 2
 ignorehitpause = 1
 
 [State -2, DefenceMulSet]
-type = LifeAdd
+type = Null;LifeAdd
 triggerall = fvar(29) != 4 && !fvar(26)
 triggerall = !fvar(28)
 triggerall = !(PrevStateNo = [5000,5300])
@@ -651,7 +723,7 @@ absolute = 1
 ignorehitpause = 1
 
 [State -2, DefenceMulSet]
-type = DefenceMulSet
+type = Null;DefenceMulSet
 triggerall = fvar(29) = 1 && !fvar(26)
 triggerall = fvar(28)
 trigger1 = 1
@@ -659,7 +731,7 @@ value = 1.5
 ignorehitpause = 1
 
 [State -2, DefenceMulSet]
-type = LifeAdd
+type = Null;LifeAdd
 triggerall = fvar(29) = 1 && !fvar(26)
 triggerall = fvar(28)
 triggerall = !(PrevStateNo = [5000,5300])
@@ -671,7 +743,7 @@ absolute = 1
 ignorehitpause = 1
 
 [State -2, DefenceMulSet]
-type = DefenceMulSet
+type = Null;DefenceMulSet
 triggerall = fvar(29) = 4
 triggerall = !fvar(28)
 trigger1 = 1
@@ -679,7 +751,7 @@ value = 4
 ignorehitpause = 1
 
 [State -2, DefenceMulSet]
-type = LifeAdd
+type = Null;LifeAdd
 triggerall = fvar(29) = 4
 triggerall = !fvar(28)
 triggerall = !(PrevStateNo = [5000,5300])
@@ -691,7 +763,7 @@ absolute = 1
 ignorehitpause = 1
 
 [State -2, DefenceMulSet]
-type = DefenceMulSet
+type = Null;DefenceMulSet
 triggerall = fvar(29) = 1 && fvar(26)
 triggerall = !fvar(28)
 trigger1 = 1
@@ -699,7 +771,7 @@ value = 3
 ignorehitpause = 1
 
 [State -2, DefenceMulSet]
-type = LifeAdd
+type = Null;LifeAdd
 triggerall = fvar(29) = 1 && fvar(26)
 triggerall = !fvar(28)
 triggerall = !(PrevStateNo = [5000,5300])
@@ -714,6 +786,7 @@ ignorehitpause = 1
 
 [State -2, 空中連続ヒット制限]
 type = varset
+
 triggerall = P2MoveType = H
 triggerall = !(NumTarget(1000))
 triggerall = !(NumTarget(1300) || NumTarget(1301) || NumTarget(1302))
@@ -738,6 +811,7 @@ var(9) = 1
 
 [State -2, 空中連続ヒット制限]
 type = varset
+
 trigger1 = EnemyNear(var(2)),Life > 0 && EnemyNear(var(2)),Ctrl
 trigger2 = var(49) = [1,2]
 trigger3 = !(P2MoveType = H)
@@ -751,6 +825,7 @@ ignorehitpause = 1
 
 [State -2, 02UM超必殺技空中ヒット制限]
 type = varset
+
 triggerall = fvar(26)
 triggerall = MoveHit = 1
 trigger1 = NumTarget(1402) || NumTarget(1452) || NumTarget(1453)
@@ -760,6 +835,7 @@ ignorehitpause = 1
 
 [State -2, 02UM超必殺技空中ヒット制限]
 type = varset
+
 trigger1 = !fvar(26)
 trigger2 = !(NumTarget(1402) || NumTarget(1452) || NumTarget(1453))
 trigger2 = !(NumTarget(1300) || NumTarget(1301) || NumTarget(1350) || NumTarget(1351))
@@ -774,12 +850,14 @@ ignorehitpause = 1
 
 [State -2, バニシングラッシュヒット制限]
 type = varset
+
 trigger1 = ProjHitTime(1890) = 0
 var(28) = 1
 ignorehitpause = 1
 
 [State -2, バニシングラッシュヒット制限]
 type = varset
+
 triggerall = var(28)
 trigger1 = !(P2MoveType = H)
 var(28) = 0
@@ -925,6 +1003,7 @@ ID = 2440
 
 [State -2]
 type = VarAdd
+
 trigger1 = var(24)
 var(24) = 1
 ignorehitpause = 1
@@ -941,6 +1020,7 @@ ignorehitpause = 1
 
 [State -2, ジェノサイドカッター 98 ボイス]
 type = VarSet
+
 trigger1 = var(24)
 trigger1 = var(24) >= 47
 trigger2 = MoveType = H
@@ -1039,6 +1119,7 @@ ignorehitpause = 1
 
 [State -2, PowerAdd 98UM EX]
 type = PowerAdd
+triggerall = fvar(26) != 1
 triggerall = fvar(34) = 2
 triggerall = !(var(52) || (NumPartner = 0 && Power >= 1000))
 triggerall = MoveType = H
@@ -1056,7 +1137,7 @@ trigger2 = ProjContactTime(1001) = 0
 trigger3 = ProjContactTime(1002) = 0
 trigger4 = ProjContactTime(1100) = 0
 trigger5 = ProjContactTime(1150) = 0
-value = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,135)
+value = IfElse(((var(52)||fvar(34)=2)&&(fvar(29)=1||fvar(29)=4)),0,175)
 ignorehitpause = 1
 
 ;==================================================================
@@ -1064,6 +1145,7 @@ ignorehitpause = 1
 
 [State -2, MAX発動時パワーゲージ量記録(2002)]
 type = VarSet
+
 triggerall = fvar(29) = 1
 triggerall = var(52) = 779 || Time = 1
 trigger1 = var(52) = 779
@@ -1086,6 +1168,7 @@ ignorehitpause = 1
 
 [State -2, MAX発動時パワーゲージ量記録(98UM)]
 type = VarSet
+
 triggerall = fvar(29) = 4 && fvar(34) = 1
 triggerall = var(52) = 1079 || Time = 1
 trigger1 = var(52) = 1079
@@ -1136,12 +1219,14 @@ ignorehitpause = 1
 
 [State -2, MAX発動タイマー]
 type = VarAdd
+
 trigger1 = var(52) > 0
 var(52) = -1
 ignorehitpause = 1
 
 [State -2, MAX発動タイマー]
 type = VarSet
+
 trigger1 = var(52) < 0
 var(52) = 0
 ignorehitpause = 1
@@ -1178,6 +1263,7 @@ ignorehitpause = 1
 
 [State -2, MAX発動中攻撃力補正]
 type = varset
+
 triggerall = var(52)
 trigger1 = fvar(29) = 4
 fvar(10) = 1.25
@@ -1185,6 +1271,7 @@ ignorehitpause = 1
 
 [State -2, MAX発動中攻撃力補正]
 type = varset
+
 triggerall = var(52)
 trigger1 = !(fvar(29) = 1 || fvar(29) = 4)
 fvar(10) = 1.5*(1+(Life<=10)*0.25)
@@ -1192,6 +1279,7 @@ ignorehitpause = 1
 
 [State -2, MAX発動中攻撃力補正]
 type = varset
+
 triggerall = !var(52)
 trigger1 = fvar(29) = 1 || fvar(29) = 4
 fvar(10) = 1
@@ -1199,6 +1287,7 @@ ignorehitpause = 1
 
 [State -2, MAX発動中攻撃力補正]
 type = varset
+
 triggerall = !var(52)
 trigger1 = !(fvar(29) = 1 || fvar(29) = 4)
 fvar(10) = 1*(1+(Life<=10)*0.25)
@@ -1208,21 +1297,25 @@ ignorehitpause = 1
 
 [State -2, モード決定]
 type = VarSet
+
 trigger1 = !(fvar(29) = 4)
 fvar(32) = 1
 
 [State -2, モード決定]
 type = VarSet
+
 trigger1 = !(fvar(29) = 4)
 fvar(33) = 1
 
 [State -2, モード決定]
 type = VarSet
+
 trigger1 = !(fvar(29) = 4)
 fvar(34) = 1
 
 [State -2, モード決定（時間切れ）]
 type = VarSet
+
 triggerall = fvar(29) = 4
 triggerall = RoundState = 2
 triggerall = var(7)
@@ -1237,6 +1330,7 @@ fvar(32) = 1+Random%2
 
 [State -2, モード決定（時間切れ）]
 type = VarSet
+
 triggerall = fvar(29) = 4
 triggerall = RoundState = 2
 triggerall = var(7)
@@ -1251,6 +1345,7 @@ fvar(33) = 1+Random%2
 
 [State -2, モード決定（時間切れ）]
 type = VarSet
+
 triggerall = fvar(29) = 4
 triggerall = RoundState = 2
 triggerall = var(7)
@@ -1265,6 +1360,7 @@ fvar(34) = 1+Random%2
 
 [State -2, モード決定（パートナー合わせ）]
 type = VarSet
+
 triggerall = fvar(29) = 4
 triggerall = RoundState = 2
 triggerall = var(7)
@@ -1277,6 +1373,7 @@ fvar(32) = Partner,fvar(32)
 
 [State -2, モード決定（パートナー合わせ）]
 type = VarSet
+
 triggerall = fvar(29) = 4
 triggerall = RoundState = 2
 triggerall = var(7)
@@ -1289,6 +1386,7 @@ fvar(33) = Partner,fvar(33)
 
 [State -2, モード決定（パートナー合わせ）]
 type = VarSet
+
 triggerall = fvar(29) = 4
 triggerall = RoundState = 2
 triggerall = var(7)
@@ -2465,6 +2563,7 @@ ignorehitpause = 1
 [State -2]
 type = VarSet
 trigger1 = !(StateNo = [1000,1010])
+trigger1 = !(StateNo = [3000,3021])
 var(30) = 0
 
 [State -2, カイザーウェイブ到達予測時間]
@@ -2699,7 +2798,7 @@ type = TargetState
 TriggerAll = fvar(26) = 1
 TriggerAll = numtarget
 TriggerAll = target,alive
-TriggerAll = fvar(9) >= 10000
+TriggerAll = fvar(23) >= 10000
 TriggerAll = target,StateType = S || target,StateType = C
 TriggerAll = target,MoveType = H && target,StateNo = [120,159]
 Trigger1 = MoveGuarded = 1
@@ -2709,26 +2808,26 @@ value = 5700
 [State -2]
 type = VarSet
 TriggerAll = fvar(26) = 1
-TriggerAll = fvar(9) < 0
+TriggerAll = fvar(23) < 0
 Trigger1 = 1
-fvar(9) = 0
+fvar(23) = 0
 ignorehitpause = 1
 
 [State -2]
 type = VarAdd
 TriggerAll = fvar(26) = 1
-TriggerAll = fvar(9) >= 1
+TriggerAll = fvar(23) >= 1
 Trigger1 = GameTime%37 = 0
-fvar(9) = -100
+fvar(23) = -100
 ignorehitpause = 1
 
 [State -2]
 type = VarSet
 TriggerAll = fvar(26) = 1
-TriggerAll = fvar(9) != 0
+TriggerAll = fvar(23) != 0
 Trigger1 = roundstate != 2
 Trigger2 = enemy,StateNo = 5700
-fvar(9) = 0
+fvar(23) = 0
 ignorehitpause = 1
 
 [State -2]
@@ -2739,7 +2838,7 @@ TriggerAll = EnemyNear,MoveType = H
 TriggerAll = EnemyNear,time = 0
 Trigger1 = !(ProjGuarded = 1)
 Trigger1 = moveguarded = 1
-fvar(9) = ifelse(stateno < 1000, 500, ifelse((StateNo = [1700,1899]),600,1200))
+fvar(23) = ifelse(stateno < 1000, 400, ifelse((StateNo = [1700,1899]),600,800))
 ignorehitpause = 1
 persistent = 0
 
@@ -2750,7 +2849,7 @@ TriggerAll = RoundState = 2
 TriggerAll = EnemyNear,MoveType = H
 TriggerAll = EnemyNear,time = 0
 Trigger1 = ProjGuarded = 1
-fvar(9) = ifelse((StateNo = [1700,1899]),600,1200)
+fvar(23) = ifelse((StateNo = [1700,1899]),400,800)
 ignorehitpause = 1
 persistent = 0
 
@@ -2905,17 +3004,60 @@ ignorehitpause = 1
 ;===================================================================================
 ;Print
 ;===================================================================================
+
+;----------------------------------------------------------------------------------------
+;原始
+[State -2, Debug]
+type = displaytoclipboard
+Trigger1 = 0
+text = "P2StateNo = %d p2HitTime = %d X = %d, Y = %d p2posy = %d p2AnimTime = %d"
+params = P2StateNo, EnemyNear,GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, EnemyNear,Pos y, EnemyNear,AnimTime
+ignorehitpause = 1
+
+[State -2, Debug]
+type = appendtoclipboard
+Trigger1 = 0
+text="\nTRACE=%d V16=%d HV44=%d P2Time=%d"  
+params= var(50), var(16), helper(11990),var(44), EnemyNear,Time
+ignorehitpause = 1
+
+;----------------------------------------------------------------------------------------
+;毁灭压杀追击剪刀脚
 [State -2, Debug]
 type = displaytoclipboard
 Trigger1 = 1
-text = "P2StateNo = %d p2HitTime = %d hittime = %d X = %d, Y = %d var(4) = %d"
-params = P2StateNo, EnemyNear,GetHitVar(hittime), GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, var(4)
+text = "P2StateNo = %d p2HitTime = %d X = %d, Y = %d p2posy = %d p2AnimTime = %d"
+params = P2StateNo, EnemyNear,GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, EnemyNear,Pos y, EnemyNear,AnimTime
 ignorehitpause = 1
 
 [State -2, Debug]
 type = appendtoclipboard
 Trigger1 = 1
-text="\nTRACE = %d fvar(12) = %f fvar(13) = %f p2AnimTime = %d"  
-params= var(50), fvar(12) , fvar(13), EnemyNear,AnimTime
-ignorehitpause = 1 
+text="\nTRACE=%d HV45=%d"  
+params= var(50), helper(11990),var(45)
+ignorehitpause = 1
 
+;----------------------------------------------------------------------------------------
+;调试抓浮空追击问题
+[State -2, Debug]
+type = displaytoclipboard
+Trigger1 = 0
+text = "Target205=%d p2Ctrl=%d TargetPosY=%f V17=%d"
+params = Numtarget(205),EnemyNear,Ctrl,EnemyNear,Pos Y + EnemyNear,Vel Y * 6 + fvar(13) * 6 * (6 + 1) / 2, var(17)
+ignorehitpause = 1
+
+[State -2, Debug]
+type = appendtoclipboard
+Trigger1 = 0
+text="\nTRACE=%d P2Vel Y=%d FV13=%f FV11=%f V9=%d P2H=%d"  
+params= var(50), EnemyNear,Vel Y, fvar(13),fvar(11), var(9), EnemyNear,MoveType = H 
+ignorehitpause = 1
+
+;----------------------------------------------------------------------------------------
+;调试僵局
+[State -2, Debug]
+type = appendtoclipboard
+Trigger1 = 0
+text="\nTRACE=%d HV0=%d HV1=%d HV2=%d"  
+params= var(50), helper(11990),var(0), helper(11990),var(1), helper(11990),var(2)
+ignorehitpause = 1

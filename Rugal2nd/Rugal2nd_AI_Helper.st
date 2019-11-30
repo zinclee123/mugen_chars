@@ -1014,6 +1014,11 @@ Physics = N
 Sprpriority = 1
 
 [State 33001]
+type = playerpush
+trigger1 = 1
+value = 0
+
+[State 33001]
 type=selfstate
 trigger1=!ishelper
 value=0
@@ -1067,6 +1072,11 @@ Movetype = I
 Physics = N
 Sprpriority = 1
 
+[State 33001]
+type = playerpush
+trigger1 = 1
+value = 0
+
 [State 33002]
 type=selfstate
 trigger1=!ishelper
@@ -1088,7 +1098,7 @@ Type = Projectile
 Trigger1 = time=0
 Velocity = -10,0
 ProjID = 6666
-Projanim = -1
+Projanim = 0
 Offset = 0,0
 projstagebound = 0
 Projedgebound = 100000
@@ -1116,11 +1126,6 @@ IgnoreHitPause = 1
 [Statedef 11990]
 
 [State 11990]
-type=selfstate
-trigger1=!ishelper
-value=0
-
-[State 11990]
 Type = AssertSpecial
 Trigger1 = IsHelper
 flag = invisible
@@ -1132,15 +1137,367 @@ Value = SCA
 Time = 1
 IgnoreHitPause = 1
 
+[State 11990]
+type = varadd
+Triggerall = RoundState = 2
+triggerall = !(EnemyNear,StateNo = 0 && Root,StateNo = 0 && !Root,Ctrl && !EnemyNear,Ctrl)
+trigger1 = floor(Root,pos x) = var(0) 
+trigger1 = floor(EnemyNear,pos x) = var(1) 
+trigger1 = EnemyNear,MoveType != H
+trigger1 = Root,MoveType != H
+var(2) = 1
+
+[State 11990,Rest]
+type = varset
+trigger1 = EnemyNear,MoveType = H
+trigger2 = Root,MoveType = H
+trigger3 = floor(Root,pos x) != var(0) 
+trigger4 = floor(EnemyNear,pos x) != var(1) 
+trigger5 = RoundState != 2
+trigger6 = EnemyNear,StateType = A
+trigger7 = Root,StateType = A
+trigger8 = Root,StateNo >= 1000
+trigger9 = EnemyNear,StateNo >= 1000
+var(2) = 0
+
+[State 11990 上一F自己的位置]
+type = Varset
+trigger1 = 1
+var(0) = floor(Root,pos x)
+
+[State 11990 上一F自己的位置]
+type = Varset
+trigger1 = 1
+var(1) = floor(EnemyNear,pos x)
+
+
+[State 11990,长距离攻击角色]
+type = VarSet
+Triggerall = ishelper
+Trigger1 = P2BodyDist x > 100
+Trigger1 = EnemyNear,StateType != A
+Trigger1 = EnemyNear,MoveType = A
+Trigger1 = EnemyNear,MoveContact
+Trigger1 = EnemyNear,StateNo = [200,1999]
+var(15) = 1
+IgnoreHitPause = 1
+
+
+[State 11990 最多升龙追击次数]
+type = VarSet
+Triggerall = ishelper
+Trigger1 = 1
+var(16) = 3 + ifelse(root,var(52)>0 || root,life < 300,2,0)
+IgnoreHitPause = 1
+
+;--------------------------------------------------------
+;远距离赌AB
+[State 11990 远AB距离初始化]
+type = Varset
+Triggerall = IsHelper
+Trigger1 = var(15) = 0
+var(17) = 135
+IgnoreHitPause = 1
+
+[State 11990 远AB距离调整]
+type = VarAdd
+Triggerall = IsHelper
+Trigger1 = Root,PrevStateNo = 900
+Trigger1 = Root,Time = 1
+Trigger1 = Root,MoveType = H
+Trigger1 = Root,StateNo != [120,159]
+Trigger1 = var(15) >= 100
+var(17) = -35
+IgnoreHitPause = 1
+
+;--------------------------------------------------------
+;弹幕抵消
+[state 11990,弹幕不可抵消]
+type = varset
+Triggerall = ishelper
+Triggerall = Root,MoveType = H
+Triggerall = Root,StateNo != [120,159]
+Triggerall = !EnemyNear,MoveHit
+Trigger1 = Root,PrevStateNo = 1700 && Root,Time >= 12
+Trigger2 = Root,PrevStateNo = 1720 && Root,Time >= 12
+Trigger3 = Root,PrevStateNo = 1701
+Trigger4 = Root,PrevStateNo = 1010 && Root,Time >= 12
+var(18) = 1
+ignorehitpause = 1
+
+;--------------------------------------------------------
+;弹幕跳不过去
+[state 11990]
+type = varset
+Triggerall = ishelper
+Triggerall = Root,MoveType = H
+Triggerall = Root,StateNo != [120,159]
+Triggerall = Root,PrevStateNo = 38 || Root,PrevStateNo = 50 || (Root,PrevStateNo = [120,149]) || Root,PrevStateNo = [600,690]
+Trigger1 = Root,Pos Y < -72 
+Trigger1 = !EnemyNear,MoveHit
+var(19) = 1
+ignorehitpause = 1
+
+;--------------------------------------------------------
+;计算飞行道具出现判定的时间
+[State 11990]
+type = varset
+trigger1 = EnemyNear,StateNo != [1000,1999]
+trigger2 = EnemyNear,Ctrl
+trigger3 = EnemyNear,MoveType = H
+trigger4 = EnemyNear,StateType = L
+trigger5 = EnemyNear,NumProj = 0 && !PlayerIdExist(Helper(33333333),var(3))
+trigger6 = EnemyNear,AnimTime = 0
+var(20) = 0
+IgnoreHitPause = 1
+
+
+[State 11990]
+type = varset
+triggerall = EnemyNear,StateNo = [1000,1999]
+triggerall = Enemynear,MoveType = A || EnemyNear,MoveType = I
+triggerall = EnemyNear,NumProj || PlayerIdExist(Helper(33333333),var(3))
+triggerall = var(20) = 0
+
+trigger1 = var(21) = 0
+trigger1 = var(21) := EnemyNear,StateNo 
+trigger1 = var(26) := EnemyNear,Time
+
+trigger2 = var(21) != EnemyNear,StateNo 
+trigger2 = var(22) = 0
+trigger2 = var(22) := EnemyNear,StateNo
+trigger2 = var(27) := EnemyNear,Time
+
+trigger3 = var(21) != EnemyNear,StateNo
+trigger3 = var(22) != EnemyNear,StateNo  
+trigger3 = var(23) = 0
+trigger3 = var(23) := EnemyNear,StateNo
+trigger3 = var(28) := EnemyNear,Time
+
+trigger4 = var(21) != EnemyNear,StateNo
+trigger4 = var(22) != EnemyNear,StateNo  
+trigger4 = var(23) != EnemyNear,StateNo 
+trigger4 = var(24) = 0
+trigger4 = var(24) := EnemyNear,StateNo
+trigger5 = var(29) := EnemyNear,Time
+
+trigger5 = var(21) != EnemyNear,StateNo
+trigger5 = var(22) != EnemyNear,StateNo  
+trigger5 = var(23) != EnemyNear,StateNo 
+trigger5 = var(24) != EnemyNear,StateNo 
+trigger5 = var(25) = 0
+trigger5 = var(25) := EnemyNear,StateNo
+trigger5 = var(30) := EnemyNear,Time
+
+var(20) = 1
+IgnoreHitPause = 1
+
+[State 11990]
+type = Null
+triggerall = 1 || var(31) := 0
+trigger1 = var(21) && var(21) = enemynear,Stateno
+trigger1 = var(31) := var(26)
+trigger2 = var(22) && var(22) = enemynear,Stateno
+trigger2 = var(31) := var(27)
+trigger3 = var(23) && var(23) = enemynear,Stateno
+trigger3 = var(31) := var(28)
+trigger4 = var(24) && var(24) = enemynear,Stateno
+trigger4 = var(31) := var(29)
+trigger5 = var(25) && var(25) = enemynear,Stateno
+trigger5 = var(31) := var(30)
+IgnoreHitPause = 1
+
+;--------------------------------------------------------
+;多个飞行道具同时出现
+[State 11990]
+type = varset
+Triggerall = RoundState = 2
+triggerall = EnemyNear,MoveType = A
+Triggerall = EnemyNear,StateNo = [1000,1999]
+trigger1 = EnemyNear,NumProj > 1
+trigger2 = PlayerIdExist(Helper(33333333),var(3)) && PlayerIdExist(Helper(33333333),var(4))
+var(32) = 1
+ignorehitpause
+
+;--------------------------------------------------------
+;当身记录
+[state 11990,对手当身技 记录]
+type = null
+triggerall = ishelper
+triggerall = root,var(18) = [700,1999]
+
+trigger1 = var(37) = 0
+trigger1 = var(37) := root,var(18) 
+
+trigger2 = var(37) != root,var(18) 
+trigger2 = var(38) = 0
+trigger2 = var(38) := root,var(18) 
+
+trigger3 = var(37) != root,var(18) 
+trigger3 = var(38) != root,var(18) 
+trigger3 = var(39) = 0
+trigger3 = var(39) := root,var(18) 
+
+trigger4 = var(37) != root,var(18) 
+trigger4 = var(38) != root,var(18) 
+trigger4 = var(39) != root,var(18) 
+trigger4 = var(40) = 0
+trigger4 = var(40) := root,var(18) 
+
+trigger5 = var(37) != root,var(18) 
+trigger5 = var(38) != root,var(18) 
+trigger5 = var(39) != root,var(18) 
+trigger5 = var(40) != root,var(18) 
+trigger5 = var(41) = 0
+trigger5 = var(41) := root,var(18) 
+
+trigger6 = var(37) != root,var(18) 
+trigger6 = var(38) != root,var(18) 
+trigger6 = var(39) != root,var(18) 
+trigger6 = var(40) != root,var(18) 
+trigger6 = var(41) != root,var(18) 
+trigger6 = var(42) = 0
+trigger6 = var(42) := root,var(18) 
+IgnoreHitPause = 1
+
+[state 11990,对手当身技 记录]
+type = null
+triggerall = ishelper
+triggerall = root,var(19) = [700,1999]
+
+trigger1 = var(37) = 0
+trigger1 = var(37) := root,var(19) 
+
+trigger2 = var(37) != root,var(19) 
+trigger2 = var(38) = 0
+trigger2 = var(38) := root,var(19) 
+
+trigger3 = var(37) != root,var(19) 
+trigger3 = var(38) != root,var(19) 
+trigger3 = var(39) = 0
+trigger3 = var(39) := root,var(19) 
+
+trigger4 = var(37) != root,var(19) 
+trigger4 = var(38) != root,var(19) 
+trigger4 = var(39) != root,var(19) 
+trigger4 = var(40) = 0
+trigger4 = var(40) := root,var(19) 
+
+trigger5 = var(37) != root,var(19) 
+trigger5 = var(38) != root,var(19) 
+trigger5 = var(39) != root,var(19) 
+trigger5 = var(40) != root,var(19) 
+trigger5 = var(41) = 0
+trigger5 = var(41) := root,var(19) 
+
+trigger6 = var(37) != root,var(19) 
+trigger6 = var(38) != root,var(19) 
+trigger6 = var(39) != root,var(19) 
+trigger6 = var(40) != root,var(19) 
+trigger6 = var(41) != root,var(19) 
+trigger6 = var(42) = 0
+trigger6 = var(42) := root,var(19) 
+IgnoreHitPause = 1
+
+
+[state 11990,对手正在使用当身技]
+type = VarSet
+var(43) = 1
+triggerall = ishelper
+triggerall = 1 || var(43) := 0
+trigger1 = var(37) && var(37) = enemynear,Stateno
+trigger2 = var(38) && var(38) = enemynear,Stateno
+trigger3 = var(39) && var(39) = enemynear,Stateno
+trigger4 = var(40) && var(40) = enemynear,Stateno
+trigger5 = var(41) && var(41) = enemynear,Stateno
+trigger6 = var(42) && var(42) = enemynear,Stateno
+IgnoreHitPause = 1
+
+
+;--------------------------------------------------------
+;切返条件判定
+;飞行道具不切返，因为K系列会空振滑步
+;普通招式只切返比我们最快最远的招式开快的招式
+[State -3]
+type = VarSet
+var(44) = 1
+triggerall = ishelper
+triggerall = 1 || var(44) := 0
+Triggerall = EnemyNear,MoveType != I
+Triggerall = var(43) = 0
+Triggerall = !((EnemyNear,StateNo = [200,1999]) && EnemyNear,Time > -EnemyNear,AnimTime) || EnemyNear,AnimTime > 0
+;2A都不能抢的普通招式
+Trigger1 = EnemyNear,MoveType = A
+trigger1 = EnemyNear,StateNo = [200,999]
+trigger1 = helper(33000),var(3) != [0,1] ;这种是Time=0的Hitdef
+trigger1 = Enemynear,StateType != A
+trigger1 = Root,P2BodyDist x = [-40, 40]
+trigger1 = enemynear,stateno = helper(33000),var(2)
+trigger1 = helper(33000),var(3) < 3
+;2B都不能抢的普通招式
+Trigger2 = EnemyNear,MoveType = A
+trigger2 = EnemyNear,StateNo = [200,999]
+trigger2 = helper(33000),var(3) != [0,1] ;这种是Time=0的Hitdef
+trigger2 = Enemynear,StateType != A
+trigger2 = Root,P2BodyDist x = [-65, 65]
+trigger2 = enemynear,stateno = helper(33000),var(2)
+trigger2 = helper(33000),var(3) < 5
+;必杀技
+trigger3 = EnemyNear,StateNo = [1000,1999]
+trigger3 = Enemynear,StateType != A
+trigger3 = EnemyNear,MoveType = A
+trigger3 = EnemyNear,HitDefAttr = SCA,AA,AT,AP || var(31) > 0 || Helper(33000),var(1) != 0
+;超杀
+trigger4 = EnemyNear,StateNo = [2000,4999]
+trigger4 = Enemynear,StateType != A
+trigger4 = EnemyNear,MoveType = A
+;超远的普通技能
+trigger5 = EnemyNear,StateNo = [200,999]
+trigger5 = Enemynear,StateType != A
+trigger5 = EnemyNear,Life - Life > 500 || Root,P2BodyDist x = [70,120]
+trigger5 = EnemyNear,MoveType = A
+IgnoreHitPause = 1
+
+
+;--------------------------------------------------------
+;裸出灭族切割标志位，如果是裸出的，用毁灭压杀接连段
+[State -3,Reset]
+type = VarSet
+var(45) = 0
+triggerall = ishelper
+trigger1 = EnemyNear,MoveType != H
+trigger2 = EnemyNear,Ctrl
+trigger3 = EnemyNear,StateType = L
+trigger4 = RoundState != 2
+trigger5 = Helper(33000),var(14) != 1300 && Helper(33000),var(14) != 1301 
+
+[State -3]
+type = VarSet
+var(45) = 1
+triggerall = ishelper
+Triggerall = Root,StateNo = 1300
+Triggerall = EnemyNear,MoveType = H
+Triggerall = Root,NumTarget(1300) ||  Root,NumTarget(1301) ||  Root,NumTarget(1302)  
+Triggerall = Root,Life > Root,LifeMax*0.3
+TriggerAll = Root,Fvar(11) = [14,21] 
+trigger1 = Root,var(50) = [130071,130076]
+trigger2 = Root,var(50) = [130031,130032]
 
 
 
+[state 1091100,敌人当身技记录 显示]
+type = displaytoclipboard
+triggerall = ishelper
+trigger1 = 1
+text = "V20=%d V21=%d V26=%d V31=%d V32=%d"
+params = var(20),var(21),var(26),var(31),var(32)
 
-
-
-
-
-
+[state 1091100,敌人正在使用当身技 显示]
+type = Appendtoclipboard
+triggerall = ishelper
+trigger1 = 0
+text = "\nv17=%d"
+params = var(17)
 
 
 
@@ -1291,6 +1648,51 @@ trigger10 = PlayerIdExist(var(0)-10)
 trigger10 = IfElse(root,teamside = 1, PlayerID(var(0)-10),teamside = 2, PlayerID(var(0)-10),teamside = 1)
 trigger10 = PlayerID(var(0)-10),hitdefattr = ASC, NP, SP, HP
 trigger10 = var(3) := (var(0)-10)
+ignorehitpause = 1
+
+[State 33333333, 2]
+type = Null
+triggerall = PlayerIdExist(Root,ID)
+trigger1 = PlayerIdExist(var(3)-1)
+trigger1 = IfElse(root,teamside = 1, PlayerID(var(3)-1),teamside = 2, PlayerID(var(3)-1),teamside = 1)
+trigger1 = PlayerID(var(3)-1),hitdefattr = ASC, NP, SP, HP
+trigger1 = var(4) := (var(3)-1)
+trigger2 = PlayerIdExist(var(3)-2)
+trigger2 = IfElse(root,teamside = 1, PlayerID(var(3)-2),teamside = 2, PlayerID(var(3)-2),teamside = 1)
+trigger2 = PlayerID(var(3)-2),hitdefattr = ASC, NP, SP, HP
+trigger2 = var(4) := (var(3)-2)
+trigger3 = PlayerIdExist(var(3)-3)
+trigger3 = IfElse(root,teamside = 1, PlayerID(var(3)-3),teamside = 2, PlayerID(var(3)-3),teamside = 1)
+trigger3 = PlayerID(var(3)-3),hitdefattr = ASC, NP, SP, HP
+trigger3 = var(4) := (var(3)-3)
+trigger4 = PlayerIdExist(var(3)-4)
+trigger4 = IfElse(root,teamside = 1, PlayerID(var(3)-4),teamside = 2, PlayerID(var(3)-4),teamside = 1)
+trigger4 = PlayerID(var(3)-4),hitdefattr = ASC, NP, SP, HP
+trigger4 = var(4) := (var(3)-4)
+trigger5 = PlayerIdExist(var(3)-5)
+trigger5 = IfElse(root,teamside = 1, PlayerID(var(3)-5),teamside = 2, PlayerID(var(3)-5),teamside = 1)
+trigger5 = PlayerID(var(3)-5),hitdefattr = ASC, NP, SP, HP
+trigger5 = var(4) := (var(3)-5)
+trigger6 = PlayerIdExist(var(3)-6)
+trigger6 = IfElse(root,teamside = 1, PlayerID(var(3)-6),teamside = 2, PlayerID(var(3)-6),teamside = 1)
+trigger6 = PlayerID(var(3)-6),hitdefattr = ASC, NP, SP, HP
+trigger6 = var(4) := (var(3)-6)
+trigger7 = PlayerIdExist(var(3)-7)
+trigger7 = IfElse(root,teamside = 1, PlayerID(var(3)-7),teamside = 2, PlayerID(var(3)-7),teamside = 1)
+trigger7 = PlayerID(var(3)-7),hitdefattr = ASC, NP, SP, HP
+trigger7 = var(4) := (var(3)-7)
+trigger8 = PlayerIdExist(var(3)-8)
+trigger8 = IfElse(root,teamside = 1, PlayerID(var(3)-8),teamside = 2, PlayerID(var(3)-8),teamside = 1)
+trigger8 = PlayerID(var(3)-8),hitdefattr = ASC, NP, SP, HP
+trigger8 = var(4) := (var(3)-8)
+trigger9 = PlayerIdExist(var(3)-9)
+trigger9 = IfElse(root,teamside = 1, PlayerID(var(3)-9),teamside = 2, PlayerID(var(3)-9),teamside = 1)
+trigger9 = PlayerID(var(3)-9),hitdefattr = ASC, NP, SP, HP
+trigger9 = var(4) := (var(3)-9)
+trigger10 = PlayerIdExist(var(3)-10)
+trigger10 = IfElse(root,teamside = 1, PlayerID(var(3)-10),teamside = 2, PlayerID(var(3)-10),teamside = 1)
+trigger10 = PlayerID(var(3)-10),hitdefattr = ASC, NP, SP, HP
+trigger10 = var(4) := (var(3)-10)
 ignorehitpause = 1
  
 [State 33333333, BindToRoot]

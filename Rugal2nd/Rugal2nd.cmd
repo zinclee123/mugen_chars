@@ -380,8 +380,8 @@ type = ChangeState
 Triggerall = !var(59)
 trigger1 = ctrl || StateNo = 100
 trigger1 = command = "start"
-trigger1 = var(4):=4
-value = 39
+;trigger1 = var(4):=4
+value = 1450
 
 [State -1, ステート奪取判定用]
 type = VarSet
@@ -1436,7 +1436,7 @@ Trigger1 = Ctrl
 Type = ChangeState
 Value = 980
 Triggerall = !var(59)
-Triggerall = fvar(34) = 2 || !(fvar(29) = 1 || fvar(29) = 4)
+;Triggerall = fvar(34) = 2 || !(fvar(29) = 1 || fvar(29) = 4)
 Triggerall = Command = "holdx" && Command = "holdy" && Command = "holda"
 Triggerall = RoundState = 2
 Triggerall = Command != "holddown"

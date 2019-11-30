@@ -10,7 +10,7 @@
 
 对于比较了解Mugen或者格斗的爱好者(人物/AI作者和Mugen区影响力较大的Up主)：
 * 个人坚决反对用此处公开的人物/AI与国人魔改的只存在于视频的**凶狂类拳皇**人物对战(包括录视频)
-* 个人希望不要用此处公开的人物/AI与已发布的包含违背正常格斗行为的**拳皇**人物对战，包括但不限于空振防御、空振AB、无责任空振当身、5C当身之类
+* 个人希望不要用此处公开的人物/AI与已发布的包含违背正常拳皇系统行为的**拳皇**人物对战，包括但不限于空振防御、空振AB、无责任空振当身、5C当身之类
 * 个人希望不要用此处公开的人物/AI与某些通过Hitdef中通过P2StateNo演本人物掉AI的人物对战  
 * 本人也是UP，活跃在B站，主打强凶级，如果您也是UP想用此人物录视频，也请考虑此人物是否适合您的视频风格  
 
@@ -34,6 +34,10 @@ https://www.bilibili.com/video/av68477163
 02UM系统四条雏子 强级   
 对战演示视频:   
 https://www.bilibili.com/video/av66199493  
+
+## 卢卡尔(Rugal2nd)
+![Hinako](https://github.com/zinclee123/mugen_chars/blob/master/Resources/Rugal.gif)    
+02UM+98UM系统卢卡尔 凶级      
 
 ## 最后
 以上所有人物不可避免的有Bug，可以https://github.com/zinclee123/mugen_chars 提问题或者改进意见可通过Github的提交issue功能

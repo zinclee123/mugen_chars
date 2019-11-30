@@ -311,7 +311,7 @@ velset = 0,0
 
 [State 52, nothitby]
 type = NotHitBy
-trigger1 = Time = 0
+trigger1 = 1
 value = ,AT
 time = 1
 
@@ -592,16 +592,24 @@ type = U    ;Leave state type unchanged
 physics = U ;Leave physics unchanged
 
 [State 120]
+type = velset
+trigger1 = time = 0
+trigger1 = StateType != A
+x = 0
+
+[State 120]
 type = ChangeState
 trigger1 = Time = 0
 trigger1 = PrevStateNo = 5120
 value = 0
 ctrl = 1
 
-[State 120, 1]
-type = ChangeAnim
-trigger1 = Time = 0
-value = 120 + (statetype = C) + (statetype = A)*2
+[state 120, Turn]
+type = Turn
+trigger1 = var(59) = 1 && ctrl = 0
+trigger1 = StateType = S || StateType = C
+trigger1 = teammode = single || teammode = turns
+trigger1 = p2dist x < 0
 
 [State 120, 2]
 type = StateTypeSet
@@ -618,10 +626,24 @@ type = StateTypeSet
 trigger1 = Time = 0 && statetype = A
 physics = A
 
+[State 120, 1]
+type = ChangeAnim
+trigger1 = Time = 0
+value = 120 + (statetype = C) + (statetype = A)*2
+
 [State 120, Hi to Lo]
 type = StateTypeSet
 triggerall = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
+trigger2 = var(59) 
+trigger2 = helper(33000),var(11) != 2
+trigger2 = EnemyNear,StateType != A
+trigger2 = EnemyNear,MoveType = A
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) && PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger3 = var(59)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = EnemyNear,StateType != A
+trigger3 = EnemyNear,AnimTime >= -20
 statetype = C
 physics = C
 
@@ -629,19 +651,62 @@ physics = C
 type = StateTypeSet
 triggerall = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = !EnemyNear,NumProj
+trigger3 = !PlayerIdExist(helper(33333333),var(3))
+trigger3 = EnemyNear,StateType != C
+trigger3 = EnemyNear,MoveType = A
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 statetype = S
 physics = S
 
+[State AI fix]
+type = ctrlset
+trigger1 = var(59) && numenemy
+value = (enemynear, time >= 120 || time >= 180)
+
 [State 120, 5]
 type = ChangeState
-trigger1 = AnimTime = 0
+trigger1 = Time = 0;AnimTime = 0
 value = 130 + (statetype = C) + (statetype = A)*2
 
 [State 120, Stop Guarding]
 type = ChangeState
-triggerall = var(59) = 0
+trigger1 = var(59) = 0
 trigger1 = command != "holdback"
 trigger2 = !inguarddist
+trigger2 = !(numhelper(33000) && Helper(33000),InGuardDist && (Facing*EnemyNear,Facing!=-1 || P2Dist X<0))
+trigger3 = var(59) && numenemy
+trigger3 = enemynear, hitdefattr = SCA, AT
+;AI helper带的撤防
+trigger4 = enemynear,hitdefattr = ,at 
+trigger5 = numhelper(33000)
+trigger5 = helper(33000),var(11) = 3 || helper(33000),var(11) = 5 ;空中的话，直接写helper(33000),var(11) = [3,5]
+
+trigger6 = numhelper(33000)
+trigger6 = enemynear,stateno = helper(33000),var(2)
+trigger6 = P2BodyDist x < 35
+trigger6 = enemynear,time < helper(33000),var(3) - 2 ;一般最快的普通技是4f就这么写。    
+trigger6 = enemy,teammode != simul ;双人战不记录
+trigger6 = !EnemyNear,NumProj && !PlayerIdExist(helper(33333333),var(3))
+
+trigger7 = !EnemyNear,NumProj && !PlayerIdExist(helper(33333333),var(3))
+trigger7 = numhelper(33000)
+trigger7 = helper(33000),var(1) > 1 ;对手判定已经过了，写 > 1比较保险。
+trigger7 = time > 3 || enemynear,animtime >= -5 ;3F用来多段技警戒。而对手animtime >= -5的时候已经接近收招了，通常不会残余判定。
+trigger7 = random <= 60*var(59) ;有些招持续时间还是很长的，必须加一个random保险。
+trigger7 = enemy,teammode != simul ;双人战撤防很危险
+trigger7 = enemynear,statetype != A || prevstateno = [150,159] ;空中攻击通常持续时间很长，但防御过后一般可以认为判定已经过去了。
+trigger7 = prevstateno != 5120 || random%10 = 0 ;起身时少乱动，虽然也有可能中奖。
+;自身在空中，对方发C类型的攻击
+trigger8 = statetype = A
+trigger8 = enemynear,hitdefattr = c ,aa
 value = 140
 
 ;---------------------------------------------------------------------------
@@ -649,25 +714,69 @@ value = 140
 [Statedef 130]
 type    = S
 physics = S
-ctrl = 0
 
 [State 130, 1]
 type = ChangeAnim
 trigger1 = Anim != 130
 value = 130
 
+[state 120, Turn]
+type = Turn
+trigger1 = var(59) = 1 && ctrl = 0
+trigger1 = StateType = S || StateType = C
+trigger1 = teammode = single || teammode = turns
+trigger1 = p2dist x < 0
+
+[State AI fix]
+type = ctrlset
+trigger1 = var(59) && numenemy
+value = (enemynear, time >= 120 || time >= 180)
+
 [State 130, Hi to Lo]
 type = ChangeState
-triggerall = var(59) = 0
-triggerall = Time > 0
-trigger1 = var(13) && Command = "holddown" && Command = "holdback"
+TriggerAll = StateType = S
+trigger1 = var(59) = 0
+trigger1 = command = "holddown"
+trigger2 = var(59) 
+trigger2 = helper(33000),var(11) != 2
+trigger2 = EnemyNear,StateType != A
+trigger2 = EnemyNear,MoveType = A
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger3 = var(59)
+trigger3 = helper(33000),var(11) != 2
+trigger3 = EnemyNear,MoveType = A
+trigger3 = EnemyNear,StateType != A
+trigger3 = EnemyNear,AnimTime >= -20
 value = 131
+IgnoreHitPause = 1
 
 [State 130, Stop Guarding]
 type = ChangeState
-triggerall = var(59) = 0
+trigger1 = var(59) = 0
 trigger1 = command != "holdback"
 trigger2 = !inguarddist
+trigger2 = !(numhelper(33000) && Helper(33000),InGuardDist && (Facing*EnemyNear,Facing!=-1 || P2Dist X<0))
+trigger3 = var(59) && numenemy
+trigger3 = enemynear, hitdefattr = , AT
+;AI helper带的撤防
+trigger4 = numhelper(33000)
+trigger4 = helper(33000),var(11) = 3 || helper(33000),var(11) = 5 ;空中的话，直接写helper(33000),var(11) = [3,5]
+
+trigger5 = !EnemyNear,NumProj && !PlayerIdExist(helper(33333333),var(3))
+trigger5 = numhelper(33000)
+trigger5 = P2BodyDist x < 35
+trigger5 = enemynear,stateno = helper(33000),var(2)
+trigger5 = enemynear,time < helper(33000),var(3) - 2 ;一般最快的普通技是4f就这么写。    
+trigger5 = enemy,teammode != simul ;双人战不记录
+
+trigger6 = !EnemyNear,NumProj && !PlayerIdExist(helper(33333333),var(3))
+trigger6 = numhelper(33000)
+trigger6 = helper(33000),var(1) > 1 ;对手判定已经过了，写 > 1比较保险。
+trigger6 = time > 3 || enemynear,animtime >= -5 ;3F用来多段技警戒。而对手animtime >= -5的时候已经接近收招了，通常不会残余判定。
+trigger6 = random <= 60*var(59) ;有些招持续时间还是很长的，必须加一个random保险。
+trigger6 = enemy,teammode != simul ;双人战撤防很危险
+trigger6 = enemynear,statetype != A || prevstateno = [150,159] ;空中攻击通常持续时间很长，但防御过后一般可以认为判定已经过去了。
+trigger6 = prevstateno != 5120 || random%10 = 0 ;起身时少乱动，虽然也有可能中奖。
 value = 140
 
 ;---------------------------------------------------------------------------
@@ -675,26 +784,71 @@ value = 140
 [Statedef 131]
 type    = C
 physics = C
-ctrl = 0
 
 [State 131, 1]
 type = ChangeAnim
 trigger1 = Anim != 131
 value = 131
 
+[state 120, Turn]
+type = Turn
+trigger1 = var(59) = 1 && ctrl = 0
+trigger1 = StateType = S || StateType = C
+trigger1 = teammode = single || teammode = turns
+trigger1 = p2dist x < 0
+
+[State AI fix]
+type = ctrlset
+trigger1 = var(59) && numenemy
+value = (enemynear, time >= 120 || time >= 180)
+
 [State 131, Lo to Hi]
 type = ChangeState
-triggerall = var(59) = 0
-triggerall = Time > 0
-trigger1 = var(13) && Command != "holddown" && Command = "holdback"
+TriggerAll = StateType = C
+trigger1 = var(59) = 0
+trigger1 = command != "holddown"
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = !EnemyNear,NumProj
+trigger3 = !PlayerIdExist(helper(33333333),var(3))
+trigger3 = EnemyNear,MoveType = A
+trigger3 = EnemyNear,StateType != C
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 value = 130
+IgnoreHitPause = 1
 
 [State 131, Stop Guarding]
 type = ChangeState
-triggerall = var(59) = 0
+trigger1 = var(59) = 0
 trigger1 = command != "holdback"
-trigger2 = !var(13)
 trigger2 = !inguarddist
+trigger2 = !(numhelper(33000) && Helper(33000),InGuardDist && (Facing*EnemyNear,Facing!=-1 || P2Dist X<0))
+trigger3 = var(59) && numenemy
+trigger3 = enemynear, hitdefattr = SCA, AT
+;AI helper带的撤防
+trigger4 = numhelper(33000)
+trigger4 = helper(33000),var(11) = 3 || helper(33000),var(11) = 5 ;空中的话，直接写helper(33000),var(11) = [3,5]
+
+trigger5 = !EnemyNear,NumProj && !PlayerIdExist(helper(33333333),var(3))
+trigger5 = P2BodyDist x < 35
+trigger5 = numhelper(33000)
+trigger5 = enemynear,stateno = helper(33000),var(2)
+trigger5 = enemynear,time < helper(33000),var(3) - 2 ;一般最快的普通技是4f就这么写。    
+trigger5 = enemy,teammode != simul ;双人战不记录
+
+trigger6 = !EnemyNear,NumProj && !PlayerIdExist(helper(33333333),var(3))
+trigger6 = numhelper(33000)
+trigger6 = helper(33000),var(1) > 1 ;对手判定已经过了，写 > 1比较保险。
+trigger6 = time > 3 || enemynear,animtime >= -5 ;3F用来多段技警戒。而对手animtime >= -5的时候已经接近收招了，通常不会残余判定。
+trigger6 = random <= 60*var(59) ;有些招持续时间还是很长的，必须加一个random保险。
+trigger6 = enemy,teammode != simul ;双人战撤防很危险
+trigger6 = enemynear,statetype != A || prevstateno = [150,159] ;空中攻击通常持续时间很长，但防御过后一般可以认为判定已经过去了。
+trigger6 = prevstateno != 5120 || random%10 = 0 ;起身时少乱动，虽然也有可能中奖。
 value = 140
 
 ;---------------------------------------------------------------------------
@@ -728,12 +882,16 @@ type = PosSet
 trigger1 = sysvar(0)
 y = 0
 
+[State AI fix]
+type = ctrlset
+trigger1 = var(59) && numenemy
+value = (enemynear, time >= 120 || time >= 180)
+
 [State 132, 6]
 type = ChangeState
-triggerall = sysvar(0)
-trigger1 = var(59) = 0
+trigger1 = sysvar(0)
+trigger1 = (var(59) = 0 && command = "holdback") || var(59)
 trigger1 = inguarddist
-trigger1 = command = "holdback"
 value = 130
 
 [State 132, 7]
@@ -743,9 +901,33 @@ value = 52
 
 [State 132, Stop Guarding]
 type = ChangeState
-triggerall = var(59) = 0
+trigger1 = var(59) = 0
 trigger1 = command != "holdback"
 trigger2 = !inguarddist
+trigger2 = !(numhelper(33000) && Helper(33000),InGuardDist && (Facing*EnemyNear,Facing!=-1 || P2Dist X<0))
+trigger3 = var(59) && numenemy
+trigger3 = enemynear, hitdefattr = , AT
+;AI helper带的撤防
+trigger4 = numhelper(33000)
+trigger4 = helper(33000),var(11) = [3,5] ;空中的话，直接写helper(33000),var(11) = [3,5]
+
+trigger5 = !EnemyNear,NumProj && !PlayerIdExist(helper(33333333),var(3))
+trigger5 = numhelper(33000)
+trigger5 = enemynear,stateno = helper(33000),var(2)
+trigger5 = enemynear,time < helper(33000),var(3) - 5 ;一般最快的普通技是4f就这么写。    
+trigger5 = enemy,teammode != simul ;双人战不记录
+
+trigger6 = !EnemyNear,NumProj && !PlayerIdExist(helper(33333333),var(3))
+trigger6 = numhelper(33000)
+trigger6 = helper(33000),var(1) > 1 ;对手判定已经过了，写 > 1比较保险。
+trigger6 = time > 3 || enemynear,animtime >= -5 ;3F用来多段技警戒。而对手animtime >= -5的时候已经接近收招了，通常不会残余判定。
+trigger6 = random <= 60*var(59) ;有些招持续时间还是很长的，必须加一个random保险。
+trigger6 = enemy,teammode != simul ;双人战撤防很危险
+trigger6 = enemynear,statetype != A || prevstateno = [150,159] ;空中攻击通常持续时间很长，但防御过后一般可以认为判定已经过去了。
+trigger6 = prevstateno != 5120 || random%10 = 0 ;起身时少乱动，虽然也有可能中奖。
+;自身在空中，对方发C类型的攻击
+trigger7 = statetype = A
+trigger7 = enemynear,hitdefattr = c ,aa
 value = 140
 
 ;---------------------------------------------------------------------------
@@ -777,17 +959,42 @@ physics = A
 
 [State 140, Hi to Lo]
 type = StateTypeSet
-triggerall = var(59) = 0
+TriggerAll = StateType = S
+trigger1 = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
+trigger2 = var(59) 
+trigger2 = helper(33000),var(11) != 2
+trigger2 = EnemyNear,MoveType = A
+trigger2 = EnemyNear,StateType != A
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger3 = var(59)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = EnemyNear,StateType != A
+trigger3 = EnemyNear,AnimTime >= -20
 statetype = C
 physics = C
+IgnoreHitPause = 1
 
 [State 140, Lo to Hi]
 type = StateTypeSet
-triggerall = var(59) = 0
+TriggerAll = StateType = C
+trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = !EnemyNear,NumProj
+trigger3 = !PlayerIdExist(helper(33333333),var(3))
+trigger3 = EnemyNear,StateType != C
+trigger3 = EnemyNear,MoveType = A
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 statetype = S
 physics = S
+IgnoreHitPause = 1
 
 [State 140, 5]
 type = ChangeState
@@ -866,8 +1073,8 @@ value = 151 + 2*(command = "holddown")
 
 ;这里有点疑问
 [State 150, 2]
-type = Null;ChangeState
-triggerall = (var(59) || fvar(39) = 4)
+type = ChangeState
+triggerall = var(59)
 trigger1 = HitShakeOver
 value = 151 + 2*(statetype = C)
 
@@ -879,17 +1086,42 @@ ignorehitpause = 1
 
 [State 150, Hi to Lo]
 type = StateTypeSet
-triggerall = var(59) = 0
+TriggerAll = StateType = S
+trigger1 = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
+trigger2 = var(59) 
+trigger2 = helper(33000),var(11) != 2
+trigger2 = EnemyNear,MoveType = A
+trigger2 = EnemyNear,StateType != A
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger3 = var(59)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = EnemyNear,StateType != A
+trigger3 = EnemyNear,AnimTime >= -20
 statetype = C
 physics = C
+IgnoreHitPause = 1
 
 [State 150, Lo to Hi]
 type = StateTypeSet
-triggerall = var(59) = 0
+TriggerAll = StateType = C
+trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = !EnemyNear,NumProj
+trigger3 = !PlayerIdExist(helper(33333333),var(3))
+trigger3 = EnemyNear,StateType != C
+trigger3 = EnemyNear,MoveType = A
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 statetype = S
 physics = S
+IgnoreHitPause = 1
 
 [State 150, 3]
 type = ForceFeedback
@@ -924,17 +1156,42 @@ value = 1
 
 [State 151, Hi to Lo]
 type = StateTypeSet
-triggerall = var(59) = 0
+TriggerAll = StateType = S
+trigger1 = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
+trigger2 = var(59) 
+trigger2 = helper(33000),var(11) != 2
+trigger2 = EnemyNear,MoveType = A
+trigger2 = EnemyNear,StateType != A
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger3 = var(59)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = EnemyNear,StateType != A
+trigger3 = EnemyNear,AnimTime >= -20
 statetype = C
 physics = C
+IgnoreHitPause = 1
 
 [State 151, Lo to Hi]
 type = StateTypeSet
-triggerall = var(59) = 0
+TriggerAll = StateType = C
+trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = !EnemyNear,NumProj
+trigger3 = !PlayerIdExist(helper(33333333),var(3))
+trigger3 = EnemyNear,StateType != C
+trigger3 = EnemyNear,MoveType = A
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 statetype = S
 physics = S
+IgnoreHitPause = 1
 
 [State 151, 4]
 type = ChangeState
@@ -1008,8 +1265,8 @@ value = 151 + 2*(command = "holddown")
 
 ;这里有疑问
 [State 152, 3]
-type = Null;ChangeState
-triggerall = (var(59) || fvar(39) = 4)
+type = ChangeState
+triggerall = var(59)
 trigger1 = HitShakeOver
 value = 151 + 2*(statetype = C)
 
@@ -1019,19 +1276,45 @@ trigger1 = var(52) = IfElse((fvar(34) = 2 && var(53)),1560,1080)
 value = 151 + 2*(statetype = C)
 ignorehitpause = 1
 
+
 [State 152, Hi to Lo]
 type = StateTypeSet
-triggerall = var(59) = 0
+TriggerAll = StateType = S
+trigger1 = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
+trigger2 = var(59) 
+trigger2 = helper(33000),var(11) != 2
+trigger2 = EnemyNear,MoveType = A
+trigger2 = EnemyNear,StateType != A
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0)
+trigger3 = var(59)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = EnemyNear,StateType != A
+trigger3 = EnemyNear,AnimTime >= -20
 statetype = C
 physics = C
+IgnoreHitPause = 1
 
 [State 152, Lo to Hi]
 type = StateTypeSet
-triggerall = var(59) = 0
+TriggerAll = StateType = C
+trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = !EnemyNear,NumProj
+trigger3 = !PlayerIdExist(helper(33333333),var(3))
+trigger3 = EnemyNear,StateType != C
+trigger3 = EnemyNear,MoveType = A
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 statetype = S
 physics = S
+IgnoreHitPause = 1
 
 [State 152, 4]
 type = ForceFeedback
@@ -1065,17 +1348,38 @@ value = 1
 
 [State 153, Hi to Lo]
 type = StateTypeSet
-triggerall = var(59) = 0
+TriggerAll = StateType = S
+trigger1 = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
+trigger2 = var(59) 
+trigger2 = helper(33000),var(11) != 2
+trigger2 = EnemyNear,MoveType = A
+trigger2 = EnemyNear,StateType != A
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0)
 statetype = C
 physics = C
+IgnoreHitPause = 1
 
 [State 153, Lo to Hi]
 type = StateTypeSet
-triggerall = var(59) = 0
+TriggerAll = StateType = C
+trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
+;中段切站
+trigger2 = var(59)
+trigger2 = EnemyNear,StateType != C
+trigger2 = EnemyNear,MoveType = A 
+trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+;
+trigger3 = var(59)
+trigger3 = !EnemyNear,NumProj
+trigger3 = !PlayerIdExist(helper(33333333),var(3))
+trigger3 = EnemyNear,MoveType = A
+trigger3 = EnemyNear,StateType != C
+trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
 statetype = S
 physics = S
+IgnoreHitPause = 1
 
 [State 153, 4]
 type = ChangeState
@@ -2653,6 +2957,182 @@ trigger1 = time = 0
 trigger1 = SelfAnimExist(5500)
 value = 5500
 
+
+
+
+
+
+
+;---------------------------------------------------------------------------
+; Air get-hit (shaking)
+[Statedef 115020]
+type    = A
+movetype= H
+physics = N
+velset = 0,0
+ctrl = 0
+
+[State 5020, 1] ;Anim for HIT_LIGHT to HIT_HARD
+type = ChangeAnim2
+trigger1 = Time = 0
+trigger1 = GetHitVar(animtype) != [3,5]
+value = ifelse((GetHitVar(airtype) = 1),5000,5010) + GetHitVar(animtype)
+
+[State 5020, 2] ;Anim for HIT_BACK
+type = ChangeAnim2
+trigger1 = Time = 0
+trigger1 = GetHitVar(animtype) = [3,5]
+value = 5030
+
+[State 5020, 3] ;Anim for HIT_UP/HIT_DIAGUP (only if it exists)
+type = ChangeAnim2
+trigger1 = Time = 0
+trigger1 = (GetHitVar(animtype) = [4,5]) && (SelfAnimExist(5047 + GetHitVar(animtype)))
+value = 5047 + GetHitVar(animtype) ;5051 - 4 + type
+
+[State 5020, 4] ;Freeze anim
+type = ChangeAnim2
+trigger1 = Time > 0
+value = anim
+
+[State 5020, 5]
+type = ChangeState
+trigger1 = HitShakeOver
+value = 115030
+
+[State 5020, FFB Light]
+type = ForceFeedback
+trigger1 = anim = 5000
+trigger2 = anim = 5010
+persistent = 0
+time = 6
+waveform = square
+
+[State 5020, FFB Medium]
+type = ForceFeedback
+trigger1 = anim = 5001
+trigger2 = anim = 5011
+persistent = 0
+time = 8
+waveform = sinesquare
+ampl = 110,-1,-.3
+
+[State 5020, FFB Hard]
+type = ForceFeedback
+trigger1 = anim = 5012
+trigger2 = anim = 5002
+trigger3 = anim = 5030
+trigger4 = anim = [5051,5059]
+persistent = 0
+time = 15
+waveform = sinesquare
+ampl = 140
+
+;---------------------------------------------------------------------------
+; Air get-hit (knocked away)
+[Statedef 115030]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+
+[State 5030, 1]
+type = ChangeAnim2
+trigger1 = Anim != [5000, 5199]
+trigger1 = SelfAnimExist(5030)
+value = 5030
+
+[State 5030, 2]
+type = VelAdd
+trigger1 = 1
+y = GetHitVar(yaccel)
+
+[State 5030, 3]
+type = HitVelSet
+trigger1 = Time = 0
+x = 1
+y = 1
+
+[State 5030, 4]
+type = ChangeState
+trigger1 = HitOver
+trigger2 = Vel Y > 0    ;Hit ground
+trigger2 = Pos Y >= Const(movement.air.gethit.groundlevel)
+value = 115040 ;HITA_RECOV
+
+[State 5030, 6]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 115035 ;Air get-hit (transition)
+
+;---------------------------------------------------------------------------
+; Air get-hit (transition)
+[Statedef 115035]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+
+[State 5035, 1]
+type = ChangeAnim2
+trigger1 = Time = 0
+trigger1 = SelfAnimExist(5035)
+trigger1 = Anim != [5051,5059] ;Not if in hit up anim
+trigger1 = Anim != 5090 ;Not if hit off ground anim
+value = 5035
+
+[State 5035, 2]
+type = VelAdd
+trigger1 = 1
+y = GetHitVar(yaccel)
+
+[State 5035, 3]
+type = ChangeState
+trigger1 = HitOver  ;Hit is over
+trigger2 = AnimTime = 0 ;Animation over
+trigger3 = Vel Y > 0    ;Hit ground
+trigger3 = Pos Y >= Const(movement.air.gethit.groundlevel)
+trigger4 = Time = 0     ;No transition anim
+trigger4 = Anim != 5035 ;.
+value = 115040 ;Air get-hit (recovering in air, not falling)
+
+;---------------------------------------------------------------------------
+; Air get-hit (recovering in air, not falling)
+[Statedef 115040]
+type    = A
+movetype= H
+physics = N
+ctrl = 0
+
+[State 5040, 1]
+type = SelfState
+trigger1 = !Alive
+value = 5050
+ctrl = 0
+
+[State 5040, 2]
+type = ChangeAnim2
+trigger1 = AnimTime = 0
+value = 115040
+
+[State 5040, 5]
+type = VelAdd
+trigger1 = 1
+y = GetHitVar(yaccel)
+
+[State 5040, 6]
+type = SelfState
+trigger1 = Vel Y > 0
+trigger1 = Pos Y >= 0
+value = 52 ;Jump land
+
+
+
+
+
+
+
+
 ;---------------------------------------------------------------------------
 ; Initialize (at the start of the round)
 [Statedef 5900]
@@ -2690,6 +3170,11 @@ fvalue = 0
 type = ChangeState
 trigger1 = roundno = 1
 value = 190
+
+[State 5900]
+type = VarSet
+trigger1 = Time = 0
+var(44) = 180
 
 [State 5900, 3] 
 type = ChangeState

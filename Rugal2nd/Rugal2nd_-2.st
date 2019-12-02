@@ -82,6 +82,15 @@ trigger1 = EnemyNear,PrevStateNo  < 2000
 var(19) = EnemyNear,PrevStateNo 
 ignorehitpause = 1
 
+[State -2]
+type = varset
+triggerall = MoveReversed = 1
+trigger1 = PrevStateNo = [600,699]
+trigger1 = enemynear,movetype = A || enemynear,movetype = I
+trigger1 = EnemyNear,StateNo < 2000
+fvar(18) = 1
+ignorehitpause = 1
+
 
 ;****************************************************************
 ;*************************【Config】*****************************
@@ -91,14 +100,14 @@ ignorehitpause = 1
 [State -2, Display Power Gauge]
 type = varset
 trigger1 = 1
-fvar(30) = 1;(1:on/0:off)
+fvar(30) = 0;(1:on/0:off)
 ignorehitpause = 1
 ;パワーゲージの表示の有無を切り替えます。
 
 [State -2, Display AI s Lv]
 type = varset
 trigger1 = 1
-fvar(31) = 1;(1:on/0:off)
+fvar(31) = 0;(1:on/0:off)
 ignorehitpause = 1
 ;AILvの表示の有無を切り替えます。
 
@@ -691,15 +700,6 @@ value = 2
 ignorehitpause = 1
 
 
-[State -2, バグ回避（受身）]
-type = SelfState
-value = 5100 + (Pos Y < -20)*10
-triggerall = abs(var(22) - var(23)) > 300
-triggerall = Time > 300
-triggerall = Vel Y = 0
-trigger1 = !(EnemyNear(var(2)),MoveType = A)
-
-
 ;==================================================================
 
 [State -2, DefenceMulSet]
@@ -811,7 +811,6 @@ var(9) = 1
 
 [State -2, 空中連続ヒット制限]
 type = varset
-
 trigger1 = EnemyNear(var(2)),Life > 0 && EnemyNear(var(2)),Ctrl
 trigger2 = var(49) = [1,2]
 trigger3 = !(P2MoveType = H)
@@ -825,7 +824,6 @@ ignorehitpause = 1
 
 [State -2, 02UM超必殺技空中ヒット制限]
 type = varset
-
 triggerall = fvar(26)
 triggerall = MoveHit = 1
 trigger1 = NumTarget(1402) || NumTarget(1452) || NumTarget(1453)
@@ -3009,32 +3007,49 @@ ignorehitpause = 1
 ;原始
 [State -2, Debug]
 type = displaytoclipboard
-Trigger1 = 0
+Trigger1 = 1
 text = "P2StateNo = %d p2HitTime = %d X = %d, Y = %d p2posy = %d p2AnimTime = %d"
 params = P2StateNo, EnemyNear,GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, EnemyNear,Pos y, EnemyNear,AnimTime
 ignorehitpause = 1
 
 [State -2, Debug]
 type = appendtoclipboard
-Trigger1 = 0
-text="\nTRACE=%d V16=%d HV44=%d P2Time=%d"  
-params= var(50), var(16), helper(11990),var(44), EnemyNear,Time
+Trigger1 = 1
+text="\nTRACE=%d V49=%d HV45=%d FV18=%d P2Time=%d"   
+params= var(50), var(49),helper(11990),var(45), fvar(18),EnemyNear,Time
 ignorehitpause = 1
+
+;----------------------------------------------------------------------------------------
+;对面普通招式太快应对
+[State -2, Debug]
+type = displaytoclipboard
+Trigger1 = 0
+text = "P2StateNo=%d Proj5555=%d, Proj6666=%d dist1=%d dist2=%d"
+params = P2StateNo,NumProjID(5555),NumProjID(6666),Helper(33001),rootdist x,Helper(33002),rootdist x
+ignorehitpause = 1
+
+[State -2, Debug]
+type = appendtoclipboard
+Trigger1 = 0
+text="\nTRACE=%d HV44=%d HV2=%d HV3=%d"  
+params= var(50), helper(11990),var(44),helper(33000),var(2),helper(33000),var(3)
+ignorehitpause = 1
+
 
 ;----------------------------------------------------------------------------------------
 ;毁灭压杀追击剪刀脚
 [State -2, Debug]
 type = displaytoclipboard
-Trigger1 = 1
+Trigger1 = 0
 text = "P2StateNo = %d p2HitTime = %d X = %d, Y = %d p2posy = %d p2AnimTime = %d"
 params = P2StateNo, EnemyNear,GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, EnemyNear,Pos y, EnemyNear,AnimTime
 ignorehitpause = 1
 
 [State -2, Debug]
 type = appendtoclipboard
-Trigger1 = 1
-text="\nTRACE=%d HV45=%d"  
-params= var(50), helper(11990),var(45)
+Trigger1 = 0
+text="\nTRACE=%d HV45=%d HV2=%d HV3=%d"  
+params= var(50), helper(11990),var(45),helper(33000),var(2),helper(33000),var(3)
 ignorehitpause = 1
 
 ;----------------------------------------------------------------------------------------

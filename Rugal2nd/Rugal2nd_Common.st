@@ -639,11 +639,11 @@ trigger2 = var(59)
 trigger2 = helper(33000),var(11) != 2
 trigger2 = EnemyNear,StateType != A
 trigger2 = EnemyNear,MoveType = A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) && PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) && PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
 trigger3 = var(59)
 trigger3 = EnemyNear,MoveType = A
 trigger3 = EnemyNear,StateType != A
-trigger3 = EnemyNear,AnimTime >= -20
+trigger3 = (EnemyNear,Time - EnemyNear,AnimTime <= 20)
 statetype = C
 physics = C
 
@@ -662,7 +662,7 @@ trigger3 = !EnemyNear,NumProj
 trigger3 = !PlayerIdExist(helper(33333333),var(3))
 trigger3 = EnemyNear,StateType != C
 trigger3 = EnemyNear,MoveType = A
-trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
+trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
 statetype = S
 physics = S
 
@@ -741,12 +741,12 @@ trigger2 = var(59)
 trigger2 = helper(33000),var(11) != 2
 trigger2 = EnemyNear,StateType != A
 trigger2 = EnemyNear,MoveType = A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
 trigger3 = var(59)
 trigger3 = helper(33000),var(11) != 2
 trigger3 = EnemyNear,MoveType = A
 trigger3 = EnemyNear,StateType != A
-trigger3 = EnemyNear,AnimTime >= -20
+trigger3 = (EnemyNear,Time - EnemyNear,AnimTime <= 20)
 value = 131
 IgnoreHitPause = 1
 
@@ -818,7 +818,7 @@ trigger3 = !EnemyNear,NumProj
 trigger3 = !PlayerIdExist(helper(33333333),var(3))
 trigger3 = EnemyNear,MoveType = A
 trigger3 = EnemyNear,StateType != C
-trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
+trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
 value = 130
 IgnoreHitPause = 1
 
@@ -966,11 +966,11 @@ trigger2 = var(59)
 trigger2 = helper(33000),var(11) != 2
 trigger2 = EnemyNear,MoveType = A
 trigger2 = EnemyNear,StateType != A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
 trigger3 = var(59)
 trigger3 = EnemyNear,MoveType = A
 trigger3 = EnemyNear,StateType != A
-trigger3 = EnemyNear,AnimTime >= -20
+trigger3 = (EnemyNear,Time - EnemyNear,AnimTime <= 20)
 statetype = C
 physics = C
 IgnoreHitPause = 1
@@ -991,7 +991,7 @@ trigger3 = !EnemyNear,NumProj
 trigger3 = !PlayerIdExist(helper(33333333),var(3))
 trigger3 = EnemyNear,StateType != C
 trigger3 = EnemyNear,MoveType = A
-trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
+trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
 statetype = S
 physics = S
 IgnoreHitPause = 1
@@ -1093,11 +1093,11 @@ trigger2 = var(59)
 trigger2 = helper(33000),var(11) != 2
 trigger2 = EnemyNear,MoveType = A
 trigger2 = EnemyNear,StateType != A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
 trigger3 = var(59)
 trigger3 = EnemyNear,MoveType = A
 trigger3 = EnemyNear,StateType != A
-trigger3 = EnemyNear,AnimTime >= -20
+trigger3 = (EnemyNear,Time - EnemyNear,AnimTime <= 20)
 statetype = C
 physics = C
 IgnoreHitPause = 1
@@ -1118,7 +1118,7 @@ trigger3 = !EnemyNear,NumProj
 trigger3 = !PlayerIdExist(helper(33333333),var(3))
 trigger3 = EnemyNear,StateType != C
 trigger3 = EnemyNear,MoveType = A
-trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
+trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
 statetype = S
 physics = S
 IgnoreHitPause = 1
@@ -1135,6 +1135,7 @@ time = 3
 type    = S
 movetype= H
 physics = S
+
 anim = 150
 
 [State 151, 1]
@@ -1163,11 +1164,11 @@ trigger2 = var(59)
 trigger2 = helper(33000),var(11) != 2
 trigger2 = EnemyNear,MoveType = A
 trigger2 = EnemyNear,StateType != A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
 trigger3 = var(59)
 trigger3 = EnemyNear,MoveType = A
 trigger3 = EnemyNear,StateType != A
-trigger3 = EnemyNear,AnimTime >= -20
+trigger3 = (EnemyNear,Time - EnemyNear,AnimTime <= 20)
 statetype = C
 physics = C
 IgnoreHitPause = 1
@@ -1188,7 +1189,7 @@ trigger3 = !EnemyNear,NumProj
 trigger3 = !PlayerIdExist(helper(33333333),var(3))
 trigger3 = EnemyNear,StateType != C
 trigger3 = EnemyNear,MoveType = A
-trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
+trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
 statetype = S
 physics = S
 IgnoreHitPause = 1
@@ -1286,11 +1287,11 @@ trigger2 = var(59)
 trigger2 = helper(33000),var(11) != 2
 trigger2 = EnemyNear,MoveType = A
 trigger2 = EnemyNear,StateType != A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0)
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0)
 trigger3 = var(59)
 trigger3 = EnemyNear,MoveType = A
 trigger3 = EnemyNear,StateType != A
-trigger3 = EnemyNear,AnimTime >= -20
+trigger3 = (EnemyNear,Time - EnemyNear,AnimTime <= 20)
 statetype = C
 physics = C
 IgnoreHitPause = 1
@@ -1311,7 +1312,7 @@ trigger3 = !EnemyNear,NumProj
 trigger3 = !PlayerIdExist(helper(33333333),var(3))
 trigger3 = EnemyNear,StateType != C
 trigger3 = EnemyNear,MoveType = A
-trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
+trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
 statetype = S
 physics = S
 IgnoreHitPause = 1
@@ -1355,7 +1356,7 @@ trigger2 = var(59)
 trigger2 = helper(33000),var(11) != 2
 trigger2 = EnemyNear,MoveType = A
 trigger2 = EnemyNear,StateType != A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || EnemyNear,AnimTime >= -20 || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0)
+trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0)
 statetype = C
 physics = C
 IgnoreHitPause = 1
@@ -1376,7 +1377,7 @@ trigger3 = !EnemyNear,NumProj
 trigger3 = !PlayerIdExist(helper(33333333),var(3))
 trigger3 = EnemyNear,MoveType = A
 trigger3 = EnemyNear,StateType != C
-trigger3 = helper(33000),var(11) = 0 && EnemyNear,AnimTime < -20
+trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
 statetype = S
 physics = S
 IgnoreHitPause = 1

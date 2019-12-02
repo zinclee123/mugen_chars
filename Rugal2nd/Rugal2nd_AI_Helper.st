@@ -1,6 +1,11 @@
 ;-----------------------Helper------------------------------------------
 [Statedef 33000]
 
+[State 33001]
+type = playerpush
+trigger1 = 1
+value = 0
+
 [State 33000]
 type=selfstate
 trigger1=!ishelper
@@ -1036,10 +1041,11 @@ value = sca
 ;ヘルパーと一緒に飛び道具を飛ばす
 [State 5555]
 Type=Projectile
+Trigger1 = Root,NumProjID(5555)=0
 Trigger1 = time=0
 Velocity = -10,0
 ProjID = 5555
-Projanim = -1
+Projanim = 9999
 Offset = 0,0
 projstagebound = 0
 Projedgebound = 100000
@@ -1095,10 +1101,11 @@ value = sca
 ;ヘルパーと一緒に飛び道具を飛ばす
 [State 6666]
 Type = Projectile
+Trigger1 = Root,NumProjID(6666)=0
 Trigger1 = time=0
 Velocity = -10,0
 ProjID = 6666
-Projanim = 0
+Projanim = 9999
 Offset = 0,0
 projstagebound = 0
 Projedgebound = 100000
@@ -1129,6 +1136,11 @@ IgnoreHitPause = 1
 Type = AssertSpecial
 Trigger1 = IsHelper
 flag = invisible
+
+[State 33001]
+type = playerpush
+trigger1 = 1
+value = 0
 
 [State 11990]
 Type = NotHitBy
@@ -1419,8 +1431,7 @@ IgnoreHitPause = 1
 ;飞行道具不切返，因为K系列会空振滑步
 ;普通招式只切返比我们最快最远的招式开快的招式
 [State -3]
-type = VarSet
-var(44) = 1
+type = Null
 triggerall = ishelper
 triggerall = 1 || var(44) := 0
 Triggerall = EnemyNear,MoveType != I
@@ -1433,7 +1444,8 @@ trigger1 = helper(33000),var(3) != [0,1] ;这种是Time=0的Hitdef
 trigger1 = Enemynear,StateType != A
 trigger1 = Root,P2BodyDist x = [-40, 40]
 trigger1 = enemynear,stateno = helper(33000),var(2)
-trigger1 = helper(33000),var(3) < 3
+trigger1 = helper(33000),var(3) <= 3
+trigger1 = var(44) := 2
 ;2B都不能抢的普通招式
 Trigger2 = EnemyNear,MoveType = A
 trigger2 = EnemyNear,StateNo = [200,999]
@@ -1442,20 +1454,24 @@ trigger2 = Enemynear,StateType != A
 trigger2 = Root,P2BodyDist x = [-65, 65]
 trigger2 = enemynear,stateno = helper(33000),var(2)
 trigger2 = helper(33000),var(3) < 5
+trigger2 = var(44) := 1
 ;必杀技
 trigger3 = EnemyNear,StateNo = [1000,1999]
 trigger3 = Enemynear,StateType != A
 trigger3 = EnemyNear,MoveType = A
 trigger3 = EnemyNear,HitDefAttr = SCA,AA,AT,AP || var(31) > 0 || Helper(33000),var(1) != 0
+trigger3 = var(44) := 1
 ;超杀
 trigger4 = EnemyNear,StateNo = [2000,4999]
 trigger4 = Enemynear,StateType != A
 trigger4 = EnemyNear,MoveType = A
+trigger4 = var(44) := 1
 ;超远的普通技能
 trigger5 = EnemyNear,StateNo = [200,999]
 trigger5 = Enemynear,StateType != A
 trigger5 = EnemyNear,Life - Life > 500 || Root,P2BodyDist x = [70,120]
 trigger5 = EnemyNear,MoveType = A
+trigger5 = var(44) := 1
 IgnoreHitPause = 1
 
 
@@ -1470,6 +1486,8 @@ trigger2 = EnemyNear,Ctrl
 trigger3 = EnemyNear,StateType = L
 trigger4 = RoundState != 2
 trigger5 = Helper(33000),var(14) != 1300 && Helper(33000),var(14) != 1301 
+trigger6 = Root,var(49) = [1,2]
+trigger7 = Root,NumExplod(7650)
 
 [State -3]
 type = VarSet
@@ -1480,8 +1498,11 @@ Triggerall = EnemyNear,MoveType = H
 Triggerall = Root,NumTarget(1300) ||  Root,NumTarget(1301) ||  Root,NumTarget(1302)  
 Triggerall = Root,Life > Root,LifeMax*0.3
 TriggerAll = Root,Fvar(11) = [14,21] 
+triggerall = NumExplod(7650) = 0
+triggerall = Root,var(49) = 0
 trigger1 = Root,var(50) = [130071,130076]
 trigger2 = Root,var(50) = [130031,130032]
+
 
 
 
@@ -1489,8 +1510,8 @@ trigger2 = Root,var(50) = [130031,130032]
 type = displaytoclipboard
 triggerall = ishelper
 trigger1 = 1
-text = "V20=%d V21=%d V26=%d V31=%d V32=%d"
-params = var(20),var(21),var(26),var(31),var(32)
+text = "V37=%d V38=%d V39=%d V40=%d V41=%d V42=%d"
+params = var(37),var(38),var(39),var(40),var(41),var(42)
 
 [state 1091100,敌人正在使用当身技 显示]
 type = Appendtoclipboard

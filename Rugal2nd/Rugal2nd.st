@@ -1719,7 +1719,7 @@ pausemovetime = 99999
 [State 980, poweradd]
 type = poweradd
 trigger1 = 1
-value = 11
+value = 7
 
 [State 980, end]
 type = ChangeState

@@ -2893,7 +2893,7 @@ x = -.15
 type = NotHitBy
 trigger1 = 1
 value = SCA
-time = 1
+time = 2
 
 [State 5201, 3]
 type = playsnd
@@ -3160,11 +3160,13 @@ var(52) = 0
 [State 5900, 1] ;Clear all int variables
 type = VarRangeSet
 trigger1 = roundsexisted = 0
+trigger1 = TeamMode = turns 
 value = 0
 
 [State 5900, 2] ;Clear all float variables
 type = VarRangeSet
 trigger1 = roundsexisted = 0
+trigger1 = TeamMode = turns 
 fvalue = 0
 
 [State 5900, 3] ;Intro for round 1

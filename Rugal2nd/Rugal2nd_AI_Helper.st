@@ -1194,12 +1194,20 @@ Trigger1 = EnemyNear,StateNo = [200,1999]
 var(15) = 1
 IgnoreHitPause = 1
 
-
-[State 11990 最多升龙追击次数]
+;--------------------------------------------------------
+;最多升龙追击次数
+[State 11990 ]
 type = VarSet
 Triggerall = ishelper
-Trigger1 = 1
-var(16) = 3 + ifelse(root,var(52)>0 || root,life < 300,2,0)
+Trigger1 = Root,var(52) = 0
+var(16) = 3 + ifelse(root,life < 300,1,0)
+IgnoreHitPause = 1
+
+[State 11990]
+type = VarSet
+Triggerall = ishelper
+Trigger1 = Root,var(52) > 0
+var(16) = 4
 IgnoreHitPause = 1
 
 ;--------------------------------------------------------
@@ -1245,7 +1253,7 @@ Triggerall = ishelper
 Triggerall = Root,MoveType = H
 Triggerall = Root,StateNo != [120,159]
 Triggerall = Root,PrevStateNo = 38 || Root,PrevStateNo = 50 || (Root,PrevStateNo = [120,149]) || Root,PrevStateNo = [600,690]
-Trigger1 = Root,Pos Y < -72 
+Trigger1 = Root,Pos Y < -80 
 Trigger1 = !EnemyNear,MoveHit
 var(19) = 1
 ignorehitpause = 1
@@ -1435,7 +1443,7 @@ type = Null
 triggerall = ishelper
 triggerall = 1 || var(44) := 0
 Triggerall = EnemyNear,MoveType != I
-Triggerall = var(43) = 0
+Triggerall = var(43) = 0 || EnemyNear,Time - EnemyNear,AnimTime < 30
 Triggerall = !((EnemyNear,StateNo = [200,1999]) && EnemyNear,Time > -EnemyNear,AnimTime) || EnemyNear,AnimTime > 0
 ;2A都不能抢的普通招式
 Trigger1 = EnemyNear,MoveType = A
@@ -1459,7 +1467,6 @@ trigger2 = var(44) := 1
 trigger3 = EnemyNear,StateNo = [1000,1999]
 trigger3 = Enemynear,StateType != A
 trigger3 = EnemyNear,MoveType = A
-trigger3 = EnemyNear,HitDefAttr = SCA,AA,AT,AP || var(31) > 0 || Helper(33000),var(1) != 0
 trigger3 = var(44) := 1
 ;超杀
 trigger4 = EnemyNear,StateNo = [2000,4999]
@@ -1473,38 +1480,6 @@ trigger5 = EnemyNear,Life - Life > 500 || Root,P2BodyDist x = [70,120]
 trigger5 = EnemyNear,MoveType = A
 trigger5 = var(44) := 1
 IgnoreHitPause = 1
-
-
-;--------------------------------------------------------
-;裸出灭族切割标志位，如果是裸出的，用毁灭压杀接连段
-[State -3,Reset]
-type = VarSet
-var(45) = 0
-triggerall = ishelper
-trigger1 = EnemyNear,MoveType != H
-trigger2 = EnemyNear,Ctrl
-trigger3 = EnemyNear,StateType = L
-trigger4 = RoundState != 2
-trigger5 = Helper(33000),var(14) != 1300 && Helper(33000),var(14) != 1301 
-trigger6 = Root,var(49) = [1,2]
-trigger7 = Root,NumExplod(7650)
-
-[State -3]
-type = VarSet
-var(45) = 1
-triggerall = ishelper
-Triggerall = Root,StateNo = 1300
-Triggerall = EnemyNear,MoveType = H
-Triggerall = Root,NumTarget(1300) ||  Root,NumTarget(1301) ||  Root,NumTarget(1302)  
-Triggerall = Root,Life > Root,LifeMax*0.3
-TriggerAll = Root,Fvar(11) = [14,21] 
-triggerall = NumExplod(7650) = 0
-triggerall = Root,var(49) = 0
-trigger1 = Root,var(50) = [130071,130076]
-trigger2 = Root,var(50) = [130031,130032]
-
-
-
 
 [state 1091100,敌人当身技记录 显示]
 type = displaytoclipboard
@@ -1631,43 +1606,43 @@ type = Null
 triggerall = PlayerIdExist(Root,ID)
 trigger1 = PlayerIdExist(var(0)-1)
 trigger1 = IfElse(root,teamside = 1, PlayerID(var(0)-1),teamside = 2, PlayerID(var(0)-1),teamside = 1)
-trigger1 = PlayerID(var(0)-1),hitdefattr = ASC, NP, SP, HP
+trigger1 = PlayerID(var(0)-1),hitdefattr = ASC, AP, AA
 trigger1 = var(3) := (var(0)-1)
 trigger2 = PlayerIdExist(var(0)-2)
 trigger2 = IfElse(root,teamside = 1, PlayerID(var(0)-2),teamside = 2, PlayerID(var(0)-2),teamside = 1)
-trigger2 = PlayerID(var(0)-2),hitdefattr = ASC, NP, SP, HP
+trigger2 = PlayerID(var(0)-2),hitdefattr = ASC, AP, AA
 trigger2 = var(3) := (var(0)-2)
 trigger3 = PlayerIdExist(var(0)-3)
 trigger3 = IfElse(root,teamside = 1, PlayerID(var(0)-3),teamside = 2, PlayerID(var(0)-3),teamside = 1)
-trigger3 = PlayerID(var(0)-3),hitdefattr = ASC, NP, SP, HP
+trigger3 = PlayerID(var(0)-3),hitdefattr = ASC, AP, AA
 trigger3 = var(3) := (var(0)-3)
 trigger4 = PlayerIdExist(var(0)-4)
 trigger4 = IfElse(root,teamside = 1, PlayerID(var(0)-4),teamside = 2, PlayerID(var(0)-4),teamside = 1)
-trigger4 = PlayerID(var(0)-4),hitdefattr = ASC, NP, SP, HP
+trigger4 = PlayerID(var(0)-4),hitdefattr = ASC, AP, AA
 trigger4 = var(3) := (var(0)-4)
 trigger5 = PlayerIdExist(var(0)-5)
 trigger5 = IfElse(root,teamside = 1, PlayerID(var(0)-5),teamside = 2, PlayerID(var(0)-5),teamside = 1)
-trigger5 = PlayerID(var(0)-5),hitdefattr = ASC, NP, SP, HP
+trigger5 = PlayerID(var(0)-5),hitdefattr = ASC, AP, AA
 trigger5 = var(3) := (var(0)-5)
 trigger6 = PlayerIdExist(var(0)-6)
 trigger6 = IfElse(root,teamside = 1, PlayerID(var(0)-6),teamside = 2, PlayerID(var(0)-6),teamside = 1)
-trigger6 = PlayerID(var(0)-6),hitdefattr = ASC, NP, SP, HP
+trigger6 = PlayerID(var(0)-6),hitdefattr = ASC, AP, AA
 trigger6 = var(3) := (var(0)-6)
 trigger7 = PlayerIdExist(var(0)-7)
 trigger7 = IfElse(root,teamside = 1, PlayerID(var(0)-7),teamside = 2, PlayerID(var(0)-7),teamside = 1)
-trigger7 = PlayerID(var(0)-7),hitdefattr = ASC, NP, SP, HP
+trigger7 = PlayerID(var(0)-7),hitdefattr = ASC, AP, AA
 trigger7 = var(3) := (var(0)-7)
 trigger8 = PlayerIdExist(var(0)-8)
 trigger8 = IfElse(root,teamside = 1, PlayerID(var(0)-8),teamside = 2, PlayerID(var(0)-8),teamside = 1)
-trigger8 = PlayerID(var(0)-8),hitdefattr = ASC, NP, SP, HP
+trigger8 = PlayerID(var(0)-8),hitdefattr = ASC, AP, AA
 trigger8 = var(3) := (var(0)-8)
 trigger9 = PlayerIdExist(var(0)-9)
 trigger9 = IfElse(root,teamside = 1, PlayerID(var(0)-9),teamside = 2, PlayerID(var(0)-9),teamside = 1)
-trigger9 = PlayerID(var(0)-9),hitdefattr = ASC, NP, SP, HP
+trigger9 = PlayerID(var(0)-9),hitdefattr = ASC, AP, AA
 trigger9 = var(3) := (var(0)-9)
 trigger10 = PlayerIdExist(var(0)-10)
 trigger10 = IfElse(root,teamside = 1, PlayerID(var(0)-10),teamside = 2, PlayerID(var(0)-10),teamside = 1)
-trigger10 = PlayerID(var(0)-10),hitdefattr = ASC, NP, SP, HP
+trigger10 = PlayerID(var(0)-10),hitdefattr = ASC, AP, AA
 trigger10 = var(3) := (var(0)-10)
 ignorehitpause = 1
 
@@ -1676,45 +1651,49 @@ type = Null
 triggerall = PlayerIdExist(Root,ID)
 trigger1 = PlayerIdExist(var(3)-1)
 trigger1 = IfElse(root,teamside = 1, PlayerID(var(3)-1),teamside = 2, PlayerID(var(3)-1),teamside = 1)
-trigger1 = PlayerID(var(3)-1),hitdefattr = ASC, NP, SP, HP
+trigger1 = PlayerID(var(3)-1),hitdefattr = ASC, AP, AA
 trigger1 = var(4) := (var(3)-1)
 trigger2 = PlayerIdExist(var(3)-2)
 trigger2 = IfElse(root,teamside = 1, PlayerID(var(3)-2),teamside = 2, PlayerID(var(3)-2),teamside = 1)
-trigger2 = PlayerID(var(3)-2),hitdefattr = ASC, NP, SP, HP
+trigger2 = PlayerID(var(3)-2),hitdefattr = ASC, AP, AA
 trigger2 = var(4) := (var(3)-2)
 trigger3 = PlayerIdExist(var(3)-3)
 trigger3 = IfElse(root,teamside = 1, PlayerID(var(3)-3),teamside = 2, PlayerID(var(3)-3),teamside = 1)
-trigger3 = PlayerID(var(3)-3),hitdefattr = ASC, NP, SP, HP
+trigger3 = PlayerID(var(3)-3),hitdefattr = ASC, AP, AA
 trigger3 = var(4) := (var(3)-3)
 trigger4 = PlayerIdExist(var(3)-4)
 trigger4 = IfElse(root,teamside = 1, PlayerID(var(3)-4),teamside = 2, PlayerID(var(3)-4),teamside = 1)
-trigger4 = PlayerID(var(3)-4),hitdefattr = ASC, NP, SP, HP
+trigger4 = PlayerID(var(3)-4),hitdefattr = ASC, AP, AA
 trigger4 = var(4) := (var(3)-4)
 trigger5 = PlayerIdExist(var(3)-5)
 trigger5 = IfElse(root,teamside = 1, PlayerID(var(3)-5),teamside = 2, PlayerID(var(3)-5),teamside = 1)
-trigger5 = PlayerID(var(3)-5),hitdefattr = ASC, NP, SP, HP
+trigger5 = PlayerID(var(3)-5),hitdefattr = ASC, AP, AA
 trigger5 = var(4) := (var(3)-5)
 trigger6 = PlayerIdExist(var(3)-6)
 trigger6 = IfElse(root,teamside = 1, PlayerID(var(3)-6),teamside = 2, PlayerID(var(3)-6),teamside = 1)
-trigger6 = PlayerID(var(3)-6),hitdefattr = ASC, NP, SP, HP
+trigger6 = PlayerID(var(3)-6),hitdefattr = ASC, AP, AA
 trigger6 = var(4) := (var(3)-6)
 trigger7 = PlayerIdExist(var(3)-7)
 trigger7 = IfElse(root,teamside = 1, PlayerID(var(3)-7),teamside = 2, PlayerID(var(3)-7),teamside = 1)
-trigger7 = PlayerID(var(3)-7),hitdefattr = ASC, NP, SP, HP
+trigger7 = PlayerID(var(3)-7),hitdefattr = ASC, AP, AA
 trigger7 = var(4) := (var(3)-7)
 trigger8 = PlayerIdExist(var(3)-8)
 trigger8 = IfElse(root,teamside = 1, PlayerID(var(3)-8),teamside = 2, PlayerID(var(3)-8),teamside = 1)
-trigger8 = PlayerID(var(3)-8),hitdefattr = ASC, NP, SP, HP
+trigger8 = PlayerID(var(3)-8),hitdefattr = ASC, AP, AA
 trigger8 = var(4) := (var(3)-8)
 trigger9 = PlayerIdExist(var(3)-9)
 trigger9 = IfElse(root,teamside = 1, PlayerID(var(3)-9),teamside = 2, PlayerID(var(3)-9),teamside = 1)
-trigger9 = PlayerID(var(3)-9),hitdefattr = ASC, NP, SP, HP
+trigger9 = PlayerID(var(3)-9),hitdefattr = ASC, AP, AA
 trigger9 = var(4) := (var(3)-9)
 trigger10 = PlayerIdExist(var(3)-10)
 trigger10 = IfElse(root,teamside = 1, PlayerID(var(3)-10),teamside = 2, PlayerID(var(3)-10),teamside = 1)
-trigger10 = PlayerID(var(3)-10),hitdefattr = ASC, NP, SP, HP
+trigger10 = PlayerID(var(3)-10),hitdefattr = ASC, AP, AA
 trigger10 = var(4) := (var(3)-10)
 ignorehitpause = 1
+
+
+
+
  
 [State 33333333, BindToRoot]
 type = BindToRoot

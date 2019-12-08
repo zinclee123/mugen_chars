@@ -136,12 +136,12 @@ Time = 15
 
 [Command]
 Name = "カイザーウェイブX"
-Command = ~F, B, DB, D, DF, F, x
+Command = ~F, B, DB, D, x
 Time = 25
 
 [Command]
 Name = "カイザーウェイブY"
-Command = ~F, B, DB, D, DF, F, y
+Command = ~F, B, DB, D, y
 Time = 25
 
 [Command]
@@ -166,22 +166,22 @@ Time = 10
 
 [Command]
 Name = "ゴッドプレスX"
-Command = ~F, DF, D, DB, B, x
+Command = ~D, DB, B, x
 Time = 15
 
 [Command]
 Name = "ゴッドプレスY"
-Command = ~F, DF, D, DB, B, y
+Command = ~D, DB, B, y
 Time = 15
 
 [Command]
 Name = "ビースデストラクションA"
-Command = ~F, DF, D, DB, B, a
+Command = ~D, DB, B, a
 Time = 15
 
 [Command]
 Name = "ビースデストラクションB"
-Command = ~F, DF, D, DB, B, b
+Command = ~D, DB, B, b
 Time = 15
 
 [Command]
@@ -196,6 +196,12 @@ Time = 12
 
 ;===========================================
 ;【ダッシュ、バックステップ、大ジャンプ】
+
+[Command]
+Name = "RELEASE 3"
+Command = ~DF
+Time = 1
+Buffer.Time = 6
 
 [Command]
 Name = "FF"
@@ -376,12 +382,12 @@ Time = 1
 [Statedef -1]
 
 [State -1,test]
-type = ChangeState
+type = Null;ChangeState
 Triggerall = !var(59)
 trigger1 = ctrl || StateNo = 100
 trigger1 = command = "start"
 ;trigger1 = var(4):=4
-value = 1450
+value = 1850
 
 [State -1, ステート奪取判定用]
 type = VarSet
@@ -1640,6 +1646,7 @@ Type = ChangeState
 Value = 261
 Triggerall = !var(59)
 Triggerall = !(Command = "max" || Command = "ya")
+Triggerall = Command != "RELEASE 3"
 Triggerall = (Command = "a" && Command = "holdfwd" && !Command = "holddown") || var(12) = 101
 Triggerall = RoundState = 2
 Triggerall = StateType != A

@@ -4,11 +4,6 @@
 ;AI跳跃限制用
 ;---------------------------------------------------------------------------------
 [State -2]
-type = varset
-Trigger1 = RoundState < 2
-var(44) = 300
-
-[State -2]
 type = varadd
 Trigger1 = RoundState = 2
 Trigger1 = var(44) > 0
@@ -55,7 +50,7 @@ ignorehitpause = 1
 
 ;-----------------------------------------------------------
 ;提前停止鞭尸炮
-[State -2,锁气用]
+[State -2]
 type = varset
 triggerall = fvar(26) = 1
 triggerall = var(33) = [1,5]
@@ -69,6 +64,7 @@ ignorehitpause = 1
 [State -2]
 type = varset
 triggerall = MoveReversed = 1
+triggerall = MoveType = H
 trigger1 = enemynear,movetype = A || enemynear,movetype = I
 trigger1 = EnemyNear,StateNo  < 2000
 var(18) = EnemyNear,StateNo 
@@ -76,7 +72,8 @@ ignorehitpause = 1
 
 [State -2]
 type = varset
-triggerall = MoveReversed = 1
+triggerall = MoveReversed = 2
+triggerall = MoveType = H
 trigger1 = enemynear,movetype = A || enemynear,movetype = I
 trigger1 = EnemyNear,PrevStateNo  < 2000
 var(19) = EnemyNear,PrevStateNo 
@@ -85,7 +82,8 @@ ignorehitpause = 1
 [State -2]
 type = varset
 triggerall = MoveReversed = 1
-trigger1 = PrevStateNo = [600,699]
+triggerall = MoveType = H
+trigger1 = PrevStateNo = 1950 || PrevStateNo = [600,699]
 trigger1 = enemynear,movetype = A || enemynear,movetype = I
 trigger1 = EnemyNear,StateNo < 2000
 fvar(18) = 1
@@ -865,7 +863,7 @@ ignorehitpause = 1
 ;CornerPush
 
 [State -2, cornerpush 2002 && 98UM]
-type = VelSet
+type = Null;VelSet
 triggerall = !(EnemyNear(var(2)),StateType = A)
 triggerall = EnemyNear(var(2)),BackEdgeBodyDist <= 10
 triggerall = MoveContact = 1
@@ -874,7 +872,7 @@ trigger2 = StateNo = 260 && NumTarget(260)
 x = 0
 
 [State -2, cornerpush 2002]
-type = VelSet
+type = Null;VelSet
 triggerall = !(EnemyNear(var(2)),StateType = A)
 triggerall = EnemyNear(var(2)),BackEdgeBodyDist <= 10
 triggerall = MoveContact = 1
@@ -888,7 +886,7 @@ trigger7 = StateNo = 420 && NumTarget(420)
 x = -5.75-(fvar(29)=4&&var(52)>0)*1.35
 
 [State -2, cornerpush 2002]
-type = VelSet
+type = Null;VelSet
 triggerall = !(EnemyNear(var(2)),StateType = A)
 triggerall = EnemyNear(var(2)),BackEdgeBodyDist <= 10
 triggerall = MoveContact = 1
@@ -900,19 +898,19 @@ type = VelSet
 triggerall = !(EnemyNear(var(2)),StateType = A)
 triggerall = EnemyNear(var(2)),BackEdgeBodyDist <= 10
 triggerall = MoveContact = 1
-trigger1 = StateNo = 210 && NumTarget(210)
-trigger2 = StateNo = 215 && NumTarget(216)
-trigger3 = StateNo = 230 && NumTarget(231)
-trigger4 = StateNo = 235 && NumTarget(236)
-trigger5 = StateNo = 250 && NumTarget(250)
-trigger6 = StateNo = 260 && NumTarget(261)
-trigger7 = StateNo = 410 && NumTarget(410)
-trigger8 = StateNo = 430 && NumTarget(430)
-trigger9 = StateNo = 1450 && NumTarget(1453) && (fvar(29) = 1 && !fvar(26))
+;trigger1 = StateNo = 210 && NumTarget(210)
+;trigger2 = StateNo = 215 && NumTarget(216)
+;trigger3 = StateNo = 230 && NumTarget(231)
+;trigger4 = StateNo = 235 && NumTarget(236)
+;trigger5 = StateNo = 250 && NumTarget(250)
+;trigger6 = StateNo = 260 && NumTarget(261)
+;trigger7 = StateNo = 410 && NumTarget(410)
+;trigger8 = StateNo = 430 && NumTarget(430)
+trigger1 = StateNo = 1450 && NumTarget(1453) && (fvar(29) = 1 && !fvar(26))
 x = -10.35-(fvar(29)=4&&var(52)>0)
 
 [State -2, cornerpush 2002]
-type = VelSet
+type = Null;VelSet
 triggerall = !(EnemyNear(var(2)),StateType = A)
 triggerall = EnemyNear(var(2)),BackEdgeBodyDist <= 10
 triggerall = MoveContact = 1
@@ -920,7 +918,7 @@ trigger1 = StateNo = 2500 && NumTarget(2500) && MoveGuarded = 1
 x = -11.5
 
 [State -2, cornerpush 2002]
-type = VelSet
+type = Null;VelSet
 triggerall = !(EnemyNear(var(2)),StateType = A)
 triggerall = EnemyNear(var(2)),BackEdgeBodyDist <= 10
 triggerall = MoveContact = 1
@@ -1217,14 +1215,12 @@ ignorehitpause = 1
 
 [State -2, MAX発動タイマー]
 type = VarAdd
-
 trigger1 = var(52) > 0
 var(52) = -1
 ignorehitpause = 1
 
 [State -2, MAX発動タイマー]
 type = VarSet
-
 trigger1 = var(52) < 0
 var(52) = 0
 ignorehitpause = 1
@@ -1261,7 +1257,6 @@ ignorehitpause = 1
 
 [State -2, MAX発動中攻撃力補正]
 type = varset
-
 triggerall = var(52)
 trigger1 = fvar(29) = 4
 fvar(10) = 1.25
@@ -1269,7 +1264,6 @@ ignorehitpause = 1
 
 [State -2, MAX発動中攻撃力補正]
 type = varset
-
 triggerall = var(52)
 trigger1 = !(fvar(29) = 1 || fvar(29) = 4)
 fvar(10) = 1.5*(1+(Life<=10)*0.25)
@@ -1277,7 +1271,6 @@ ignorehitpause = 1
 
 [State -2, MAX発動中攻撃力補正]
 type = varset
-
 triggerall = !var(52)
 trigger1 = fvar(29) = 1 || fvar(29) = 4
 fvar(10) = 1
@@ -1285,7 +1278,6 @@ ignorehitpause = 1
 
 [State -2, MAX発動中攻撃力補正]
 type = varset
-
 triggerall = !var(52)
 trigger1 = !(fvar(29) = 1 || fvar(29) = 4)
 fvar(10) = 1*(1+(Life<=10)*0.25)
@@ -1295,25 +1287,21 @@ ignorehitpause = 1
 
 [State -2, モード決定]
 type = VarSet
-
 trigger1 = !(fvar(29) = 4)
 fvar(32) = 1
 
 [State -2, モード決定]
 type = VarSet
-
 trigger1 = !(fvar(29) = 4)
 fvar(33) = 1
 
 [State -2, モード決定]
 type = VarSet
-
 trigger1 = !(fvar(29) = 4)
 fvar(34) = 1
 
 [State -2, モード決定（時間切れ）]
 type = VarSet
-
 triggerall = fvar(29) = 4
 triggerall = RoundState = 2
 triggerall = var(7)
@@ -1328,7 +1316,6 @@ fvar(32) = 1+Random%2
 
 [State -2, モード決定（時間切れ）]
 type = VarSet
-
 triggerall = fvar(29) = 4
 triggerall = RoundState = 2
 triggerall = var(7)
@@ -1343,7 +1330,6 @@ fvar(33) = 1+Random%2
 
 [State -2, モード決定（時間切れ）]
 type = VarSet
-
 triggerall = fvar(29) = 4
 triggerall = RoundState = 2
 triggerall = var(7)
@@ -1358,7 +1344,6 @@ fvar(34) = 1+Random%2
 
 [State -2, モード決定（パートナー合わせ）]
 type = VarSet
-
 triggerall = fvar(29) = 4
 triggerall = RoundState = 2
 triggerall = var(7)
@@ -1371,7 +1356,6 @@ fvar(32) = Partner,fvar(32)
 
 [State -2, モード決定（パートナー合わせ）]
 type = VarSet
-
 triggerall = fvar(29) = 4
 triggerall = RoundState = 2
 triggerall = var(7)
@@ -1384,7 +1368,6 @@ fvar(33) = Partner,fvar(33)
 
 [State -2, モード決定（パートナー合わせ）]
 type = VarSet
-
 triggerall = fvar(29) = 4
 triggerall = RoundState = 2
 triggerall = var(7)
@@ -2998,7 +2981,6 @@ supermovetime = 999999
 ignorehitpause = 1
 ;--------------------------------------
 
-
 ;===================================================================================
 ;Print
 ;===================================================================================
@@ -3015,64 +2997,6 @@ ignorehitpause = 1
 [State -2, Debug]
 type = appendtoclipboard
 Trigger1 = 1
-text="\nTRACE=%d V49=%d HV45=%d FV18=%d P2Time=%d"   
-params= var(50), var(49),helper(11990),var(45), fvar(18),EnemyNear,Time
-ignorehitpause = 1
-
-;----------------------------------------------------------------------------------------
-;对面普通招式太快应对
-[State -2, Debug]
-type = displaytoclipboard
-Trigger1 = 0
-text = "P2StateNo=%d Proj5555=%d, Proj6666=%d dist1=%d dist2=%d"
-params = P2StateNo,NumProjID(5555),NumProjID(6666),Helper(33001),rootdist x,Helper(33002),rootdist x
-ignorehitpause = 1
-
-[State -2, Debug]
-type = appendtoclipboard
-Trigger1 = 0
-text="\nTRACE=%d HV44=%d HV2=%d HV3=%d"  
-params= var(50), helper(11990),var(44),helper(33000),var(2),helper(33000),var(3)
-ignorehitpause = 1
-
-
-;----------------------------------------------------------------------------------------
-;毁灭压杀追击剪刀脚
-[State -2, Debug]
-type = displaytoclipboard
-Trigger1 = 0
-text = "P2StateNo = %d p2HitTime = %d X = %d, Y = %d p2posy = %d p2AnimTime = %d"
-params = P2StateNo, EnemyNear,GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, EnemyNear,Pos y, EnemyNear,AnimTime
-ignorehitpause = 1
-
-[State -2, Debug]
-type = appendtoclipboard
-Trigger1 = 0
-text="\nTRACE=%d HV45=%d HV2=%d HV3=%d"  
-params= var(50), helper(11990),var(45),helper(33000),var(2),helper(33000),var(3)
-ignorehitpause = 1
-
-;----------------------------------------------------------------------------------------
-;调试抓浮空追击问题
-[State -2, Debug]
-type = displaytoclipboard
-Trigger1 = 0
-text = "Target205=%d p2Ctrl=%d TargetPosY=%f V17=%d"
-params = Numtarget(205),EnemyNear,Ctrl,EnemyNear,Pos Y + EnemyNear,Vel Y * 6 + fvar(13) * 6 * (6 + 1) / 2, var(17)
-ignorehitpause = 1
-
-[State -2, Debug]
-type = appendtoclipboard
-Trigger1 = 0
-text="\nTRACE=%d P2Vel Y=%d FV13=%f FV11=%f V9=%d P2H=%d"  
-params= var(50), EnemyNear,Vel Y, fvar(13),fvar(11), var(9), EnemyNear,MoveType = H 
-ignorehitpause = 1
-
-;----------------------------------------------------------------------------------------
-;调试僵局
-[State -2, Debug]
-type = appendtoclipboard
-Trigger1 = 0
-text="\nTRACE=%d HV0=%d HV1=%d HV2=%d"  
-params= var(50), helper(11990),var(0), helper(11990),var(1), helper(11990),var(2)
+text="\nTRACE=%d FV15=%f FV11=%f HV37=%d PROJ=%d P2Time=%d"   
+params= var(50), fvar(15),fvar(11), helper(11990),var(45), PlayerIdExist(Helper(33333333),var(3)), EnemyNear,Time
 ignorehitpause = 1

@@ -996,6 +996,12 @@ statetype = S
 physics = S
 IgnoreHitPause = 1
 
+[State 140]
+type = NotHitBy
+Trigger1 = Time = 0
+value = SCA,AT
+IgnoreHitPause = 1
+
 [State 140, 5]
 type = ChangeState
 trigger1 = AnimTime = 0

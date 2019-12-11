@@ -2367,8 +2367,8 @@ guard.sparkno = S7260
 sparkxy = -10,-75
 hitsound = S5,IfElse(Random%2=1,5,10)
 guardsound = S6,0
-pausetime = 11,11
-guard.pausetime = 11,9
+pausetime = 11,12
+guard.pausetime = 11,10
 ground.slidetime = 9
 ground.hittime = 9
 guard.ctrltime = 9
@@ -2534,8 +2534,8 @@ guard.sparkno = S7260
 sparkxy = -10,-75+Floor(P2BodyDist Y*0.5)
 hitsound = S5,IfElse(Random%2=1,5,10)
 guardsound = S6,0
-pausetime = 11,11
-guard.pausetime = 11,9
+pausetime = 11,12
+guard.pausetime = 11,10
 ground.slidetime = 9
 ground.hittime = 9
 guard.ctrltime = 9
@@ -3116,8 +3116,8 @@ guard.sparkno = S7260
 sparkxy = -15,-30
 hitsound = S5,IfElse(Random%2=1,7,12)
 guardsound = S6,0
-pausetime = 11,11
-guard.pausetime = 11,9
+pausetime = 11,12
+guard.pausetime = 11,10
 ground.slidetime = 9
 ground.hittime = 9
 guard.ctrltime = 9
@@ -3265,8 +3265,8 @@ guard.sparkno = S7210
 sparkxy = -25,-65
 hitsound = S5,IfElse(Random%2=1,7,12)
 guardsound = S6,0
-pausetime = 11,11
-guard.pausetime = 11,9
+pausetime = 11,12
+guard.pausetime = 11,10
 ground.slidetime = 9
 ground.hittime = 9
 guard.ctrltime = 9
@@ -4315,8 +4315,8 @@ guard.sparkno = S7260
 sparkxy = -10,-45
 hitsound = S5,IfElse(Random%2=1,5,10)
 guardsound = S6,0
-pausetime = 11,11
-guard.pausetime = 11,9
+pausetime = 11,12
+guard.pausetime = 11,10
 ground.slidetime = 9
 ground.hittime = 9
 guard.ctrltime = 9
@@ -4612,8 +4612,8 @@ guard.sparkno = S7260
 sparkxy = -15,-5
 hitsound = S5,IfElse(Random%2=1,7,12)
 guardsound = S6,0
-pausetime = 11,11
-guard.pausetime = 11,9
+pausetime = 11,12
+guard.pausetime = 11,10
 ground.slidetime = 9
 ground.hittime = 9
 guard.ctrltime = 9

@@ -2997,6 +2997,6 @@ ignorehitpause = 1
 [State -2, Debug]
 type = appendtoclipboard
 Trigger1 = 1
-text="\nTRACE=%d FV15=%f FV11=%f V16&2=%d FV12=%f P2Time=%d"   
-params= var(50), fvar(15),fvar(11), var(16)&2**2, fvar(12), EnemyNear,Time
+text="\nTRACE=%d FV15=%f FV11=%f HV44=%d FV12=%f P2Time=%d"   
+params= var(50), fvar(15),fvar(11), Helper(11990),var(44), fvar(12), EnemyNear,Time
 ignorehitpause = 1

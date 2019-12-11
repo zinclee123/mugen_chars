@@ -490,12 +490,17 @@ Trigger9 = EnemyNear,StateType = A
 Trigger9 = EnemyNear,MoveType = H
 Trigger9 = P2BodyDist x < 50
 Trigger9 = var(50) := 1119909
-;敌人在身后
-Trigger10 = EnemyNear,StateType = A
-Trigger10 = EnemyNear,MoveType = H
-Trigger10 = P2BodyDist x < -30
 value = 101
 
+[State 101, 6]
+Type = ChangeState
+TriggerAll = Time >= 6
+;敌人飘到身后
+Trigger1 = EnemyNear,StateType = A
+Trigger1 = EnemyNear,MoveType = H
+Trigger1 = P2BodyDist x < -30
+Trigger1 = var(50) := 1119910
+value = 101
 
 
 
@@ -997,6 +1002,21 @@ Trigger1 = var(43) > 0
 var(43) = -1
 IgnoreHitPause = 1
 
+[State -3]
+Type = varadd
+Trigger1 = var(43) > 0
+Trigger1 = StateNo = [150,153]
+Trigger1 = EnemyNear,MoveHit = 1
+Trigger1 = EnemyNear,StateType != A
+Trigger1 = EnemyNear,StateNo = [200,500]
+var(43) = -15
+
+[State -3]
+Type = varset
+Trigger1 = var(43) < 0
+var(43) = 0
+IgnoreHitPause = 1
+
 ;===================================================================================
 ;可控
 ;===================================================================================
@@ -1306,9 +1326,8 @@ value = 99
 ;抢招9
 ;=================================================================================
 
-[State -3,CR LP]
+[State -3,挥空用]
 Type = ChangeState
-value = 400
 TriggerAll = var(59)
 TriggerAll = StateType != A
 TriggerAll = EnemyNear,MoveType = A
@@ -1415,7 +1434,7 @@ Trigger2 = EnemyNear,AnimTime < -30
 Trigger2 = var(50) := 42092
 ;没记录就直接抢
 Trigger3 = EnemyNear,Time - EnemyNear,AnimTime > 22
-Trigger3 = P2BodyDist x = [40,56]
+Trigger3 = P2BodyDist x = [40,64]
 Trigger3 = EnemyNear,time <= 1
 Trigger3 = var(50) := 42093
 IgnoreHitPause = 1
@@ -1817,7 +1836,7 @@ TriggerAll = EnemyNear,Facing != Facing
 TriggerAll = Helper(11990),var(44) = 1
 TriggerAll = InGuardDist
 ;切返，无敌时间长，对面空振也刚不过剪刀脚理论上
-Trigger1 = var(16) & 2**0 = 0 
+Trigger1 = var(16)&2**0 = 0 
 Trigger1 = var(17) = [1,2]
 Trigger1 = EnemyNear,StateNo = [ifelse(Helper(11990),var(37)=0,200,1000), 4999]
 Trigger1 = EnemyNear,StateType != A
@@ -1825,7 +1844,7 @@ Trigger1 = P2BodyDist x - fvar(12)*7 < 80
 Trigger1 = EnemyNear,AnimTime <= -8 || EnemyNear,AnimTime > 0
 Trigger1 = var(50) := 130071
 ;2段切返
-Trigger2 = var(16) & 2**0 = 0
+Trigger2 = var(16)&2**0 = 0
 Trigger2 = var(17) = [1,2]
 Trigger2 = EnemyNear,StateNo = [ifelse(Helper(11990),var(37)=0,200,1000), 4999]
 Trigger2 = EnemyNear,StateType != A
@@ -1967,6 +1986,7 @@ TriggerAll = StateNo = 610 || StateNo = 615 || StateNo = 630 || StateNo = 635 ||
 TriggerAll = MoveContact
 Trigger1 = fvar(11) >= 11
 Trigger1 = MoveHit && EnemyNear,GetHitvar(Hittime) >= 9
+Trigger1 = Fvar(15) < 60
 value = 1770
 
 
@@ -2027,7 +2047,7 @@ Trigger1 = var(50) := 130069
 ;接毁灭压杀
 Trigger2 = (StateNo = 245 && AnimElemTime(5) > 1) || var(17) = 1
 Trigger2 = P2BodyDist x > 130 || !(Helper(33000),var(14) = [1850,1851])
-Trigger2 = (P2BodyDist x + 40 - fvar(12)*7)/15.0 + 7 = [fvar(11)-14, fvar(11)-7]
+Trigger2 = (P2BodyDist x + 40 - fvar(12)*7)/15.0 + 12 = [fvar(11)-8, fvar(11)-5]
 Trigger2 = var(54) := 1850
 Trigger2 = var(50) := 185069 
 value = var(54)
@@ -2126,7 +2146,7 @@ Trigger1 = P2BodyDist x - Vel X * 4 < 45
 Trigger1 = var(50) := 42061
 Trigger2 = EnemyNear,BackEdgeBodyDist >= 10
 Trigger2 = P2BodyDist x - fvar(12) * 4 < 55
-Trigger1 = var(50) := 42062
+Trigger2 = var(50) := 42062
 value = 420
 
 [State -3]
@@ -2221,7 +2241,7 @@ Trigger4 = var(50) := 42066
 Trigger5 = EnemyNear,StateNo >= 5000
 Trigger5 = var(17) = 1 
 Trigger5 = EnemyNear,GetHitvar(HitTime) = [6,8]
-Trigger5 = P2BodyDist x = [55, 78]
+Trigger5 = P2BodyDist x = [55, 68]
 Trigger5 = var(54) := 260
 Trigger5 = var(50) := 26066
 
@@ -2304,6 +2324,7 @@ TriggerAll = var(9) = 0
 TriggerAll = !EnemyNear,Ctrl
 TriggerAll = EnemyNear,MoveType = H && EnemyNear,StateType = A
 TriggerAll = var(17) = 1
+TriggerAll = var(52) = 0
 TriggerAll = EnemyNear,StateNo = 1321
 TriggerAll = EnemyNear,Pos Y + EnemyNear,Vel Y * 8 + fvar(13) * 8 * (8 + 1) / 2 = [-65, -11)
 TriggerAll = P2BodyDist X = [-15, 83]
@@ -2350,7 +2371,7 @@ TriggerAll = var(9) = 0
 TriggerAll = !EnemyNear,Ctrl
 TriggerAll = EnemyNear,MoveType = H && EnemyNear,StateType = A
 TriggerAll = var(17) = 1
-TriggerAll =  var(38) < (Helper(11990),var(16) - 1)
+TriggerAll = var(38) < (Helper(11990),var(16) - 1)
 Trigger1 = EnemyNear,Pos Y + EnemyNear,Vel Y * 8 + fvar(13) * 8 * (8 + 1) / 2 = [-60, -11)
 Trigger1 = (P2BodyDist X - fvar(12) * 8 = [-10, 90]) || (EnemyNear,BackEdgeBodyDist < 5 && P2BodyDist X = [0, 90]) 
 Trigger1 = var(50) := 130061
@@ -2531,13 +2552,13 @@ value = 2500
 Type = ChangeState
 TriggerAll = var(59)
 TriggerAll = var(9) = 0 
+TriggerAll = var(52) = 0
 TriggerAll = !EnemyNear,Ctrl
 TriggerAll = EnemyNear,MoveType = H && EnemyNear,StateType = A
 TriggerAll = var(17) = 1
-Triggerall = !(var(52)>0 && Helper(33000),var(14) = [1850,1851])
 ;正常追击
 Trigger1 = P2BodyDist x > 130 || !(Helper(33000),var(14) = [1850,1851])
-Trigger1 = (P2BodyDist x + 30 - fvar(12)*7)/15.0 + 7 = [fvar(11)-8, fvar(11)-6]
+Trigger1 = (P2BodyDist x + 30 - fvar(12)*7)/15.0 + 12 = [fvar(11)-8, fvar(11)-5]
 Trigger1 = var(50) := 185066
 value = 1850
 
@@ -2664,6 +2685,18 @@ Trigger1 = var(50) := 180064
 ;毁灭压杀
 value = 1800
 
+[State -3,挥空]
+Type = ChangeState
+TriggerAll = var(59)
+Triggerall = StateType != A
+Trigger1 = var(17) = 2
+Trigger1 = AnimTime <= -4
+Trigger1 = EnemyNear,MoveType = A || EnemyNear,Ctrl
+Trigger1 = P2Dist x = [-40,0]
+Trigger1 = var(50) := 130064
+;剪刀脚
+value = 1300
+
 
 ;---------------------------------------------------------------------------------
 ;凯撒波追击
@@ -2672,11 +2705,26 @@ Type = ChangeState
 TriggerAll = var(59)
 TriggerAll = !EnemyNear,Ctrl
 TriggerAll = EnemyNear,MoveType = H && EnemyNear,StateType != A
-Triggerall = StateNo >= 5000
-Triggerall = P2BodyDist x > 55
-Trigger1 = StateNo = 220 && MoveHit
+TriggerAll = EnemyNear,StateNo != 5700
+TriggerAll = P2BodyDist x >= 56
+Trigger1 = var(17) = 2
+Trigger1 = EnemyNear,StateNo = [150,153]
+Trigger1 = EnemyNear,GetHitvar(Hittime) >= 7
 Trigger1 = var(50) := 100069
 value = 1000
+
+[State -3]
+Type = ChangeState
+value = 1950
+TriggerAll = var(59)
+TriggerAll = (StateNo = [600,640]) && MoveHit
+TriggerAll = StateType = A
+Trigger1 = Fvar(15) >= 80
+Trigger1 = EnemyNear,MoveType = H
+Trigger1 = EnemyNear,StateType = A
+Trigger1 = Fvar(11) >= 10
+Trigger1 = var(50) := 195061
+
 
 ;=================================================================================
 ;移动5
@@ -2771,6 +2819,7 @@ Trigger1 = P2BodyDist x > 140
 Trigger1 = EnemyNear,MoveType = A 
 Trigger1 = PlayerIdExist(Helper(33333333),var(3)) 
 Trigger1 = PlayerId(Helper(33333333),var(3)),P2BodyDist x > 50
+Trigger1 = EnemyNear,Time < -EnemyNear,AnimTime 
 Trigger1 = EnemyNear,AnimTime < -30
 value = 99
 
@@ -2867,7 +2916,7 @@ Trigger15 = var(50) := 990515
 Trigger16 = Fvar(12) > 0
 Trigger16 = EnemyNear,MoveType = H
 Trigger16 = EnemyNear,StateType = A
-Trigger16 = BackEdgeBodyDist < 30
+Trigger16 = Fvar(15) < 100
 Trigger16 = Fvar(11) > 20
 Trigger16 = P2BodyDist x - (Fvar(11)-15)*Fvar(12) < 5
 Trigger16 = var(50) := 990516
@@ -3114,10 +3163,10 @@ Trigger1 = P2BodyDist y + EnemyNear,Vel Y * 10 + fvar(13) * 10 * (10 + 1) / 2 = 
 Trigger1 = fvar(11) > 12
 Trigger1 = var(50) := 195031
 ;对地面
-Trigger2 = fvar(18) = 0 || EnemyNear,StateNo >= 2000
+Trigger2 = fvar(18) = 0 || (EnemyNear,StateNo >= 1000 && Helper(11990),var(43) = 0)
 Trigger2 = !PlayerIdExist(Helper(33333333),var(3)) || Helper(11990),var(19) = 1
 Trigger2 = Helper(11990),var(31) = 0;不是弹幕招式
-Trigger2 = P2BodyDist x - fvar(12)*3 > -5;保证跳不过去,跳过去了还是用JB
+Trigger2 = P2BodyDist x - (Vel x+fvar(12))*3 > -5;保证跳不过去,跳过去了还是用JB
 Trigger2 = EnemyNear,MoveType = A
 Trigger2 = EnemyNear,StateType != A
 Trigger2 = EnemyNear,StateNo = [200,4999]
@@ -3435,13 +3484,13 @@ Trigger1 = !PlayerIdExist(Helper(33333333),var(3)) || abs(PlayerId(Helper(333333
 Trigger1 = (P2BodyDist x >= 0 && EnemyNear,Facing != Facing) || (P2BodyDist x <= 0 && EnemyNear,Facing = Facing)
 Trigger1 = EnemyNear,StateType != A && EnemyNear,Vel Y = 0
 Trigger1 = EnemyNear,Vel x >= 0
-Trigger1 = P2BodyDist x = [-40, 40]
+Trigger1 = P2BodyDist x - ifelse((EnemyNear,StateNo = [200,4999]),fvar(12)*3,0)= [-45, 45]
 Trigger1 = var(50) := 040031
 Trigger1 = var(43) := var(43) + 60
 Trigger1 = var(42) := 400
 ;骗当身
 Trigger2 = Random < 50
-Trigger2 = Helper(11990),var(37) > 0;无当身技能
+Trigger2 = Helper(11990),var(37) > 0;有当身技能
 Trigger2 = !PlayerIdExist(Helper(33333333),var(3)) || abs(PlayerId(Helper(33333333),var(3)),P2BodyDist x) > 50 
 Trigger2 = (P2BodyDist x >= 0 && EnemyNear,Facing != Facing) || (P2BodyDist x <= 0 && EnemyNear,Facing = Facing)
 Trigger2 = EnemyNear,StateType != A && EnemyNear,Vel Y = 0
@@ -3458,8 +3507,7 @@ value = 420
 TriggerAll = !isHelper
 TriggerAll = var(59)
 TriggerAll = var(17) = 1
-TriggerAll = var(43) = 0
-TriggerAll = var(42) != 430 || Time > 90
+TriggerAll = var(42) != 420 || var(43) = 0
 TriggerAll = StateType != A
 TriggerAll = (EnemyNear,Ctrl || EnemyNear,StateNo <= 199)
 TriggerAll = !InGuardDist
@@ -3469,9 +3517,9 @@ Trigger1 = Helper(11990),var(37) = 0;无当身技能
 Trigger1 = !PlayerIdExist(Helper(33333333),var(3)) || abs(PlayerId(Helper(33333333),var(3)),P2BodyDist x) > 50 
 Trigger1 = (P2BodyDist x >= 0 && EnemyNear,Facing != Facing) || (P2BodyDist x <= 0 && EnemyNear,Facing = Facing)
 Trigger1 = EnemyNear,StateType != A && EnemyNear,Vel Y = 0
-Trigger1 = (P2BodyDist x + IfElse((EnemyNear,StateNo = [18,24]),0,fvar(12))*3 = [-50, -40]) || (P2BodyDist x - IfElse((EnemyNear,StateNo = [18,40]),0,fvar(12))*3 =[40, 50]) || (EnemyNear,BackEdgeBodyDist < 5 && P2BodyDist x < 50)
+Trigger1 = abs(P2BodyDist x - ifelse((EnemyNear,StateNo = [200,4999]),fvar(12)*4,0))= [40, 64]
 Trigger1 = var(50) := 042031
-Trigger1 = var(43) := var(46) + 60
+Trigger1 = var(43) := var(43) + 120
 Trigger1 = var(42) := 420
 IgnoreHitPause = 1
 
@@ -3546,7 +3594,7 @@ TriggerAll = (var(16)&2**2) = 0
 ;
 Trigger1 = P2BodyDist x > 100
 Trigger1 = P2BodyDist x - fvar(12) * 8 > 100
-Trigger1 = fvar(11) - ((P2BodyDist x - 20 - fvar(12)*8) /16 + 8) = (0.2,3]
+Trigger1 = fvar(11) - ((P2BodyDist x - 20 - fvar(12)*8) /16 + 8) = (1,4]
 Trigger1 = var(50) := 100031
 value = 1000
 IgnoreHitPause = 1
@@ -3637,6 +3685,7 @@ Trigger3 = EnemyNear,Time < 8
 Trigger3 = EnemyNear,StateNo >= 1000
 Trigger3 = EnemyNear,NumProj
 Trigger3 = P2BodyDist x > 190
+Trigger3 = EnemyNear,Time < -EnemyNear,AnimTime
 Trigger3 = EnemyNear,AnimTime < -25
 Trigger3 = var(54) := 1700
 Trigger3 = var(50) := 170033
@@ -3645,6 +3694,7 @@ Trigger4 = EnemyNear,Time < 12
 Trigger4 = EnemyNear,StateNo >= 1000
 Trigger4 = EnemyNear,NumProj
 Trigger4 = P2BodyDist x > 160
+Trigger4 = EnemyNear,Time < -EnemyNear,AnimTime
 Trigger4 = EnemyNear,AnimTime < -25
 Trigger4 = var(54) := 1150
 Trigger4 = var(50) := 115034
@@ -3652,6 +3702,7 @@ Trigger4 = var(50) := 115034
 Trigger5 = EnemyNear,StateNo >= 1000
 Trigger5 = EnemyNear,NumProj
 Trigger5 = P2BodyDist x > 235
+Trigger5 = EnemyNear,Time < -EnemyNear,AnimTime
 Trigger5 = EnemyNear,AnimTime < -25
 Trigger5 = var(54) := 1150
 Trigger5 = var(50) := 115035

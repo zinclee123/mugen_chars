@@ -1476,7 +1476,7 @@ trigger4 = var(44) := 1
 ;超远的普通技能
 trigger5 = EnemyNear,StateNo = [200,999]
 trigger5 = Enemynear,StateType != A
-trigger5 = EnemyNear,Life - Life > 500 || Root,P2BodyDist x = [70,120]
+trigger5 = EnemyNear,Life - Root,Life > 500 || Root,P2BodyDist x = [60,110]
 trigger5 = EnemyNear,MoveType = A
 trigger5 = var(44) := 1
 IgnoreHitPause = 1

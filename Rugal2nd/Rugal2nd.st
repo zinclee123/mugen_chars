@@ -23901,7 +23901,7 @@ volume = 150
 
 [State 2500, hitdef]
 type = HitDef
-triggerall = var(9) = 1
+triggerall = var(9) = 1 || EnemyNear,StateType != A
 trigger1 = fvar(26)
 trigger1 = AnimElem = 6
 attr = S,HA

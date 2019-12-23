@@ -387,7 +387,7 @@ Triggerall = !var(59)
 trigger1 = ctrl || StateNo = 100
 trigger1 = command = "start"
 ;trigger1 = var(4):=4
-value = 1450
+value = 1400
 
 [State -1, ステート奪取判定用]
 type = VarSet

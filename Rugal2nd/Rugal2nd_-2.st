@@ -98,14 +98,14 @@ ignorehitpause = 1
 [State -2, Display Power Gauge]
 type = varset
 trigger1 = 1
-fvar(30) = 0;(1:on/0:off)
+fvar(30) = 1;(1:on/0:off)
 ignorehitpause = 1
 ;パワーゲージの表示の有無を切り替えます。
 
 [State -2, Display AI s Lv]
 type = varset
 trigger1 = 1
-fvar(31) = 0;(1:on/0:off)
+fvar(31) = 1;(1:on/0:off)
 ignorehitpause = 1
 ;AILvの表示の有無を切り替えます。
 
@@ -784,7 +784,6 @@ ignorehitpause = 1
 
 [State -2, 空中連続ヒット制限]
 type = varset
-
 triggerall = P2MoveType = H
 triggerall = !(NumTarget(1000))
 triggerall = !(NumTarget(1300) || NumTarget(1301) || NumTarget(1302))
@@ -811,6 +810,7 @@ var(9) = 1
 type = varset
 trigger1 = EnemyNear(var(2)),Life > 0 && EnemyNear(var(2)),Ctrl
 trigger2 = var(49) = [1,2]
+trigger2 = NumTarget(1302) = 0
 trigger3 = !(P2MoveType = H)
 trigger4 = P2StateType = L
 trigger5 = P2StateNo = 5120
@@ -831,7 +831,6 @@ ignorehitpause = 1
 
 [State -2, 02UM超必殺技空中ヒット制限]
 type = varset
-
 trigger1 = !fvar(26)
 trigger2 = !(NumTarget(1402) || NumTarget(1452) || NumTarget(1453))
 trigger2 = !(NumTarget(1300) || NumTarget(1301) || NumTarget(1350) || NumTarget(1351))

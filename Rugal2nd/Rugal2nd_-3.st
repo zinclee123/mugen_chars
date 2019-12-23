@@ -2064,6 +2064,7 @@ TriggerAll = EnemyNear,MoveType = H
 TriggerAll = !EnemyNear,Ctrl
 TriggerAll = EnemyNear,StateNo >= 5000 
 Triggerall = Life - EnemyNear,Life <= (EnemyNear,LifeMax*0.7)
+Trigger1 = var(52) = 0
 Trigger1 = P2BodyDist x < 20
 Trigger1 = StateNo = 260 && MoveHit
 Trigger1 = var(50) := 115061
@@ -2253,9 +2254,9 @@ value = var(54)
 Type = ChangeState
 TriggerAll = var(59)
 TriggerAll = var(9) = 1
+TriggerAll = var(17) = 1
 TriggerAll = !EnemyNear,Ctrl
 TriggerAll = EnemyNear,MoveType = H
-TriggerAll = var(17) = 1
 TriggerAll = Life < LifeMax*0.3
 TriggerAll = power >= 3000 || (var(52) > 0 && power >= 1000)
 TriggerAll = !((var(52) = 0 && power >= 4000) || (var(52) > 0 && power >= 2000));能MAX死亡终结 >> 搬运的，不要隐藏
@@ -2608,23 +2609,6 @@ Trigger2 = (P2BodyDist x - 35)/16.0 + 7 = [fvar(11)-3,fvar(11)-2]
 Trigger2 = var(50) := 100067
 value = 1000
 
-;---------------------------------------------------------------------------------
-;烈风拳目押追击剪刀脚
-[State -3]
-Type = ChangeState
-TriggerAll = !isHelper
-TriggerAll = var(59)
-TriggerAll = var(9) = 0 
-TriggerAll = !EnemyNear,Ctrl
-TriggerAll = EnemyNear,MoveType = H && EnemyNear,StateType = A
-Triggerall = EnemyNear,StateNo = 1321
-Triggerall = var(38) >= Helper(11990),var(16)
-TriggerAll = var(17) = 1
-Trigger1 = (abs(P2BodyDist X) >= 21)
-Trigger1 = EnemyNear,Pos Y + EnemyNear,Vel Y * 13 + fvar(13) * 13 * (13 + 1) / 2 = [-55,-35)
-Trigger1 = var(50) := 115066
-value = 1150
-
 ;------------------------------------------------------------------------------------------------
 ;凯撒波追击
 ;------------------------------------------------------------------------------------------------
@@ -2707,6 +2691,7 @@ TriggerAll = !EnemyNear,Ctrl
 TriggerAll = EnemyNear,MoveType = H && EnemyNear,StateType != A
 TriggerAll = EnemyNear,StateNo != 5700
 TriggerAll = P2BodyDist x >= 56
+TriggerAll = EnemyNear,Power < 950
 Trigger1 = var(17) = 2
 Trigger1 = EnemyNear,StateNo = [150,153]
 Trigger1 = EnemyNear,GetHitvar(Hittime) >= 7
@@ -2905,12 +2890,12 @@ Trigger14 = Fvar(12) > 0
 Trigger14 = EnemyNear,MoveType = H
 Trigger14 = EnemyNear,StateType = A
 Trigger14 = P2BodyDist x > 120 
-Trigger14 = var(50) := 990515
+Trigger14 = var(50) := 990514
 ;敌人飞走
 Trigger15 = Fvar(12) < 0
 Trigger15 = EnemyNear,MoveType = H
 Trigger15 = EnemyNear,StateType = A
-Trigger15 = P2BodyDist x > 50
+Trigger15 = P2BodyDist x = [50, 180]
 Trigger15 = var(50) := 990515
 ;敌人飞来
 Trigger16 = Fvar(12) > 0

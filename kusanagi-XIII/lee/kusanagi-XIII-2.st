@@ -4,6 +4,12 @@
 ;AI跳跃限制用
 ;---------------------------------------------------------------------------------
 [State -2]
+type = varset
+Trigger1 = RoundState != 2
+var(44) = 300
+
+
+[State -2]
 type = varadd
 Trigger1 = var(44) > 0
 var(44) = -1
@@ -96,6 +102,82 @@ trigger1 = var(20) > 0
 trigger1 = var(24) > 0
 value = var(24)
 ignorehitpause = 1
+
+;-----------------------------------------------------------
+;破防计算用
+[State -2, 防止小于0]
+type = VarSet
+TriggerAll = fvar(10) < 0
+Trigger1 = 1
+fvar(10) = 0
+ignorehitpause = 1
+
+[State -2, 自减]
+type = VarAdd
+TriggerAll = fvar(10) >= 1
+Trigger1 = GameTime%37 = 0
+fvar(10) = -100
+ignorehitpause = 1
+
+[State -2,破防重置]
+type = VarSet
+TriggerAll = fvar(10) != 0
+Trigger1 = roundstate != 2
+Trigger2 = enemy,StateNo = 5700
+fvar(10) = 0
+ignorehitpause = 1
+
+[State -2]
+type = VarAdd
+TriggerAll = RoundState = 2
+TriggerAll = EnemyNear,MoveType = H
+TriggerAll = EnemyNear,time = 0
+Trigger1 = !(ProjGuarded = 1)
+Trigger1 = moveguarded = 1
+fvar(10) = ifelse((StateNo = [200,999]),500,1200)
+ignorehitpause = 1
+persistent = 0
+
+[State -2]
+type = VarAdd
+TriggerAll = RoundState = 2
+TriggerAll = EnemyNear,MoveType = H
+TriggerAll = EnemyNear,time = 0
+Trigger1 = ProjGuarded = 1
+fvar(10) = ifelse((StateNo = [200,999]),500,1200)
+ignorehitpause = 1
+persistent = 0
+
+[State -2, TargetState]
+type = TargetState
+triggerall = numtarget
+triggerall = target,alive
+triggerall = fvar(10) >= 12000
+triggerall = target,statetype = S || target,statetype = C
+triggerall = target,movetype = H && target,stateno = [120,159]
+trigger1 = moveguarded = 1
+Trigger2 = ProjGuarded = 1
+value = 5700
+
+[state a];破防效果展示
+type = Helper
+triggerall = !NumHelper(12000)
+trigger1 = numtarget
+trigger1 = target,statetype = S || target,statetype = C
+trigger1 = target,movetype = H && target,stateno = 5700
+trigger1 = target,anim = 5700 && target,time = 1
+id = 12000
+name = "g"
+sprpriority = 1
+pos = 0,0
+postype = p1
+stateno = 12000
+Helpertype = normal
+keyctrl = 1 
+ownpal = 1
+ignorehitpause = 1
+
+
 
 
 [State -2]
@@ -832,6 +914,6 @@ ignorehitpause = 1
 [State -2, Debug]
 type = appendtoclipboard
 Trigger1 = 1
-text="\nTRACE = %d left = %d rigth = %d fvar(37) = %f p2AnimTime = %d"  
-params= var(50), helper(33001),rootdist x, helper(33002),rootdist x, fvar(37), EnemyNear,AnimTime
+text="\nTRACE = %d preHit = %d fvar(37) = %f p2AnimTime = %d"  
+params= var(50), helper(33000),var(14) , fvar(37), EnemyNear,AnimTime
 ignorehitpause = 1 

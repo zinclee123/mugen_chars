@@ -1034,7 +1034,7 @@ Type=Projectile
 Trigger1 = time=0
 Velocity = -10,0
 ProjID = 5555
-Projanim = -1
+Projanim = 9999
 Offset = 0,0
 projstagebound = 0
 Projedgebound = 100000
@@ -1088,7 +1088,7 @@ Type = Projectile
 Trigger1 = time=0
 Velocity = -10,0
 ProjID = 6666
-Projanim = -1
+Projanim = 9999
 Offset = 0,0
 projstagebound = 0
 Projedgebound = 100000

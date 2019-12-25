@@ -39,18 +39,13 @@ draw.offset      = 0,0      ;キャラ?画?示位置（Ｘ軸,Ｙ軸）
 
 ;---------------------------------------------------------------------------
 [Velocity]
-walk.fwd     = 3.0
-walk.back    = -3.0
-run.fwd      = 7.0, 0
-run.back     = -5.8,-4
-jump.neu     = 0,-10.2
-jump.back    = -3.5
-jump.fwd     = 3.5
-runjump.back = -2.55,-8.1
-runjump.fwd  = 5.2
-airjump.neu  = 0,-8.1
-airjump.back = -2.5
-airjump.fwd  = 2.55
+walk.fwd  		= 2.8     
+walk.back    	= -2.8  
+run.fwd      	= 7.0, 0       
+run.back     	= -12,-4      
+jump.neu     	= 0,-10.3      
+jump.fwd     	= 3.5       
+jump.back    	= -3.5
 ;---------------------------------------------------------------------------
 [Movement]
 airjump.num = 0

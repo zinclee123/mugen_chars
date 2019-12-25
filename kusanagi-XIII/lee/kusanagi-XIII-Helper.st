@@ -1,3 +1,133 @@
+;-----------------------------------------------------------
+; 破防Helper1
+
+[Statedef 12000]
+type = S
+ctrl = 0
+anim = 9999
+velset = 0,0
+movetype = A
+physics = N
+sprpriority = 0
+
+[state turn]
+type = turn
+trigger1 = facing != root,facing
+
+[State Explod]
+type = Explod
+trigger1 = time = 0
+anim = 7055
+id = 7000
+sprpriority = 20
+postype = p2
+pos = Floor(EnemyNear,Const(size.mid.pos.x)),Floor(EnemyNear,Const(size.mid.pos.y)*1.3*(1+(P2StateType = A)*0.1*(1-(P2StateType = C)*0.5)))
+bindtime = 1
+supermove = 999
+pausemove = 999
+ignorehitpause = 1
+persistent = 0
+under = 0
+ontop = 1
+ownpal = 1
+facing = -1
+
+
+[state playsnd]
+type = playsnd
+trigger1 = time = 0
+value = 12000,0
+
+[state a]
+type = Helper
+trigger1 = time = 0
+id = 12010
+name = "g"
+sprpriority = 1
+pos = 0,0
+postype = back
+stateno = 12010
+Helpertype = normal
+keyctrl = 1 
+ownpal = 1
+
+[state DestroySelf]
+type = DestroySelf
+trigger1 = time = 0
+
+
+;-----------------------------------------------------------
+; 破防Helper2
+
+[Statedef 12010]
+type = S
+ctrl = 0
+anim = 9999
+velset = 0,0
+movetype = I
+physics = N
+sprpriority = 200
+
+[State -2]
+type = AssertSpecial
+trigger1 = 1
+flag = noshadow
+
+[state -2,a]
+type = Explod
+triggerall = TeamSide = 1
+trigger1 = time = 0
+anim = 12010
+id = 12000
+postype = Left
+bindtime = -1
+facing = 1
+pos = 0,ceil(GameHeight/2-20+root,var(35))
+sprpriority = 95
+removetime = -2
+pausemovetime = 999999
+supermovetime = 999999
+scale = 0.4,0.4
+
+[state -2,a]
+type = Explod
+triggerall = TeamSide = 2
+trigger1 = time = 0
+anim = 12011
+id = 12000
+postype = Right
+bindtime = -1
+facing = -1
+pos = 0,ceil(GameHeight/2-20+root,var(35))
+sprpriority = 95
+removetime = -2
+pausemovetime = 999999
+supermovetime = 999999
+scale = 0.4,0.4
+
+[state VarSet]
+type = VarSet
+trigger1 = time = 0
+var(2) = 256
+
+[state VarAdd]
+type = VarAdd
+trigger1 = time >= 8
+trigger1 = time < 42
+var(2) = -8
+
+[State palfx];
+type = palfx
+trigger1 = time >= 8
+trigger1 = time < 72
+time = 1
+add = var(2),var(2),var(2)
+
+[state DestroySelf]
+type = DestroySelf
+trigger1 = time = 80
+
+
 ;===========================================================================
 [Statedef 30000]
 type    = S
@@ -680,7 +810,7 @@ attr = SCA,AP
 animtype  = hard
 damage    = 0,10
 priority = 3, Hit
-getpower = 25,25
+getpower = 0,0
 givepower = 16,16
 hitflag = MAFDP
 guardflag = M

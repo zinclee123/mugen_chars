@@ -2247,6 +2247,7 @@ y = GetHitVar(yaccel)
 
 [State 5071, recovery]
 type = SelfState
+triggerall = var(59) = 0
 triggerall = command = "recovery"
 triggerall = alive = 1
 trigger1 = pos y > 0
@@ -6919,3 +6920,47 @@ flag2 = nomusic
 [State 1000, DestroySelf]
 type = DestroySelf
 trigger1 = time = 9999
+
+
+[Statedef 5700]
+type = S
+movetype= H
+physics = N
+sprpriority = 1
+facing = enemy,facing
+
+[State 5700, ChangeAnim]
+type = ChangeAnim2
+trigger1 = Time = 0
+value = 5700
+
+[State 5700, VelSet]
+type = VelSet
+trigger1 = time = 1
+x = 0
+
+[State 5700, VelSet]
+type = VelSet
+trigger1 = time = 5
+x = -6
+
+[State 5700, VelMul]
+type = VelMul
+trigger1 = 1
+x = 0.85
+
+[State 5700, PosSet]
+type = PosSet
+trigger1 = Time = 0
+y = 0
+
+[State 5700, VelSet]
+type = VelSet
+trigger1 = time = 16
+x = 0
+
+[State 5700, SelfState]
+type = SelfState
+trigger1 = time = 48
+value = 0
+ctrl = 1

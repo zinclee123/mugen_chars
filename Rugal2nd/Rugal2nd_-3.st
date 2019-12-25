@@ -2905,6 +2905,14 @@ Trigger16 = Fvar(15) < 100
 Trigger16 = Fvar(11) > 20
 Trigger16 = P2BodyDist x - (Fvar(11)-15)*Fvar(12) < 5
 Trigger16 = var(50) := 990516
+;敌人飞来,版边不够后退了
+Trigger17 = Fvar(12) > 0
+Trigger17 = EnemyNear,MoveType = H
+Trigger17 = EnemyNear,StateType = A
+Trigger17 = BackEdgeBodyDist < 45
+Trigger17 = Fvar(11) > 20
+Trigger17 = P2BodyDist x - (Fvar(11)-15)*Fvar(12) < 5
+Trigger17 = var(50) := 990517
 value = 99
 IgnoreHitPause = 1
 

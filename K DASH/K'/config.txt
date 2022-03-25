@@ -1,0 +1,44 @@
+;Dipswitch Set
+;---------------------------------------------------------------------------
+; Initialize (at the start of the round)
+[Statedef 5900]
+type = S
+
+[State 190, Dipswitch]
+type = Null
+trigger1 = (var(20) := 1)||e  ; 1 = Afterimages, 0 = No Afterimages
+trigger1 = (var(21) := 1)||e  ; 1 = Flash, 0 = No Flash
+trigger1 = (var(24) := 1)||e  ; 1 = KO BG, 0 = No KO BG
+trigger1 = (var(53) := 1)||e  ; 1 = MAX Mode, 0 = No MAX Mode
+persistent = 1
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;Anything Below Should Be Left Alone.                       ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[State 5900, turn]
+type = ChangeState
+trigger1 = TeamMode = Turns
+trigger1 = roundno > 1
+trigger1 = RoundsExisted = 0
+value = 190
+
+[State 5900, AI]
+type = VarSet
+trigger1 = !RoundsExisted
+var(30) = 0
+
+[State 5900, EX]
+type = VarSet
+trigger1 = PalNo = [7,12]
+var(10) = 2
+
+[State 5900, Normal]
+type = VarSet
+trigger1 = PalNo = [1,6]
+var(10) = 1
+
+[State 5900, 3] ;Intro
+type = ChangeState
+trigger1 = roundno = 1
+value = 190
+

@@ -1,0 +1,48 @@
+; Player information
+
+[Info]
+name ="K'"
+displayname ="K'"
+versiondate = 2019/6/23
+mugenversion =04,14,2002
+author ="K.O.D & JINB & Mr.Lee"
+pal.defaults = 4,5,6,1,2,3
+
+; Files for the player
+[Files]
+cmd				=command.cmd
+
+cns				=K'-Constant.st
+
+stcommon		=K'-Common.st
+
+st				=K'.st
+st2				=K'-N.st
+st3				=K'-S.st 
+st4				=K'-H.st 
+st5				=K'-Helper.st 
+st6				=K'-Override.st 
+st7				=K'-2.st  
+st8				=K'-3.st  
+st9				=K'-AI-Helper.st
+
+sprite=sprite.sff
+anim=animation.air
+sound=sound.snd
+
+pal1=act001.act
+pal2=act003.act
+pal3=act007.act
+pal4=act001.act
+pal5=act005.act
+pal6=act006.act
+pal7=act004.act
+pal8=act008.act
+pal9=act009.act
+pal10=act010.act
+pal11=act011.act
+pal12=act012.act
+
+[Arcade]
+intro.storyboard=
+ending.storyboard=

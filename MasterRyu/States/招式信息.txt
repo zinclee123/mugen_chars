@@ -1,0 +1,138 @@
+HitDefAttr(*,***)（击中定义属性）
+
+获得游戏者当前活动HitDef中的属性参数。若游戏者不在攻击状态中，则
+该条件不触发。
+能在CMD文件内从弱攻击到强攻击的简单招式中断中使用。
+
+Format:（格式：）
+HitDefAttr = value1, value2
+
+value1
+
+  一个至少含有“S”、“C”和“A”其中之一的字母分别表示
+  站、蹲和空中攻击。例如，“SA”表示站立和空中攻击。
+
+value2
+  
+  2字符的字符串集，由逗号格开。每2字符的字符串必须是如下描
+  述的形式：
+  第一个字符可以是“N”表示“普通”，“S”表示“必杀”，
+  或“H”表示“超（必杀）”，“A”表示“所有”
+  第二个字符必须是“A"表示“打击”  （一个普通hit打击），
+  “T”表示“投掷”，“P”表示“道具”
+
+Example:（示例：）
+1 trigger1 = A, NA，SA，HA
+  当游戏者在攻击状态，且当前攻击是空中的普通打击攻击，必杀打击攻击，或超杀打击攻击时触发
+
+2 trigger1 = SCA, AT
+  当游戏者在攻击状态，且当前攻击是地面，蹲下，空中的所有种类投技时触发
+  
+  
+  
+
+如果算上速度，T桢后对手的距离为
+p2bodydist X - Vel X * T - EnemyNear,Vel X * T
+EnemyNear,Pos Y - Vel Y * T + EnemyNear,Vel Y * T 
+
+Y方向如果算上加速度的话
+
+EnemyNear,Pos Y - Vel Y * T - const(movement.yaccel) * T * (T + 1) / 2 + EnemyNear,Vel Y * T + EnemyNear,const(movement.yaccel) * T * (T + 1) / 2
+
+如果对手处于受击态 
+则把enemynear,const(movement.yaccel)改成enemynear,gethitvar(yaccel)
+目押连时会用到这个。
+
+
+
+
+
+
+
+
+
+var(14) AI 行走，1前行，-1后退
+var(57) AI TASK
+
+;跳x速度可以为1和1.5倍const(velocity.jump.fwd.x)或者const(velocity.jump.back.x)
+;y速度可以为0.75、1和1.15倍const(velocity.jump.y)
+;var(9)控制跳跃类型
+;1表示前跳 1X 	0.75Y   X跳跃距离100, 起跳到落地35F
+;2表示前跳 1.5X 0.75Y	X跳跃距离150, 起跳到落地35F
+;3表示前跳 1X 	1Y		X跳跃距离136，起跳到落地44F
+;4表示前跳 1.5X 1Y		X跳跃距离204，起跳到落地44F
+;5表示前跳 1X 	1.15Y	X跳跃距离140，起跳到落地44F
+;6表示前跳 1.5X 1.15Y	X跳跃距离210，起跳到落地51F
+
+;7表示后跳 	1X 	0.75Y
+;8表示后跳 	1.5X 0.75Y
+;9表示后跳 	1X 	1Y
+;10表示后跳 1.5X 1Y
+;11表示后跳 1X 	1.15Y
+;12表示后跳 1.5X 1.15Y
+
+;13表示原地小跳
+;14表示原地中跳
+;15表示原地大跳
+
+5110 躺倒 　 
+5120 起身 　 
+5121 opt 起身 （有些人物有2种起身方式） 　 
+5201 恢复近地 （地面受身）　 
+5210 恢复近空 （空中受身） 
+5300 眩晕 　 
+
+
+var(50) trace用
+var(10) 1100升龙轻重有用
+
+stateno = 200
+轻拳
+x < 48 y >-48 攻击发生帧第3帧
+
+stateno = 215
+轻脚
+x < 48 攻击发生帧第6帧
+
+stateno = 220 anim = 220
+原地重脚
+x < 30 y > -87 攻击发生帧第7帧
+
+stateno = 220 anim = 221
+原地重脚
+x < 30 y > -87 攻击发生帧第6帧
+
+stateno = 225 anim = 225
+原地重脚
+x < 51 y > -87 攻击发生帧第10帧
+
+stateno = 1400
+var(10) = 2 移动140距离
+var(10) = 3 移动距离640*480分辨率可以刚好移动到敌人身后
+
+
+stateno = 760 自定义连段，类似BC
+stateno = 750 打康
+stateno = 740 续气
+stateno = 720 前滚
+
+stateno = 105 能后退60多一些
+stateno = 102 前冲，80距离
+
+stateno = 1320 大脚压
+
+
+stateno = 3000 黄色大波 1气
+stateno = 3600 双人战用的
+
+stateno = 3020 晕波
+stateno = 4000 关灯
+stateno = 3120 3气升龙拳
+stateno = 3150 暴走隆 3气升龙拳
+stateno = 3040 3气晕波，没啥意思感觉
+stateno = 3140 1气连续升龙拳
+stateno = 3100 1气向前移动一段距离的升龙拳
+stateno = 3200 1气旋风腿
+stateno = 3200 1气波
+stateno = 3160 2气向前移动一段距离的升龙拳，可以接目押  攻击距离152
+stateno = 3180 2气波连续技工，可以接目押

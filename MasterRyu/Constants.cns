@@ -1,0 +1,198 @@
+﻿; =========== Ryu (リュウ(隆)) by BeterHans ===============
+; =========== a Project based on POTSs Ryu =============
+
+;===================<CONSTANTS>================
+
+[Data]
+life = 1240
+power = 5000
+attack = 100
+defence = 100
+fall.defence_up = 50
+liedown.time = 60
+airjuggle = 15
+sparkno = s7010
+guard.sparkno = s7000
+KO.echo = 0
+volume = 0
+IntPersistIndex = 0
+FloatPersistIndex = 0
+
+[Size]
+xscale = 1
+yscale = 1
+ground.back = 18
+ground.front = 18
+air.back = 18
+air.front = 18
+height = 60 
+attack.dist = 160 
+proj.attack.dist = 90
+proj.doscale = 0
+head.pos = 6, -92
+mid.pos = -6, -60
+shadowoffset = 0
+draw.offset = 0, 0 
+
+[Velocity]
+walk.fwd = 3.33
+walk.back = -2.67 
+run.fwd = 6, 0
+run.back = -10, 0
+jump.neu = 0, -10
+jump.fwd = 3.3
+jump.back = -3.3
+runjump.back = -4.5, -10
+runjump.fwd = 4.5, -10 
+
+[Movement]
+airjump.num = 0
+airjump.height = 0
+yaccel = 0.5
+stand.friction = 0.85
+crouch.friction = 0.85
+stand.friction.threshold = 1.0
+crouch.friction.threshold = 1.0
+air.gethit.groundlevel = 25
+air.gethit.groundrecover.ground.threshold = -20
+air.gethit.groundrecover.groundlevel = 10
+air.gethit.airrecover.threshold = -1
+air.gethit.airrecover.yaccel = 0.35
+air.gethit.trip.groundlevel = 15
+down.bounce.offset = 0, 20
+down.bounce.yaccel = 0.4
+down.bounce.groundlevel = 12
+down.friction.threshold = 0.5
+
+[Quotes]
+;Ryu
+victory1 = "You must defeat my dragon punch to stand a chance."
+victory2 = "Whether we win or lose, all of our battles make us stronger."
+victory3 = "A defeat learned from is more important than an empty victory."
+victory4 = "You still have a fighting spirit in your eyes. I look forward to our next battle."
+victory5 = "Range... Speed... Priority... Know and master all your attacks."
+victory6 = "Trying something new is to explore your true potential."
+victory7 = "I noticed the spirit of a true warrior within your fists."
+victory8 = "The world is waiting, I must leave you now."
+victory9 = "In order to win, you must first believe you can win."
+victory10 = "Train yourself well, then challenge me again."
+victory11 = "I hope you learned from our battle."
+victory12 = "Stand up and face me again, I have yet to see your best."
+
+victory30 = "Each time I fight you, I feel something new and different...";Ken
+victory31 = "May that scar be a reminder to the both of us...";Sagat
+victory32 = "There are no shortcuts in the path of the warrior.";Akuma
+victory33 = "Sorry, but I still have much to learn before I can teach.";Sakura
+victory34 = "A new body can't make you stronger when your spirit has already stopped growing.";Dictator
+victory35 = "Ken...! What's happened to you?";V. Ken
+victory36 = "This is bad, even watch you can make my heart beat faster, Please fight me again! I need get used to pretty girls"
+
+;Evil Ryu
+victory50 = "There is no place for the weak to exist!"
+victory51 = "To lose is to prove that you are worthy to perish!"
+victory52 = "Your life is not the only thing that you are risking in battle!"
+victory53 = "To be the strongest means to be the last one standing."
+victory54 = "There's nothing to lose, when there's nothing to gain."
+
+victory80 = "Now you are nothing compared to me!";Akuma
+victory81 = "Be thankful I only gave you new scars!";Sagat
+
+
+; var(0):= -3, 751, 3008, 3215
+; var(1):= Mode var 1 Normal 2 Evil 3 Master
+; var(2):= 1015, 3005, 3605, 3025, 3045
+; var(3):= 1005, 1015, 1025, 3005, 3605, 3025, 3045, 3055
+; var(4):= Attacking Status.
+; var(5) to remember ground level
+; var(9):= 39, 40
+;var(10):= 750, 5982, 800, 1000, 1020, 1100, 1200, 1250, 1270, 1300, 1400, 1010, 1110, 1210, 1260, 1310, 3000, 3601, 3020, 3040, 3050, 3100, 3120, 3140, 3160, 3180, 3200, 4000, 3700, 1005, 1015, 1025, 3005, 3605, 3025, 3045, 3055, -1
+;var(11):= -2
+;var(12):= -2
+;var(13):= 21
+;var(14):= 21
+;var(16) 0 = OK to Combo, 99 = No OK to combo.
+;var(17):= -2, 3000, 3120, 3140, 3005
+;var(18) - General Switch Var
+;		 - 00000001 = 01 = Do not guard
+;		 - 00000010 = 02 = Have Zoom Helper
+;		 - 00000100 = 04 = Cancel into focus attack
+;		 - 00001000 = 08 = Taunt Ablity (DEF up for chun Li)
+;		 - 00010000 = 16 = 
+;		 - 00100000 = 32 = 
+;		 - 01000000 = 64 = 
+;		 - 10000000 = 128= KO Sound/event Played or not 0 is not played
+;var(19):= 800, 801, 803, 805, 810
+;var(20):= 760, -2, 3000, 3601, 3020, 3040, 3100, 3120, 3140, 3160, 3180, 3200, 4000, 3700
+;var(21):= -1
+;var(23):= -2, 3100 normal shoryuken to MetsuShoryuKen var
+;var(25):= 3020 Denjin Hadoken var
+;var(26):= 3040 METSU HADOUKEN var
+;var(27) - Build power save power var
+;var(29):= -2
+;var(30):= 4001
+;var(32) Close Enemy,ID
+;var(33) Far   Enemy,ID
+;var(34) Teammate Player ID
+;var(35) 0 = Damger 1=Teammate is defending me 2=we are traping an enemy 3=Partner trapped.4=Teammate Cornered
+;var(36) Helper's Target ID
+;var(38):= Dizzy Threshold
+;var(39):= Dizzy Var
+;var(43):= 255, 1100
+;var(44) - Specal Info announce out
+;		 - 00000001 = 01 = Dodge
+;		 - 00000010 = 02 = Charge
+;		 - 00000100 = 04 = Alpha Counter
+;		 - 00001000 = 08 = DarkStalker Combo
+;		 - 00010000 = 16 = Fast Attack
+;		 - 00100000 = 32 = Hadoken
+;var(46) Enemy info like var(44)
+;var(50) Debug & Trace
+;var(51) Finish move var
+;var(58):= -3
+
+;============<Tasks>
+;var(59) AI Tast
+;0 Free Move
+;1 Standby do not guard high chance of parry
+;2 Try to Throw
+;3 May have chance Enemy landing
+;4 Enemy's back is open or rush attack
+;5 Enemy Taunt
+;6 Enemy Special move try to evade
+;9 Enemy Falling from high
+;10 Crouch
+;20 try move forward (for team battle)
+;21 try move back (for team battle)
+;40 Custom combo
+;740 Charge
+;1310 Bounce kick
+;1400 Enemy fast teleporting
+;3000 Range fireball
+;3600 team super
+;5300 Enemy Dizzy
+;99 Stop Combo
+;101 Combo set Double kick
+;102 
+;195 Time up, flee
+;196 anti flee
+
+;---- Helper vars--------
+;---- Common ---------
+
+;---- 7150 MESSATSU Charge -------
+fvar(21) = default zoom of stage
+var(22) = ground
+var(5) = Countervar 1
+
+
+;---------------------- Float variable list ----------------------
+
+; fvar(5):= 760, -3, 3000, 3601, 3020, 3040, 3100, 3120, 3140, 3160, 3180, 3200, 4000, 3700
+; fvar(6) player 1's current scale
+; fvar(7) Detal vel x
+; fvar(8) Detal vel y
+;fvar(10):= -2
+;fvar(11):= -2
+;fvar(28):= -2
+;fvar(29):= -2
+;fvar(39):= 5300, -3

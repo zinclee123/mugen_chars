@@ -36,8 +36,14 @@ https://www.bilibili.com/video/av68477163
 https://www.bilibili.com/video/av66199493  
 
 ## 卢卡尔(Rugal2nd)
-![Hinako](https://github.com/zinclee123/mugen_chars/blob/master/Resources/Rugal.gif)    
-02UM+98UM系统卢卡尔 凶级      
+![Rugal](https://github.com/zinclee123/mugen_chars/blob/master/Resources/Rugal.gif)    
+02UM+98UM系统卢卡尔 凶级
+
+## 大师隆(MasterRyu)
+![Hinako](https://github.com/zinclee123/mugen_chars/blob/master/Resources/MasterRyu.gif)    
+修改自BetterHans，做了点AI优化，无性能改动
+对战演示视频 可以从10:20秒开始:
+https://www.bilibili.com/video/BV1u7411B7AW     
 
 ## 最后
 以上所有人物不可避免的有Bug，可以https://github.com/zinclee123/mugen_chars 提问题或者改进意见可通过Github的提交issue功能

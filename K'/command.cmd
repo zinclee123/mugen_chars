@@ -699,7 +699,7 @@ trigger1 = !IsHelper
 trigger1 = var(59) = 0 
 trigger1 = command = "start"
 ;trigger1 = var(4) := 5
-value = 3300
+value = 981
 
 
 ;===========================================================================

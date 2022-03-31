@@ -1,6 +1,6 @@
 [Data]
-life = 1000
-attack = 100
+life = 1120
+attack = 106
 defence = 100
 fall.defence_up = 50
 liedown.time = 9
@@ -34,7 +34,7 @@ walk.fwd  = 3.08203125                         ;Walk forward
 walk.back = -3.08203125                        ;Walk backward
 run.fwd  =  6.20703125                             ;Run forward (x, y)
 run.back = -6.20703125,-4               ;Hop backward (x, y)
-jump.neu = 0,-10.875                            ;Neutral jumping velocity (x, y)
+jump.neu = 0,-10.3                           ;Neutral jumping velocity (x, y)
 jump.back = -3.08203125                        ;Jump back Speed (x, y)
 jump.fwd = 3.08203125                          ;Jump forward Speed (x, y)
 runjump.back = -5.623046875,-10.02578125                ;Running jump speeds (opt)
@@ -47,7 +47,7 @@ airjump.fwd = 2.5                              ;.
 airjump.num = 0                                ;Number of air jumps allowed (opt)
 airjump.height = 35                            ;Minimum distance from ground before you can air jump (opt)
 yaccel = 0.6171875                         ;Vertical acceleration
-stand.friction = .82                           ;Friction coefficient when standing
+stand.friction = .85                           ;Friction coefficient when standing
 crouch.friction = .82                          ;Friction coefficient when crouching
 
 ;Default language victory quotes **MUGEN 1.0**

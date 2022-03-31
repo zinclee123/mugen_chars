@@ -182,7 +182,7 @@ v = 27
 value = 1
 
 [State 1000, 6]
-type = Null;ChangeState
+type = ChangeState
 trigger1 = var(59) = 0
 trigger1 = !var(43) && command != "hold_x"
 trigger2 = var(59) = 0
@@ -2939,7 +2939,7 @@ movetime = 28
 anim = -1
 sound = s3,15
 p2defmul = 1
-poweradd = ifelse(var(51)>0,-1000,-3000)
+poweradd = ifelse(roundstate=2,ifelse(var(51)>0,-1000,-3000),0)
 
 [State 0, VarSet]
 type = VarSet
@@ -3009,7 +3009,7 @@ priority = 4, Hit
 sparkno = S27002
 sparkxy = 0, -70
 hitsound = s5,3
-guardsound = s3+(1*2), 13
+guardsound = s5, 13
 guard.sparkno = s27502
 ground.type = High
 pausetime = 0,12

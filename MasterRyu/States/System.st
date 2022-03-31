@@ -5919,8 +5919,8 @@ ignorehitpause = 1
 [State -2, Debug]
 type = appendtoclipboard
 trigger1 = 1
-text="\nTRACE=%d FV21=%d FV24=%f FV25=%d FV26=%d PROJ=%d"  
-params= var(50), fvar(21), fvar(24), fvar(25), fvar(26), PlayerIdExist(Helper(33333333),var(3))
+text="\nTRACE=%d FV21=%d FV24=%f FV25=%d HV14=%d PROJ=%d"  
+params= var(50), fvar(21), fvar(24), fvar(25), helper(33000),var(14), PlayerIdExist(Helper(33333333),var(3))
 ignorehitpause = 1
 
 ;===========================================================================

@@ -1,5 +1,41 @@
 [Statedef -2]
 
+;---------------------------------------------------------------------------------
+;跳跃控制
+;---------------------------------------------------------------------------------
+[State -3]
+type = varadd
+Trigger1 = var(45) > 0
+var(45) = -1
+
+[State -3]
+type = varadd
+Trigger1 = helper(33000),var(13) = 39 && EnemyNear,MoveHit 
+Trigger2 = EnemyNear,StateType != A && StateNo = [154,155]
+var(45) = 60 
+
+[State -3]
+type = varadd
+Trigger1 = helper(33000),var(13) = 50 && EnemyNear,MoveHit 
+Trigger2 = MoveType = H
+Trigger2 = var(50)/100 = [600,699]
+Trigger2 = EnemyNear,MoveHit
+Trigger2 = StateNo != [150,159]
+Trigger
+var(45) = 300 + EnemyNear,GetHitVar(damage)
+
+
+
+
+
+
+
+
+
+
+
+
+
 [State -2,当身相关,前AB]
 type = ChangeState
 value = 750
@@ -822,7 +858,7 @@ fvar(0) = 0
 ; Power Bar
 ;===========================================================================
 [state -2,]
-type = Helper
+type = Null;Helper
 trigger1 = numhelper(7500) = 0
 id = 7500
 name = "g"

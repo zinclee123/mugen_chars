@@ -75,7 +75,7 @@ trigger1 = root,movetype = A
 var(14) = root,stateno
 
 [State -1, Preview State]
-type = VarSet
+type = Null;VarSet
 trigger1 = var(14) != 0
 trigger1 = enemynear,movetype != H || enemynear,stateno = [150,159]
 var(14) = 0

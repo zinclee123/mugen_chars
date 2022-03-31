@@ -3304,7 +3304,7 @@ trigger1 = EnemyNear,StateType != A
 trigger1 = EnemyNear,MoveType = A
 trigger1 = EnemyNear,Time < -EnemyNear,AnimTime
 trigger1 = EnemyNear,AnimTime < -6 || Life < Lifemax*0.2
-trigger1 = EnemyNear,StateType = C || Helper(33000),var(14) = 1
+trigger1 = EnemyNear,StateType = C || Helper(33000),var(11) = 1
 trigger1 = EnemyNear,StateNo = [200,999]
 trigger1 = var(21) := 2
 attr = C, AA, AP
@@ -3321,8 +3321,8 @@ triggerall = statetype != A
 triggerall = StateNo != 53
 triggerall = Ctrl||(StateNo=[20,21])||StateNo=100||StateNo = [700,701]
 triggerall = EnemyNear,Time < -EnemyNear,AnimTime || EnemyNear,NumProj || PlayerIdExist(Helper(33333333),var(3))
-triggerall = EnemyNear,StateType = S || EnemyNear,StateType = A || Helper(33000),var(14) = 2
-triggerall = Helper(33000),var(14) != 1
+triggerall = EnemyNear,StateType = S || EnemyNear,StateType = A || Helper(33000),var(11) = 2
+triggerall = Helper(33000),var(11) != 1
 ;精防普通技能
 trigger1 = EnemyNear,MoveType = A
 trigger1 = EnemyNear,StateNo = [200,999]
@@ -3385,7 +3385,7 @@ triggerall = roundstate=2 && statetype!=A
 triggerall = (ctrl || StateNo=21 || StateNo = 100 || (StateNo = [120,140]))
 triggerall = var(59) = 0
 ;防投技
-Trigger1 = Helper(33000),var(14) = 3 || EnemyNear,HitDefAttr = SCA,AT
+Trigger1 = Helper(33000),var(11) = 3 || EnemyNear,HitDefAttr = SCA,AT
 Trigger1 = P2BodyDist x < 45
 Trigger1 = EnemyNear,Time < -EnemyNear,AnimTime
 Trigger1 = var(9) = 1
@@ -4642,6 +4642,12 @@ Trigger1 = EnemyNear,StateType = A
 Trigger1 = P2BodyDist x - fvar(11) * 2 = [5,49]
 Trigger1 = EnemyNear,pos y + EnemyNear,Vel Y * 2 + fvar(12) * 2 * (2 + 1) / 2 = [-55,-25]
 Trigger1 = var(50) := 020031
+;对地面立回
+Trigger2 = EnemyNear,MoveType = I || enemynear,CTRL 
+Trigger2 = EnemyNear,StateType = S
+Trigger2 = P2BodyDist x = [5,42]
+trigger2 = random < (100 * (AIlevel ** 2 / 64.0))
+Trigger2 = var(50) := 020032
 Value = 200
 
 [State -1, SMK2]
@@ -4696,12 +4702,12 @@ value = 230
 triggerall = AIlevel && numenemy
 triggerall = statetype != A && roundstate = 2
 triggerall = var(59) = 0
-triggerall = (p2bodydist x = [-11, 40]) && (p2bodydist y = [ -50, 50]) && p2statetype != L && p2statetype != A && !(enemynear, hitfall)
+triggerall = (p2bodydist x = [-11, 41]) && (p2bodydist y = [ -50, 50]) && p2statetype != L && p2statetype != A && !(enemynear, hitfall)
 triggerall = P2MoveType != H && (Enemynear,P2Dist x > 0)
 triggerall = !(Enemynear,P2dist x < 5)
 triggerall = !(P2StateNo = [5100,5499]) || var(59)
 trigger1 = ctrl || stateno = 21 || (stateno = [99,101]) || (StateNo = [120,149])
-trigger1 = random < (50 + 100* !(Enemynear,Ctrl||StateNo=21) + 100 * (Enemynear,vel x >1)) * (AIlevel ** 2 / 64.0)
+trigger1 = random < (100 + 100* !(Enemynear,Ctrl||StateNo=21) + 100 * (Enemynear,vel x >1)) * (AIlevel ** 2 / 64.0)
 trigger1 = var(50) := 023001
 trigger2 = stateno = 200 && (movehit = [1, 16])
 trigger2 = random < (100 * (AIlevel ** 2 / 64.0))
@@ -4962,10 +4968,11 @@ TriggerAll = (EnemyNear,Ctrl || EnemyNear,StateNo <= 199)
 TriggerAll = !InGuardDist
 TriggerAll = (EnemyNear,MoveType != H || (EnemyNear,StateNo = [120,159])) && EnemyNear,StateType != L && EnemyNear,StateNo != 5120
 ;
+Trigger1 = helper(33000),var(14) != 245
 Trigger1 = !PlayerIdExist(Helper(33333333),var(3)) || abs(PlayerId(Helper(33333333),var(3)),P2BodyDist x) > 50 
 Trigger1 = (P2BodyDist x >= 0 && EnemyNear,Facing != Facing) || (P2BodyDist x <= 0 && EnemyNear,Facing = Facing)
 Trigger1 = EnemyNear,StateType != A && EnemyNear,Vel Y = 0
-Trigger1 = P2BodyDist x < 55
+Trigger1 = P2BodyDist x = [40, 55]
 Trigger1 = var(50) := 24531
 IgnoreHitPause = 1
 

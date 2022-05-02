@@ -1,0 +1,561 @@
+;===========================================================================
+; 特殊技
+;===========================================================================
+;---------------------------------------------------------------------------
+; 立ち回りを補助する特殊な行動をここにまとめておきました。
+; 要点さえ理解すれば既存の格ゲーで出来る事なら大体再現可能。
+; 飛び道具の反射とか、無理なのもあるけどね。
+;===========================================================================
+; サブシステム
+;===========================================================================
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;ブロッキング準備（ＡＩ専用ステートにしてます）
+[Statedef 700]
+type     = U
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = ifelse(StateType=C,702,ifelse(StateType=A,704,700))
+poweradd = 0
+
+[State 700, 状態変更]
+type = StateTypeSet
+trigger1 = (StateType = A)
+Physics = A
+IgnoreHitPause = 1
+Persistent = 1
+
+;***********************************
+[State 700, 軸位置]
+type = PosSet
+trigger1 = (StateType != A)
+y = 0
+
+[State 700, 移動速度]
+type = VelSet
+trigger1 = (StateType != A)
+x = 0
+y = 0
+
+;***********************************
+[State 700, 受け止め定義];相手のHitDef用
+type = ReversalDef
+trigger1 = Time = 0
+;reversal.attr = SCA, NA,SA,HA,NP,SP,HP ;｝どっちも同じ効果
+reversal.attr = SCA, AA,AP              ;｝どっちでも良い
+pausetime     = 0,14
+numhits       = 0
+sparkno       = -1
+sparkxy       = 0,0
+hitsound      = -1,-1
+P1StateNo = 701
+
+[State 700, 食らい上書き];相手のProjectile用
+type = HitOverRide
+trigger1 = Time = [0,4]
+time = 1
+;attr = SCA, NA,SA,HA,NP,SP,HP
+attr = SCA, AA,AP
+stateno = 701
+IgnoreHitPause = 1
+
+;***********************************
+[State 700, ステート変更]
+type = ChangeState
+trigger1 = (Time > 3)
+value = ifelse(StateType=A,51,ifelse(StateType=C,11,0))
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;ブロッキング（成功モーション）
+[Statedef 701]
+type     = U
+movetype = I
+physics  = U
+ctrl     = 0
+anim     = ifelse((StateType!=A)&&(EnemyNear,StateType=C),703,ifelse(StateType=A,705,701))
+poweradd = 150
+
+[State 701, 速度Ｘ軸];Ｘ軸の移動速度を記憶
+type = VarSet
+triggerall = (StateType = A)
+trigger1 = Time = 0
+fv = 10
+value = (Vel X)
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 701, 速度Ｙ軸];Ｙ軸の移動速度を記憶
+type = VarSet
+triggerall = (StateType = A)
+trigger1 = Time = 0
+fv = 11
+value = (Vel Y)
+IgnoreHitPause = 1
+Persistent = 1
+
+;***********************************
+[State 701, ライフ増減]
+type = LifeAdd
+trigger1 = Time = 0
+value = 20
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 701, 無敵];単なる気休め（これは消してもＯＫ）
+type = NotHitBy
+trigger1 = 1
+value = SCA,AA,AT,AP
+time = 2
+
+[State 701, 時間停止];自分も相手も制限時間も一時的に止める（ポーズ）
+type = Pause
+trigger1 = Time = 0
+time = 10       ;ポーズする時間（フレーム）
+movetime = 10   ;ポーズ中に動ける時間。timeよりも多いとバグる（デフォルトは０）
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 701, 押し判定];単なる気休め（これは消してもＯＫ）
+type = PlayerPush
+trigger1 = 1
+value = 1
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 701, 画像の色]
+type = PalFX
+trigger1 = Time = 0
+time = 14
+add = 20,70,150
+sinadd = 64,32,5,3  ;振幅赤,振幅緑,振幅青,周期
+
+;***********************************
+[State 701, 軸位置]
+type = PosSet
+trigger1 = (StateType != A)
+y = 0
+
+[State 701, 移動速度]
+type = VelSet
+trigger1 = (StateType != A)
+trigger2 = (StateType = A) && (Time = [0,9])
+x = 0
+y = 0
+pausemovetime = 99999999
+
+[State 701, 移動速度]
+type = VelSet
+triggerall = (StateType = A)
+trigger1 = Time = 10
+x = (fvar(10)/1.5)
+y = ifelse((fvar(11)<0),(fvar(11)/1.2),ifelse((fvar(11)>0),(fvar(11)/3.4),0))
+pausemovetime = 99999999
+
+;***********************************
+[State 701, エフェクト]
+type = Explod
+trigger1 = Time = 1
+anim = 4018
+postype = p1
+pos = ifelse(Anim=705,25,ifelse(Anim=703,30,40)),ifelse(Anim=705,-70,ifelse(Anim=703,-50,-82))
+scale = 0.5,0.5
+sprpriority = 3
+supermovetime = 99999999
+pausemovetime = 99999999
+ownpal = 1
+IgnoreHitPause = 1
+ID = 4018
+
+[State 701, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 1
+value = 0,14
+
+;***********************************
+[State 701, ステート変更]
+type = ChangeState
+trigger1 = (Time > 9)
+value = ifelse(StateType=A,51,ifelse(StateType=C,11,0))
+ctrl = 1
+;===========================================================================
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+; ※１：NotHitBy
+;
+; 　通常は「無敵状態」を設定するけど、本当は
+;　『相手の「特定の属性を設定しているHitDef」を当たらなくする』コントローラ。
+; 　特定の属性はHitDefの「attr」のパラメータが該当する。テンプレート参照。
+; 　まぁvalueに与える値を見れば早い。
+;
+; 　value = (相手のattrの状態), (相手のattrの属性１)(相手のattrの属性２),・・・
+;
+; 　これが本来の記述方法。
+;　「value2」を増やす事により、もう一つ無敵にしたい属性を指定出来る。
+; 　(属性１)と(属性２)を省略して書けば
+; 　相手の(状態)のみを判断して攻撃を当たらなくする事が出来る。（「SC」など）
+; 　逆に(状態)に関係無く特定の(属性１)と(属性２)に対して無敵にしたい場合は、
+;　『(状態)を省略して(属性１)と(属性２)を設定する』。
+; 　というか全ての状態（SとCとA全部の場合）で属性を実行したい時、
+; 　SCAを加えてしまうと(属性１)と(属性２)が機能しない（苦笑
+;
+; 　(例)　：　value = , AA,AP,AT
+; 　もしくは　value = , NA,SA,HA,NP,SP,HP,NT,ST,HT
+;
+; 　実はSCAじゃなくても、この記述でも「無敵状態」になれる。
+; 　例に挙げた見慣れない属性（AA・AP・AT）の意味は以下の通り。
+;
+; 　AA = 相手の「全ての打撃」が当たらなくなる　　　　（All Attack）
+; 　AP = 相手の「全てのProjectile」が当たらなくなる　（All Projectile）
+; 　AT = 相手の「全ての投げ」が当たらなくなる　　　　（All Throw）
+;
+; 　この３つは「HitBy」「ReversalDef」「HitOverRide」のコントローラと、
+;　「HitDefAttr」のトリガーにも使える。
+;===========================================================================
+;--------------------------------------------------------------------------
+;===========================================================================
+; 投げ技
+;===========================================================================
+;---------------------------------------------------------------------------
+; エレクバイトが「作るのが退屈と感じる時もあるよ」って言ってるけど、
+; 作り出したら意外とハマって楽しくなる投げ技。
+; 投げる相手の正確な座標取りは面倒臭いけどね（コラ
+; 投げ用のHitDefはテンプレートと見比べて確認すればわかるはず。
+;
+; ノーマルと違い、kfmcでは空中でも投げられるようにした上に、
+; 相手がシビアなタイミングで『投げ抜け』も出来るように改造してみた。
+; 自分と相手の位置が逆になるのは仕様。作ってみて面白かったから（爆
+;---------------------------------------------------------------------------
+;カンフースルー・改：掴み
+[Statedef 800]
+type     = U
+movetype = A
+physics  = N
+juggle   = 0
+anim     = 800
+ctrl     = 0
+velset   = 0,0
+sprpriority = 2
+
+;++++++++++++++++++++++++++++++++++++++++++
+[State ,];補正リセット
+type = Varset
+trigger1 = moveguarded
+trigger2 = EnemyNear,movetype != H
+trigger3 = EnemyNear,GethitVar(hitcount) <= 0
+trigger4 = EnemyNear,ctrl
+fvar(6) = 1
+ignorehitpause = 1
+
+[State , アタック]
+type = AttackMulSet
+trigger1 = (palno = [7,12])
+trigger1 = (fVar(6) = 1)
+value = 1.3+(var(3)*0.3)
+ignorehitpause = 1
+[State , アタック]
+type = AttackMulSet
+trigger1 = (palno != [7,12])
+trigger1 = (fVar(6) = 1)
+value = 1+(var(3)*0.3)
+ignorehitpause = 1
+[State , アタック]
+type = AttackMulSet
+trigger1 = (palno=[7,12])
+trigger1 = (fVar(6)<= 0.9)
+value = (0.8 * fVar(6)*1.3)
+ignorehitpause = 1+(var(3)*0.3)
+[State , アタック]
+type = AttackMulSet
+trigger1 = (palno != [7,12])
+trigger1 = (fVar(6)<= 0.9)
+value = (0.8 * fVar(6))
+ignorehitpause = 1+(var(3)*0.3)
+
+[State , アタック]
+type = AttackMulSet
+trigger1 = (palno != [7,12])
+trigger1 = (fVar(6)<= 0.1)
+value = 0.1+(var(3)*0.03)
+ignorehitpause = 1
+[State , アタック]
+type = AttackMulSet
+trigger1 = (palno = [7,12])
+trigger1 = (fVar(6)<= 0.1)
+value = 0.13+(var(3)*0.03)
+ignorehitpause = 1
+;++++++++++++++++++++++++++++++++++
+
+[State 800, 無敵]
+type = NotHitBy
+triggerall = time = 0
+trigger1  = 1
+value = SCA,AA,AT,AP
+time = 1
+
+[State 800, 移動速度]
+type = VelSet
+trigger1 = (StateType = A)
+x = 0
+y = 0
+
+[State 800, ヒット定義（投げ用）];地上
+type = HitDef
+triggerall = (StateType != A)
+trigger1 = Time = 0
+getpower           = 180,180
+givepower          = 90,90
+attr = S, NT
+hitflag = M
+priority = 1, Miss
+sparkno = -1  ;-1だからヒットスパークは表示しない
+sprpriority = 1
+p1stateno = 801
+p2stateno = 803
+guard.dist = 0 ;相手のガード態勢に入る距離を０にしてるので、ガード不可
+fall = 1
+
+[State 800, ステート変更]
+type = ChangeState
+trigger1 = (StateType != A) && (AnimTime = 0)
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+;成功（放り投げる）
+[Statedef 801]
+type     = U
+movetype = A
+physics  = N
+anim     = 801
+ctrl     = 0
+velset   = 0,0
+
+[State 200];補正
+type = Varset
+trigger1 = time = 0
+fvar(6) = fvar(6)*0.4
+persistent = 0
+ignorehitpause = 1
+
+[State 801, 変数]
+type = VarSet
+trigger1 = Time = 0
+v = 29
+value = 10
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 801, 軸位置]
+type = PosSet
+triggerall = (StateType = A)
+trigger1 = (Pos Y > 0)
+y = 0
+
+;*********************************
+[State 801, 音を鳴らす]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = 0,9
+channel = 1
+
+[State 801, 音を鳴らす]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = 0,40
+
+[State 801, 音を鳴らす]
+type = PlaySnd
+trigger1 = AnimElem = 2
+value = 0,21
+channel = 3
+
+[State 801, 音を鳴らす]
+type = PlaySnd
+trigger1 = AnimElem = 1
+value = 5,3
+channel = 2
+
+[State 801,砂埃]
+type = Projectile
+trigger1 = animelem = 2
+Projscale = 0.7,0.7
+ProjAnim = 4215
+Projremanim = -1
+Projremovetime = 12
+Projpriority = 3
+Projemisstime = 1
+Offset = 40,0
+velocity = 0, 0
+
+[State 801,]
+type = Explod
+trigger1 = animelem = 2
+anim = 4504
+ID = 0
+pos = 40, 0
+postype = p1
+removetime = -2
+pausemovetime = 0
+scale = 0.5, 0.5
+sprpriority = 2
+ontop = 0
+ownpal = 0
+
+[State 801,画面ゆれ]
+type = EnvShake
+trigger1 = animelem = 3
+time = 20
+freq = 120
+ampl = -4
+phase = 0
+
+[State 801, 掴んだ相手のライフ増減]
+type = TargetLifeAdd
+trigger1 = AnimElem = 2
+trigger1 = (palno = [1,6])
+value = -180
+[State 801, 掴んだ相手のライフ増減]
+type = TargetLifeAdd
+trigger1 = AnimElem = 2
+trigger1 = (palno = [7,12])
+value = -234
+
+;*********************************
+[State 801, 掴んだ相手の位置１];TargetBindで相手を一時的に拘束
+type = TargetBind
+trigger1 = AnimElemTime(2) < 0
+pos = -90, -105  ;自分の軸位置から相手の軸をX=28・Y=0の位置にする
+
+[State 801, 掴んだ相手の位置２]
+type = TargetBind
+trigger1 = (AnimElemTime(2) >= 0) && (AnimElemTime(3) < 0)
+pos = 58, 0
+
+;********************************* 相手が食らい状態の時のみ機能するTarget系コントローラ
+[State 801, 掴んだ相手のステート変更]
+type = TargetState
+trigger1 = AnimElem = 3
+value = 666
+
+[State 801, ステート変更]
+type = ChangeState
+trigger1 = (StateType != A) && (AnimTime = 0)
+value = 0
+ctrl = 1
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+; kfmc.cnsの「相手側ステート」の欄で説明した事と意味は同様。
+; 解説はそっちを見てね。
+;---------------------------------------------------------------------------
+;相手側１（掴まれて放り投げられるまで）
+[Statedef 803]
+type     = U
+movetype = H
+physics  = N
+ctrl     = 0
+velset   = 0,0
+
+[State 803, 相手のアニメ変更]
+type = ChangeAnim2
+trigger1 = Time = 0
+value = 803
+
+[State 803, 相手ステートに戻す];停止バグ対策
+type = SelfState
+trigger1 = (!GetHitVar(IsBound)) && (Time > 60) ;（※２）
+value = 5050
+
+;---------------------------------------------------------------------------
+; ※２：GetHitVar
+;
+; 　食らってしまった『相手の攻撃の効果』を
+; 　自分側が「特殊な変数」に変換して判断するトリガー。
+;　「GetHitVar(**)」の『**』に該当する、予め決められているパラメータを全て紹介。
+;
+; 　大概「相手のHitDefとProjectileのパラメータ」から引き出すので、かなり多い（苦笑
+;
+;
+; 　XVelAdd             = 自分が負けて吹っ飛んだ時の「Ｘ軸方向の加速度(float)」を計測する
+; 　YVelAdd             = 自分が負けて吹っ飛んだ時の「Ｙ軸方向の加速度(float)」を計測する
+; 　Type                = 自分の「食らいアニメの種類」。（0=None・1=High・2=Low・3=Trip）
+; 　AnimType            = 相手のHitDefに設定されている「animtype」を判断する
+;                        （0=Light・1=Medium・2=Hard・3=Back・4=Up・5=DiagUp）
+; 　GroundType          = 相手のHitDefに設定されている「ground.type」を判断する
+; 　AirType             = 相手のHitDefに設定されている「air.type」を判断する
+;
+; 　Damage              = 相手から食らってしまった「ダメージ量」を計測する
+; 　HitCount            = 相手の「現在のヒット数」を計測する
+; 　FallCount           = 自分が「地面に激突した回数」を判断する
+; 　HitShakeTime        = 自分の「ヒット硬直時間」を計測する
+; 　HitTime             = 自分の「食らい時間」を計測する
+; 　SlideTime           = 相手のHitDefに設定されている「slidetime」を判断する
+; 　CtrlTime            = 相手のHitDefに設定されている「(air)guard.ctrltime」を判断する
+; 　RecoverTime         = 横に倒れている時の「起き上がるまでの時間」を判断する
+;
+; 　XOff                = 相手のHitDefに設定されている「"snap"のＸ軸」を判断する（非推奨）
+; 　YOff                = 相手のHitDefに設定されている「"snap"のＹ軸」を判断する（非推奨）
+; 　ZOff                = 相手のHitDefに設定されている「"snap"のＺ軸」を判断する？（存在しないので無意味）
+;
+; 　XVel                = 相手のHitDefに設定されている「Ｘ軸の食らい状態の移動速度」を判断する
+; 　YVel                = 相手のHitDefに設定されている「Ｙ軸の食らい状態の移動速度」を判断する
+; 　YAccel              = 相手のHitDefに設定されている「yaccel」を判断する
+; 　chainID             = 相手のHitDefに設定されている「chainID」を判断する
+; 　Guarded             =「相手のコンボでの最後の攻撃をガードした場合」を判断する
+; 　IsBound             =「TargetBindで掴まれてる状態」を判断する
+;
+; 　Fall                = 相手のHitDefに設定されている「fall」を判断する
+; 　Fall.Damage         = 相手のHitDefに設定されている「fall.damage」を判断する
+; 　Fall.XVel           = 相手のHitDefに設定されている「fall.xvelocity」を判断する
+; 　Fall.YVel           = 相手のHitDefに設定されている「fall.yvelocity」を判断する
+; 　Fall.Recover        = 相手のHitDefに設定されている「fall.recover」を判断する
+; 　Fall.RecoverTime    = 相手のHitDefに設定されている「fall.recovertime」を判断する
+; 　Fall.Kill           = 相手のHitDefに設定されている「fall.kill」を判断する
+; 　Fall.EnvShake.Time  = 相手のHitDefに設定されている「fall.envshake.time」を判断する
+; 　Fall.EnvShake.Freq  = 相手のHitDefに設定されている「fall.envshake.freq」を判断する
+; 　Fall.EnvShake.Ampl  = 相手のHitDefに設定されている「fall.envshake.ampl」を判断する
+; 　Fall.EnvShake.Phase = 相手のHitDefに設定されている「fall.envshake.phase」を判断する
+;
+;---------------------------------------------------------------------------
+;相手側２（放り投げられた）
+[Statedef 804]
+type     = A
+movetype = H
+physics  = N
+ctrl     = 0
+velset   = 2.8,-7
+
+[State 804, 速度加算];重力
+type = VelAdd
+trigger1 = 1
+y = 0.4
+
+[State 804, ステート変更]
+type = ChangeState
+triggerall = (Vel Y > 0)
+triggerall = (Pos Y >= -20)
+triggerall = (Alive)      ;生きている時
+triggerall = (CanRecover) ;空中受け身が可能な時
+trigger1 = command = "recovery"
+value = 5200
+
+[State 804, 相手ステートに戻す]
+type = SelfState
+triggerall = (Vel Y > 0)
+triggerall = (Alive)
+triggerall = (CanRecover)
+trigger1 = command = "recovery"
+value = 5210
+
+[State 804, 相手ステートに戻す]
+type = SelfState
+trigger1 = (Vel Y > 0) && (Pos Y >= 0)
+value = 5100
+
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------

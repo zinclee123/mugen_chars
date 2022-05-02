@@ -1,0 +1,726 @@
+; 教材用カンフーマン（ちょっとこ丸版）のステートファイルです。
+;---------------------------------------------------------------------------
+; 単にわかりやすいように別ファイルに分けているだけです。
+; ステート自体に種類別の概念（通常技や必殺技扱いなど）は存在しません。
+;---------------------------------------------------------------------------
+; ■常時監視ステート（－２）■
+; 通常の食らい状態（Statedef 5000～5199間）でも、
+; 相手に（「P2StateNo」や「TargetState」等で）制御を奪われても、
+; 常に登録したステートコントローラが有効になります。
+; サブシステム等を制御する時に重宝するでしょう。
+;===========================================================================
+;---------------------------------------------------------------------------
+
+[Statedef -2] ;←この行は絶対に消さないでね
+;---------------------------------------------------------------------------
+; Simul用
+;---------------------------------------------------------------------------
+[State -2, プレイヤー判定]
+type = VarSet
+triggerall = (NumPartner) && (var(33) != 1)
+trigger1 = ID < (Partner,ID) ;自分のＩＤナンバーがパートナーよりも少ない数字なら
+v = 33
+value = 0
+IgnoreHitPause = 1
+
+[State -2, プレイヤー判定]
+type = VarSet
+triggerall = (NumPartner)
+trigger1 = ID > (Partner,ID) ;自分のＩＤナンバーがパートナーよりも多い数字なら
+v = 33
+value = 1
+IgnoreHitPause = 1
+
+;---------------------------------------------------------------------------
+; 崩れＫＯ用処理
+;---------------------------------------------------------------------------
+[State -2, 「立ち」か「しゃがみ」を判断]
+type = VarSet
+triggerall = (RoundState > 1)
+trigger1 = (StateNo = [120,131])
+trigger2 = (StateNo = [150,153])
+v = 37
+value = ifelse((StateType=C),1,0)
+IgnoreHitPause = 1
+
+;---------------------------------------------------------------------------
+; サブシステム用
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+; ブロッキング用処理
+;---------------------------------------------------------------------------
+[State -2, リセット];立ちと空中
+type = VarSet
+trigger1 = (var(56) <= 0)
+trigger2 = (MoveType != I)
+trigger3 = (var(56) <= 10) && (command = "blocking-001")
+trigger4 = (StateType = C)
+v = 56
+value = 0
+IgnoreHitPause = 1
+
+[State -2, 前に入力]
+type = VarSet
+trigger1 = (command = "blocking-000")
+v = 56
+value = 16
+IgnoreHitPause = 1
+
+[State -2, 効果時間減少]
+type = VarAdd
+trigger1 = (var(56) > 0)
+v = 56
+value = -1
+IgnoreHitPause = 1
+
+;***********************************
+[State -2, リセット];しゃがみ
+type = VarSet
+trigger1 = (var(57) <= 0)
+trigger2 = (MoveType != I)
+trigger3 = (var(57) <= 10) && (command = "blocking-003")
+trigger4 = (StateType = A)
+v = 57
+value = 0
+IgnoreHitPause = 1
+
+[State -2, 下に入力]
+type = VarSet
+trigger1 = (command = "blocking-002")
+v = 57
+value = 16
+IgnoreHitPause = 1
+
+[State -2, 効果時間減少]
+type = VarAdd
+trigger1 = (var(57) > 0)
+v = 57
+value = -1
+IgnoreHitPause = 1
+
+
+
+;+++++++++++++++++++++++++++++++++++++++
+[State -2];カウンターリセット
+type = Varset
+trigger1 = moveguarded
+trigger2 = EnemyNear,movetype != A
+trigger3 = EnemyNear,statetype = L
+trigger4 = EnemyNear,ctrl
+var(40) = 0
+ignorehitpause = 1
+
+[State -2];カウンターヒット
+type = Varset
+trigger1 = EnemyNear,movetype = A
+var(40) = 1
+persistent = 1
+ignorehitpause = 1
+;---------------------------------------------------------------------------
+; 変数の値の特定範囲をランダムで処理
+;---------------------------------------------------------------------------
+
+[State -2, 汎用ランダム]
+type = VarRandom
+trigger1 = 1
+v = 28
+range = 1,120
+IgnoreHitPause = 1
+
+;***********************************
+;ヒットスパーク
+[State -2, 弱]
+type = VarRandom
+trigger1 = 1
+v = 43
+range = 4200,4203
+IgnoreHitPause = 1
+
+[State -2, 強]
+type = VarRandom
+trigger1 = 1
+v = 44
+range = 4204,4207
+IgnoreHitPause = 1
+
+[State -2, 必殺技]
+type = VarRandom
+trigger1 = 1
+v = 45
+range = 4208,4211
+IgnoreHitPause = 1
+
+[State -2, スーパーアーツ]
+type = VarRandom
+trigger1 = 1
+v = 46
+range = 4212,4215
+IgnoreHitPause = 1
+
+;===========================================================================
+; その他の登録
+;===========================================================================
+[state -2, ];攻撃力補正下限
+type = varset
+triggerall = (!ishelper)
+trigger1 = (palno = [7,12])
+trigger1 = (fVar(6) <= 0.1)
+fvar(6) = 0.13+(var(3)*0.03)
+ignorehitpause = 1
+[state -2, ];攻撃力補正下限
+type = varset
+triggerall = (!ishelper)
+trigger1 = (palno != [7,12])
+trigger1 = (fVar(6) <= 0.1)
+fvar(6) = 0.1+(var(3)*0.03)
+ignorehitpause = 1
+;---------------------------------------------------------------------------
+; アニメ変更
+;---------------------------------------------------------------------------
+[State -2, スーパーアーマー用];負けて吹っ飛ぶ時に変なアニメにしない処理
+type = ChangeAnim
+trigger1 = (PrevStateNo = [1007,1008]) && (StateNo = 5030) && (Time = [0,1])
+value = 5030
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+Persistent = 0
+
+[State -2,ダメージ記憶]
+type = VarSet
+triggerall = (GetHitVar(damage)>0)
+trigger1 = movetype = H
+v = 22
+value = GetHitVar(damage)
+IgnoreHitPause = 1
+
+[State -2, 負け起き上がり用]
+type = ChangeAnim
+triggerall = (NumEnemy) && (!MatchOver) && (RoundState = 4)
+trigger1 = (Anim != 20003) && (StateNo = 5150) && (Time >= 50)
+value = 20003
+Persistent = 0
+
+[State -3,喰らい抜け]
+type = SelfState
+triggerall = (palno = [7,11])
+triggerall = (life > 1)
+triggerall = (RoundState != 3)
+trigger1 = stateno = 5100
+trigger2 = stateno = 5160
+trigger3 = stateno = 5110
+trigger4 = stateno = 5050
+trigger4 = (pos y >= 0)
+trigger5 = (anim = 5100)
+trigger5 = (pos y >= 0)
+trigger6 = (anim = 5035)
+trigger6 = (pos y >= 0)
+trigger7 = (anim = 5070)
+trigger7 = (pos y >= 0)
+trigger8 = (anim = 5071)
+trigger8 = (pos y >= 0)
+value = 5120
+ctrl = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[State -2,喰らい抜け]
+type = SelfState
+triggerall = (palno = [7,11])
+triggerall = (life > 1)
+triggerall = (RoundState != 3)
+trigger1 = (anim = 5300)
+trigger1 = (pos y >= 0)
+value = 5120
+ctrl = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[State -2,喰らい抜け]
+type = SelfState
+triggerall = (RoundState = 2)
+triggerall = (palno = 12)
+triggerall = (life != 0)
+triggerall = Name ="yujiro"
+triggerall = (stateno != 0)
+triggerall = (stateno != 40)
+triggerall = (stateno != [20,21])
+triggerall = (stateno != [10,12])
+triggerall = (stateno != [180,202])
+triggerall = (stateno != 210)
+triggerall = (stateno != 250)
+triggerall = (stateno != 270)
+triggerall = (stateno != 275)
+triggerall = (stateno != 230)
+triggerall = (stateno != 260)
+triggerall = (stateno != 240)
+triggerall = (stateno != 400)
+triggerall = (stateno != 430)
+triggerall = (stateno != 410)
+triggerall = (stateno != 440)
+triggerall = (stateno != [1000,1001])
+triggerall = (stateno != 1999)
+triggerall = (stateno != [1009,1010])
+triggerall = (stateno != 1007)
+triggerall = (stateno != [700,705])
+triggerall = (stateno != 100)
+triggerall = (stateno != 105)
+triggerall = (stateno != [998,999])
+triggerall = (stateno != 1011)
+triggerall = (stateno != 1002)
+triggerall = (stateno != 1090)
+triggerall = (stateno != 1005)
+triggerall = (stateno != 1015)
+triggerall = (stateno != 2015)
+triggerall = (stateno != 2500)
+triggerall = (stateno != 2014)
+triggerall = (stateno != [3580,3581])
+triggerall = (stateno != 3500)
+triggerall = (stateno != 2700)
+triggerall = (stateno != 1110)
+triggerall = (stateno != [2001,2003])
+triggerall = (stateno != 1006)
+triggerall = (stateno != [1600,1601])
+triggerall = (stateno != 5120)
+triggerall = (stateno != [800,801])
+triggerall = (stateno != [150,152])
+triggerall = (stateno != [2226,2227])
+triggerall = (pos y >= 0)
+trigger1 = 1
+value = 0
+ctrl = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[State -2,喰らい抜け]
+type = SelfState
+triggerall = (palno = 12)
+triggerall = (life != 0)
+triggerall = (stateno != [40,45])
+triggerall = (stateno != [50,53])
+triggerall = (stateno != [10,12])
+triggerall = (stateno != 1002)
+triggerall = (stateno != 600)
+triggerall = (stateno != 630)
+triggerall = (stateno != 640)
+triggerall = (stateno != 1110)
+triggerall = (stateno != 1090)
+triggerall = (stateno != 2701)
+triggerall = (stateno != [700,705])
+triggerall = (stateno != [150,152])
+triggerall = (pos y < 0)
+trigger1 = 1
+value = 50
+ctrl = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[State -2, lifeadd]
+type = lifeadd
+trigger1 = (palno = [7,11])
+trigger1 = (var(1) <= 0)
+trigger1 = life <= 0 || GetHitVar(damage) >= life
+value = 100
+
+[State -2, lifeadd]
+type = lifeadd
+trigger1 = (palno = 12)
+trigger1 = life <= 0 || GetHitVar(damage) >= life
+trigger1 = GetHitVar(damage) > 0
+value = GetHitVar(damage)
+
+[State -2, lifeadd]
+type = lifeadd
+triggerall = (palno = 12)
+triggerall = GetHitVar(damage) < lifemax
+triggerall = time = 1
+trigger1 = prevstateno = 5000
+trigger2 = prevstateno = 5020
+value = -1
+
+;ゲージ回復
+[State -2,]
+Type = PowerAdd
+triggerall = (palno = [7,11])
+Triggerall = Alive = 1
+Triggerall = (RoundState = 2)
+Triggerall = (stateno != 3581)
+Triggerall = (var(20) = 0)
+Triggerall = (var(1) = 0)
+Triggerall = (stateno != 1005)
+Triggerall = (stateno != [2014,2015])
+Triggerall = (stateno != 3500)
+Triggerall = (stateno != [1600,1601])
+Trigger1   = gametime%1 = 0
+value = 1
+
+
+;ゲージ回復
+[State -2,]
+Type = PowerAdd
+triggerall = (palno = [7,11])
+Triggerall = Alive = 1
+Triggerall = (stateno != 3581)
+Triggerall = (RoundState = 2)
+Triggerall = (var(20) = 0)
+Triggerall = (var(1) = 1)
+Triggerall = (stateno != 1005)
+Triggerall = (stateno != [2014,2015])
+Triggerall = (stateno != 3500)
+Triggerall = (stateno != [1600,1601])
+Trigger1   = gametime%1 = 0
+value = 3
+
+;ゲージ回復
+[State -2,]
+Type = Powerset
+triggerall = (palno = 12)
+Triggerall = Alive = 1
+Trigger1   = 1
+value = 99999999
+
+[State -2,運送からの復帰]
+type = SelfState
+trigger1 = stateno = 1999
+trigger1 = time = 40
+value = 105
+ctrl = 1
+anim = 43
+IgnoreHitPause = 1
+
+[State -2,]
+type = VarSet
+triggerall = (var(1) <= 0)
+trigger1 = (palno = 12)
+v = 1
+value = 1
+IgnoreHitPause = 1
+
+[State -2,形態変化用]
+type = SelfState
+Triggerall = (RoundState != 3)
+Triggerall = (RoundState != 4)
+triggerall = (var(1) <= 0)
+triggerall = (pos y < 0)
+triggerall = (StateType = A)
+triggerall = (moveType = H)
+triggerall = (life >= 1)
+triggerall = life < (lifemax/2)
+trigger1 = (palno = [7,12])
+value = 2701
+ctrl = 0
+anim = 2701
+
+[State -2,形態変化用]
+type = SelfState
+Triggerall = (RoundState != 3)
+Triggerall = (RoundState != 4)
+triggerall = (var(1) <= 0)
+triggerall = (pos y >= 0)
+triggerall = (Stateno = 2701)
+trigger1 = (palno = [7,12])
+value = 2700
+ctrl = 0
+anim = 2700
+
+[State -2,形態変化用]
+type = SelfState
+Triggerall = (RoundState != 3)
+Triggerall = (RoundState != 4)
+triggerall = (var(1) <= 0)
+triggerall = (pos y = 0)
+triggerall = (StateType != A)
+triggerall = (life >= 1)
+triggerall = life < (lifemax/2)
+trigger1 = (palno = [7,12])
+value = 2700
+ctrl = 0
+anim = 2700
+
+[State -2,運送　バグ対策用?]
+type = varset
+trigger1 = movetype != A 
+var(3) = 0
+
+[State -2, 無敵]
+type = NotHitBy
+triggerall = (palno = [7,12])
+triggerall = (var(1) <= 0)
+trigger1 = life < (lifemax/2)
+trigger2 = stateno = 5120
+value = SCA,AA,AT,AP
+time = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[State -2, 音を鳴らす]
+type = PlaySnd
+trigger1 = stateno != 5150
+trigger1 = stateno != 5110
+trigger1 = life > 0
+trigger1 = Random <= 80
+trigger1 = movetype = H
+trigger1 = (Time = 2)
+value = 5,1
+channel = 1
+IgnoreHitPause = 1
+
+[State -2, 音を鳴らす]
+type = PlaySnd
+trigger1 = stateno != 5150
+trigger1 = stateno != 5110
+trigger1 = life > 0
+trigger1 = Random <= 40
+trigger1 = movetype = H
+trigger1 = (Time = 2)
+value = 5,9
+channel = 1
+IgnoreHitPause = 1
+
+[State -2, 音を鳴らす]
+type = PlaySnd
+trigger1 = stateno != 5150
+trigger1 = stateno != 5110
+trigger1 = life > 0
+trigger1 = Random <= 60
+trigger1 = movetype = H
+trigger1 = (Time = 2)
+value = 5,11
+channel = 1
+IgnoreHitPause = 1
+
+[State -2, 謎ジャムボイス]
+type = PlaySnd
+trigger1 = (anim = 5555)&&(Time = 20)
+value = 5,17
+channel = 1
+IgnoreHitPause = 0
+
+[State -2, 謎ジャムボイス]
+type = PlaySnd
+trigger1 = (anim = 5555)&&(Time = 400)
+value = 5,11
+channel = 1
+IgnoreHitPause = 1
+
+[State -2, 謎ジャムボイス]
+type = PlaySnd
+trigger1 = (anim = 5555)&&(Time = 502)
+value = 5,5
+channel = 1
+IgnoreHitPause = 1
+
+[State -2, 特殊効果]
+type = AssertSpecial
+triggerall = (stateno = 3581)
+trigger1 = 1
+flag = nomusic
+
+[State -2, 特殊効果]
+type = AssertSpecial
+trigger1 = var(1) = 1
+Flag = nostandguard
+Flag2 = nocrouchguard
+Flag3 = noairguard
+
+[State -2, 特殊効果]
+type = AssertSpecial
+trigger1 = (palno = 12)
+Flag = UnGuardable
+
+[State -2,0]
+Type = DestroySelf
+trigger1 = (palno = 12)
+;---------------------------------------------------------------------------
+; ブロッキング用処理
+;---------------------------------------------------------------------------
+[State -2, 食らい上書き];立ちブロッキング
+type = HitOverRide
+triggerall = (var(35) <= 0)
+triggerall = (StateNo < 200)
+triggerall = (MoveType = I)
+trigger1 = (StateType = S) && (var(56) > 0)
+time = 2
+;attr = SA, NA,SA,HA,NP,SP,HP ;｝どっちも同じ効果
+attr = SA, AA,AP              ;｝どっちでも良い
+stateno = 701
+IgnoreHitPause = 1
+
+[State -2, 食らい上書き];しゃがみブロッキング
+type = HitOverRide
+triggerall = (var(35) <= 0)
+triggerall = (StateNo < 200)
+triggerall = (MoveType = I)
+trigger1 = (StateType != A)
+trigger1 = (StateNo = 0) || (StateNo = [10,12])
+trigger1 = (var(57) > 0)
+time = 2
+;attr = C, NA,SA,HA,NP,SP,HP
+attr = C, AA,AP
+stateno = 701
+IgnoreHitPause = 1
+
+[State -2, 食らい上書き];空中ブロッキング
+type = HitOverRide
+triggerall = (var(35) <= 0)
+triggerall = (StateNo < 200)
+triggerall = (MoveType = I)
+trigger1 = (StateType = A) && (var(56) > 0)
+time = 2
+;attr = SCA, NA,SA,HA,NP,SP,HP
+attr = SCA, AA,AP
+stateno = 701
+IgnoreHitPause = 1
+
+;---------------------------------------------------------------------------
+; 汎用処理
+;---------------------------------------------------------------------------
+[State -2, 無敵]
+type = NotHitBy
+trigger1 = (RoundState != 2);（※）
+value = SCA
+time = 10
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[State -2, スクロール];負けて倒れたらカメラワークを相手に移す処理
+type = ScreenBound
+triggerall = (Life <= 0) || (!Alive) || (Lose)
+trigger1 = (StateNo = 5150) && (RoundState = 4);（※）
+value = 0
+MoveCamera = 0,0
+IgnoreHitPause = 1
+
+[State -2, 残像表示時間];攻撃食らったら残像を強制的に消す処理
+type = AfterImageTime
+trigger1 = (StateNo = [800,899]) && (MoveType = H)
+trigger2 = (PrevStateNo = [1000,4999]) && (MoveType = H)
+trigger3 = (PrevStateNo >= 6000) && (MoveType = H)
+trigger4 = (var(35) = 2) && (fvar(12) <= 0)
+trigger5 = (RoundState > 3);（※）
+time = 0
+IgnoreHitPause = 1
+
+[State -2, 防御力乗算];増やせば増やすほど食らうダメージが増える仕組み
+type = DefenceMulSet
+triggerall = (palno = [7,11])
+trigger1 = var(1) = 0
+trigger1 = 1
+value = 0.8
+IgnoreHitPause = 1
+
+[State -2, 防御力乗算]
+type = DefenceMulSet
+triggerall = (palno = [7,11])
+trigger1 = var(1) = 1
+trigger1 = 1
+value = 0.5
+IgnoreHitPause = 1
+
+[State -2, 防御力乗算]
+type = DefenceMulSet
+triggerall = (palno = 12)
+trigger1 = 1
+value = 0
+IgnoreHitPause = 1
+
+[State -2, コントロール];アーマーバグ対策
+type = CtrlSet
+trigger1 = (PrevStateNo = 1008) && (StateNo = 0)
+value = 1
+IgnoreHitPause = 1
+
+;---------------------------------------------------------------------------
+; ※：RoundState
+;
+; 　バトル時の『ラウンド中の段階』を判断するトリガー。
+;
+; 　0 = イントロ直前の画面が切り替わった瞬間のフェードインの時
+; 　1 = イントロ（キャラの登場演出時）
+; 　2 = バトル中
+; 　3 = ＫＯした瞬間～勝利ポーズ直前まで（フィニッシュ時）
+; 　4 = 勝利ポーズ時
+;
+;---------------------------------------------------------------------------
+; 画面一時退場演出
+;---------------------------------------------------------------------------
+[State -2, ステート変更]
+type = Changestate
+triggerall = (NumEnemy) && (RoundState = [2,3])
+trigger1 = (StateNo = 1006) && (BackEdgeDist < 0) && (EnemyNear,MoveType = H)
+value = 10005
+
+;---------------------------------------------------------------------------
+; 崩れＫＯ用処理
+;---------------------------------------------------------------------------
+[State -2, 崩れＫＯ]
+type = ChangeState
+trigger1 = (PrevStateNo = [120,131]) || (PrevStateNo = [150,153])
+trigger1 = (StateNo = 5000) || (StateNo = 5010)
+trigger1 = (!Alive) || (Life <= 0) || (Lose)
+value = 10004
+IgnoreHitPause = 1
+
+;---------------------------------------------------------------------------
+; クリップボード
+;---------------------------------------------------------------------------
+[State -2, クリップボード]
+type = DisplayToClipboard
+trigger1 = 1
+text = "AI=%d, Button=%d, Player=%d, Blocking=%d,%d \n"
+params = var(0),var(53),var(33),var(56),var(57)
+IgnoreHitPause = 1
+
+[State -2, クリップボード（追加専用）]
+type = AppendToClipboard
+trigger1 = 1
+text = "BG=%d, O.C.=%d, Tengu=%d, Denjin=%d,%d"
+params = var(18),var(35),var(34),var(25),var(26)
+IgnoreHitPause = 1
+
+;---------------------------------------------------------------------------
+;※こんな使い方もある
+;
+;[State -2, クリップボード]
+;type = DisplayToClipboard
+;trigger1 = 1
+;text = "Position X=%d,Y=%d, Velocity X=%f,Y=%f \n"
+;params = floor(Pos X),floor(Pos Y),(Vel X),(Vel Y)
+;
+;[State -2, クリップボード（追加専用）]
+;type = AppendToClipboard
+;trigger1 = 1
+;text = "Distance X=%d,Y=%d, Body-Distance X=%d,Y=%d"
+;params = floor(P2Dist X),floor(P2Dist Y),floor(P2BodyDist X),floor(P2BodyDist Y)
+;
+;[State -2, クリップボード]
+;type = DisplayToClipboard
+;trigger1 = 1
+;text = "Screen-Position X=%d,Y=%d, Hit=%d,Guard=%d,Contact=%d \n"
+;params = floor(ScreenPos X),floor(ScreenPos Y),(MoveHit),(MoveGuarded),(MoveContact)
+;
+;[State -2, クリップボード（追加専用）]
+;type = AppendToClipboard
+;trigger1 = 1
+;text = "Front-Screen-Edge:Edge=%d,Body=%d, Back-Screen-Edge:Edge=%d,Body=%d"
+;params = floor(FrontEdgeDist),floor(FrontEdgeBodyDist),floor(BackEdgeDist),floor(BackEdgeBodyDist)
+;
+;[State -2, クリップボード（追加専用）]
+;type = AppendToClipboard
+;trigger1 = 1
+;text = "Recover=%d, Count=%d, Guard=%d"
+;params = GetHitVar(RecoverTime),GetHitVar(FallCount),GetHitVar(Guarded)
+;
+
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------

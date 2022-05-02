@@ -1,0 +1,1951 @@
+;---------------------------------------------------------------------------
+; ■『コモンステート』について■
+; コモンステートとは、全キャラ共通の基本動作のステートです。
+; 通常は特に変更しない限り、M.U.G.E.N本体のdataフォルダにある
+;「common1.cns（コモンステートファイル）」を使います。
+;
+; しかし、もしもあなたのキャラのステートファイルでcommon1.cnsと同じ番号の
+; 基本動作のステートを作った場合は処理が上書きされ、
+; common1.cns側の同じ番号のステートは無効になります。
+;
+; common1.cnsのプログラム優先度は最低に属しているので、
+; ステートの作成には番号に注意しないといけません。
+;===========================================================================
+; 上書きした一部のコモンステート
+;===========================================================================
+;---------------------------------------------------------------------------
+;通常立ち・改
+[Statedef 0]
+type = S
+physics = S
+sprpriority = 0
+
+[State 0, アニメ変更]
+type = ChangeAnim
+trigger1 = (Anim != 0) && (Anim != 5) && (anim != 707)
+trigger2 = (Anim = 5) && (AnimTime = 0) && (anim != 707)
+value = 0
+
+[State 0, アニメ変更]
+type = Changeanim
+triggerall = var(1) = 1
+trigger1 = time = 0
+trigger2 = anim = 0
+value = 707
+
+[State 0, 移動速度]
+type = VelSet
+trigger1 = Time = 0
+y = 0
+
+[State 0, 移動速度]
+type = VelSet
+trigger1 = (abs(Vel X) < 2) ;absは『Absolute（絶対値）』
+trigger2 = Time = 4
+trigger3 = (PrevStateNo = 20) && (Time = 0)
+x = 0
+
+[State ]
+type = NotHitby
+trigger1 = var(1)=1
+value = SCA,NA,SA,HA,NP,SP,HP
+time = 1
+ignorehitpause = 1
+
+[State ]
+type = Helper
+trigger1 = var(1)=1
+trigger1 = numhelper(26666)<1
+name = "MyHelper"
+ID = 26666
+pos = 0,0
+postype = p1
+stateno = 26666
+keyctrl = 0
+supermovetime = 999999
+pausemovetime = 999999
+
+[State 1008, 画像の色]
+type = PalFX
+trigger1 = var(1)=1
+trigger1 = helper(26666),gethitvar(damage)>0
+time = 10
+add = 250,20,40
+sinadd = 22,5,364,3
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[state ];
+type = lifeadd
+trigger1 = var(1)=1
+value = -(helper(26666),gethitvar(damage)*0.8)
+IgnoreHitPause = 1
+
+[State 0, ステート変更]
+type = ChangeState
+trigger1 = (!Alive)
+value = 5050
+;---------------------------------------------------------------------------
+; Stand to Crouch
+[Statedef 10]
+type    = C
+physics = C
+anim = 10
+
+[State 10, 1]
+type = VelMul
+trigger1 = Time = 0
+x = .75
+
+[State ]
+type = NotHitby
+trigger1 = var(1)=1
+value = SCA,NA,SA,HA,NP,SP,HP
+time = 1
+ignorehitpause = 1
+
+[State ]
+type = Helper
+trigger1 = var(1)=1
+trigger1 = numhelper(26666)<1
+name = "MyHelper"
+ID = 26666
+pos = 0,0
+postype = p1
+stateno = 26666
+keyctrl = 0
+supermovetime = 999999
+pausemovetime = 999999
+
+[State 1008, 画像の色]
+type = PalFX
+trigger1 = var(1)=1
+trigger1 = helper(26666),gethitvar(damage)>0
+time = 10
+add = 250,20,40
+sinadd = 22,5,364,3
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[state ];
+type = lifeadd
+trigger1 = var(1)=1
+value = -(helper(26666),gethitvar(damage)*0.8)
+IgnoreHitPause = 1
+
+[State 10, 2]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 11
+;---------------------------------------------------------------------------
+; Crouch to Stand
+[Statedef 12]
+type    = S
+physics = S
+anim = 12
+
+[State ]
+type = NotHitby
+trigger1 = var(1)=1
+value = SCA,NA,SA,HA,NP,SP,HP
+time = 1
+ignorehitpause = 1
+
+[State ]
+type = Helper
+trigger1 = var(1)=1
+trigger1 = numhelper(26666)<1
+name = "MyHelper"
+ID = 26666
+pos = 0,0
+postype = p1
+stateno = 26666
+keyctrl = 0
+supermovetime = 999999
+pausemovetime = 999999
+
+[State 1008, 画像の色]
+type = PalFX
+trigger1 = var(1)=1
+trigger1 = helper(26666),gethitvar(damage)>0
+time = 10
+add = 250,20,40
+sinadd = 22,5,364,3
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[state ];
+type = lifeadd
+trigger1 = var(1)=1
+value = -(helper(26666),gethitvar(damage)*0.8)
+IgnoreHitPause = 1
+
+[State 12, 1]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+
+;---------------------------------------------------------------------------
+; Crouching
+[Statedef 11]
+type    = C
+physics = C
+anim = 11
+sprpriority = 0
+
+[State 11, 1] ;Change from turning animation
+type = ChangeAnim
+trigger1 = Anim = 6 && AnimTime = 0
+value = 11
+
+[State ]
+type = NotHitby
+trigger1 = var(1)=1
+value = SCA,NA,SA,HA,NP,SP,HP
+time = 1
+ignorehitpause = 1
+
+[State ]
+type = Helper
+trigger1 = var(1)=1
+trigger1 = numhelper(26666)<1
+name = "MyHelper"
+ID = 26666
+pos = 0,0
+postype = p1
+stateno = 26666
+keyctrl = 0
+supermovetime = 999999
+pausemovetime = 999999
+
+[State 1008, 画像の色]
+type = PalFX
+trigger1 = var(1)=1
+trigger1 = helper(26666),gethitvar(damage)>0
+time = 10
+add = 250,20,40
+sinadd = 22,5,364,3
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[state ];
+type = lifeadd
+trigger1 = var(1)=1
+value = -(helper(26666),gethitvar(damage)*0.8)
+IgnoreHitPause = 1
+;---------------------------------------------------------------------------
+;ジャンプ開始・改
+[Statedef 40]
+type    = S
+physics = S
+anim = 40
+ctrl = 0
+sprpriority = 1
+
+[State 40, 無敵]
+type = NotHitBy
+triggerall = time < 6
+trigger1  = 1
+value = SCA
+time = 1
+
+[State 40, 変数];※システム用
+type = VarSet
+trigger1 = Time = 0
+sysvar(1) = 0
+
+[State 40, 変数];※システム用
+type = VarSet
+trigger1 = (command = "holdfwd")
+sysvar(1) = 1
+
+[State 40, 変数];※システム用
+type = VarSet
+trigger1 = (command = "holdback")
+sysvar(1) = -1
+
+[State 40, 移動速度]
+type = VelSet
+trigger1 = AnimTime = 0
+x = ifelse(sysvar(1)=0, const(velocity.jump.neu.x), ifelse(sysvar(1)=1, const(velocity.jump.fwd.x), const(velocity.jump.back.x)))
+y = const(velocity.jump.y)
+
+[State 40, 移動速度]
+type = VelSet
+trigger1 = (AnimTime = 0)
+trigger1 = (PrevStateNo = 100)
+trigger1 = (sysvar(1) = 1)
+x = const(velocity.runjump.fwd.x)
+
+[State 40, 振り返る]
+type = Turn
+triggerall = (PrevStateNo = 52)
+trigger1 = (Time = 0) && (P2Dist X < 0)
+Persistent = 0
+
+[State 40, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 0
+value = 0,17
+
+[State 40, ステート変更]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 50
+ctrl = 1
+;---------------------------------------------------------------------------
+; Jump Up
+[Statedef 50]
+type    = A
+physics = A
+
+[State 50, 1]
+type = VarSet
+trigger1 = Time = 0
+sysvar(1) = 0
+
+[State 50, 2]
+type = ChangeAnim
+trigger1 = Time = 0
+value = ifelse((vel x)=0, 41, ifelse((vel x)>0, 42, 43))
+
+[State 50, 3]
+type = ChangeAnim
+trigger1 = Vel y > -2
+trigger1 = SelfAnimExist(anim + 3)
+persistent = 0
+value = Anim + 3
+
+[State ]
+type = NotHitby
+trigger1 = var(1)=1
+value = SCA,NA,SA,HA,NP,SP,HP
+time = 1
+ignorehitpause = 1
+
+[State ]
+type = Helper
+trigger1 = var(1)=1
+trigger1 = numhelper(26666)<1
+name = "MyHelper"
+ID = 26666
+pos = 0,0
+postype = p1
+stateno = 26666
+keyctrl = 0
+supermovetime = 999999
+pausemovetime = 999999
+
+[State 1008, 画像の色]
+type = PalFX
+trigger1 = var(1)=1
+trigger1 = helper(26666),gethitvar(damage)>0
+time = 10
+add = 250,20,40
+sinadd = 22,5,364,3
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[state ];
+type = lifeadd
+trigger1 = var(1)=1
+value = -(helper(26666),gethitvar(damage)*0.8)
+IgnoreHitPause = 1
+;---------------------------------------------------------------------------
+; Jump Down (empty state for compatibility)
+[Statedef 51]
+type    = A
+physics = A
+
+[State 51, 1]
+type = Null
+trigger1 = 1
+
+;---------------------------------------------------------------------------
+; Jump Land
+[Statedef 52]
+type    = S
+physics = S
+ctrl = 0
+anim = 47
+
+[State 52, 1]
+type = VelSet
+trigger1 = Time = 0
+y = 0
+[State 52, 2]
+type = PosSet
+trigger1 = Time = 0
+y = 0
+[State 52, 3]
+type = CtrlSet
+trigger1 = Time = 3
+value = 1
+[State 52, 4]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+[State ]
+type = NotHitby
+trigger1 = var(1)=1
+value = SCA,NA,SA,HA,NP,SP,HP
+time = 1
+ignorehitpause = 1
+
+[State 52, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 0
+value = 0,19
+
+[State ]
+type = Helper
+trigger1 = var(1)=1
+trigger1 = numhelper(26666)<1
+name = "MyHelper"
+ID = 26666
+pos = 0,0
+postype = p1
+stateno = 26666
+keyctrl = 0
+supermovetime = 999999
+pausemovetime = 999999
+
+[State 1008, 画像の色]
+type = PalFX
+trigger1 = var(1)=1
+trigger1 = helper(26666),gethitvar(damage)>0
+time = 10
+add = 250,20,40
+sinadd = 22,5,364,3
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[state ];
+type = lifeadd
+trigger1 = var(1)=1
+value = -(helper(26666),gethitvar(damage)*0.8)
+IgnoreHitPause = 1
+;---------------------------------------------------------------------------
+;空中下降・改
+[Statedef 51]
+type     = A
+movetype = I
+physics  = A
+ctrl     = 1
+poweradd = 0
+
+[State 51, アニメ変更]
+type = ChangeAnim
+trigger1 = (PrevStateNo = [700,701]) && (Time = 0)
+trigger2 = (PrevStateNo = 800) && (Time = 0)
+value = 41
+elem = 5
+Persistent = 0
+
+;---------------------------------------------------------------------------
+; 着地ステートでは必ず「Ｙ軸方向の軸位置を０」に、かつ「Ｙ軸の速度も０」に
+; リセットする事。そうしないと地面にめり込むか、画面下へ消えてしまう（苦笑
+;---------------------------------------------------------------------------
+;着地・改
+[Statedef 52]
+type    = S
+physics = S
+ctrl = 0
+anim = 47
+
+[State 52, 軸位置];地面に軸をリセットする
+type = PosSet
+trigger1 = 1
+y = 0
+
+[State 52, 移動速度];速度をリセットしている
+type = VelSet
+trigger1 = 1
+x = 0
+y = 0
+
+[State 52, コントロール]
+type = CtrlSet
+trigger1 = PrevStateNo = 600
+trigger1 = (Time > 0)
+trigger2 = (PrevStateNo = [630,640])
+trigger2 = (Time > 0)
+value = 1
+
+[State 52, 振り返る]
+type = Turn
+trigger1 = (AnimTime = 0) && (P2Dist X < 0)
+trigger2 = (AnimElemTime(1) = 0) && (P2Dist X < 0)
+
+[State 52, エフェクト]
+type = Explod
+trigger1 = Time = 0
+anim = 4020
+postype = p1
+pos = 0,0
+scale = 0.5,0.5
+sprpriority = -1
+ownpal = 1
+ID = 4020
+
+[State 52, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 0
+value = 0,19
+
+[State ]
+type = NotHitby
+trigger1 = var(1)=1
+value = SCA,NA,SA,HA,NP,SP,HP
+time = 1
+ignorehitpause = 1
+
+[State 52, ステート変更]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++
+; Walk
+[Statedef 20]
+type    = S
+physics = S
+sprpriority = 0
+
+[State 20, 1]
+type = VelSet
+trigger1 = command = "holdfwd"
+x = const(velocity.walk.fwd.x)
+
+[State 20, 2]
+type = VelSet
+trigger1 = command = "holdback"
+x = const(velocity.walk.back.x)
+
+[State 20, 3]
+type = ChangeAnim
+triggerall = vel x > 0
+trigger1 = Anim != 20 && Anim != 5
+trigger2 = Anim = 5 && AnimTime = 0
+value = 20
+
+[State 20, 4]
+type = ChangeAnim
+triggerall = vel x < 0
+trigger1 = Anim != 21 && Anim != 5
+trigger2 = Anim = 5 && AnimTime = 0
+value = 21
+
+[State ]
+type = NotHitby
+trigger1 = var(1)=1
+value = SCA,NA,SA,HA,NP,SP,HP
+time = 1
+ignorehitpause = 1
+
+[State ]
+type = Helper
+trigger1 = var(1)=1
+trigger1 = numhelper(26666)<1
+name = "MyHelper"
+ID = 26666
+pos = 0,0
+postype = p1
+stateno = 26666
+keyctrl = 0
+supermovetime = 999999
+pausemovetime = 999999
+
+[State 1008, 画像の色]
+type = PalFX
+trigger1 = var(1)=1
+trigger1 = helper(26666),gethitvar(damage)>0
+time = 10
+add = 250,20,40
+sinadd = 22,5,364,3
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[state ];
+type = lifeadd
+trigger1 = var(1)=1
+value = -(helper(26666),gethitvar(damage)*0.8)
+IgnoreHitPause = 1
+;===========================================================================
+;---------------------------------------------------------------------------
+;走る・改
+[Statedef 100]
+type     = S
+movetype = I
+physics  = N
+anim     = 100
+ctrl     = 1
+sprpriority = 1
+
+[State 1000, 音を鳴らす]
+type = PlaySnd
+trigger1 = TimeMod = 20, 0
+value = 0,20
+channel = 1
+
+[State 0,移動用砂埃]
+type = Projectile
+trigger1 = 1
+Projscale = 0.5,0.5
+ProjAnim = 3012
+Projremanim = -1
+Projremovetime = 10
+Projpriority = 3
+Projemisstime = 1
+Offset = -25,0
+velocity = 0, 0
+
+[State 100, アニメ変更]
+type = ChangeAnim
+triggerall = (Time > 4)
+trigger1 = (command != "holdfwd")
+value = 47
+Persistent = 0
+
+[State 100, 状態変更]
+type = StateTypeSet
+trigger1 = (Anim = 47)
+Physics = S
+
+[State 100, 特殊効果];コントロールが可能なダッシュステートはこのコントローラが必要（※１）
+type = AssertSpecial
+trigger1 = 1
+flag = NoWalk      ;歩かない（前か後ろのキーを入力中コントロールが可能の時に勝手に[Statedef 20]にならない）
+flag2= NoAutoTurn  ;自動で振り向かない
+
+[State 100, 埃]
+type = MakeDust
+trigger1 = (Anim = 47)
+pos = 0,0
+spacing = 1
+Persistent = 0
+
+[State 100, 軸位置]
+type = PosSet
+trigger1 = 1
+y = 0
+
+[State 100, 移動速度]
+type = VelSet
+trigger1 = 1
+y = 0
+
+[State 100, 移動速度]
+type = VelSet
+trigger1 = var(1) != 1
+trigger1 = (Anim != 47)
+x = const(velocity.run.fwd.x)
+
+[State 100, 移動速度]
+type = VelSet
+trigger1 = var(1) = 1
+trigger1 = (Anim != 47)
+x = const(velocity.run.fwd.x)*2
+
+[State ]
+type = NotHitby
+trigger1 = var(1)=1
+value = SCA,NA,SA,HA,NP,SP,HP
+time = 1
+ignorehitpause = 1
+
+[State ]
+type = Helper
+trigger1 = var(1)=1
+trigger1 = numhelper(26666)<1
+name = "MyHelper"
+ID = 26666
+pos = 0,0
+postype = p1
+stateno = 26666
+keyctrl = 0
+supermovetime = 999999
+pausemovetime = 999999
+
+[State 1008, 画像の色]
+type = PalFX
+trigger1 = var(1)=1
+trigger1 = helper(26666),gethitvar(damage)>0
+time = 10
+add = 250,20,40
+sinadd = 22,5,364,3
+pausemovetime = 99999999
+IgnoreHitPause = 1
+
+[state ];
+type = lifeadd
+trigger1 = var(1)=1
+value = -(helper(26666),gethitvar(damage)*0.8)
+IgnoreHitPause = 1
+
+[State 100, ステート変更]
+type = ChangeState
+triggerall = (Anim = 47)
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;ジャンプ開始・改
+[Statedef 5120]
+type    = S
+physics = S
+anim = 5120
+ctrl = 0
+sprpriority = 1
+
+[State 5120, 無敵]
+type = NotHitBy
+trigger1  = 1
+value = SCA,AA,AT,AP
+time = 5
+
+[State 5120, 移動速度]
+type = VelSet
+trigger1 = 1
+x = 0
+y = 0
+
+[State 5120, 移動速度]
+type = posSet
+trigger1 = 1
+y = 0
+
+[State 5120, 振り返る]
+type = Turn
+trigger1 = (Time = 0) && (P2Dist X < 0)
+Persistent = 0
+
+[State 5120, ステート変更]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;---------------------------------------------------------------------------
+; ※１：AssertSpecial
+;
+; 　他のコントローラでは設定出来ない『特殊な効果』を指定する命令。
+; 　設定したトリガーが有効になってる間だけ一時的に適用される。
+;
+; 　適用出来るパラメータはこのコントローラを一つ設置する場合、最大３つまで。
+; 　書式としては「flag」「flag2」「flag3」を順に加えていく形。
+; 　flag2とflag3はオプション。ではその特殊効果を全て紹介。
+;
+; 　Intro          = イントロ（試合開始前の登場演出アクション）の状態になる。イントロステート専用。
+; 　Invisible      = 自分の姿を消す。しかし残像（AfterImage）は消せない。
+; 　RoundNotOver   = 現在のラウンドを過ぎない。勝利ポーズ専用。
+; 　NoBarDisplay   = ライフバーを非表示にする。
+; 　NoBG           = ステージの奥の画像を非表示にし、「真っ黒の背景」にする。
+; 　NoFG           = ステージの手前の画像を非表示にする。
+; 　NoStandGuard   = 立ちガードが出来なくなる。
+; 　NoCrouchGuard  = しゃがみガードが出来なくなる。
+; 　NoAirGuard     = 空中ガードが出来なくなる。
+; 　NoAutoTurn     = 自動で振り向かない。
+; 　NoJuggleCheck  = ジャグルをチェックしない。（ジャグルポイントが減らなくなる）
+; 　NoKOSnd        = ＫＯ時の音声（11,0）を鳴らさないようにする。画面中に存在する全員に有効なので注意。
+; 　NoKOSlow       = ＫＯ時のスローモーションを無効にする。（ＫＯ直前に有効にしないといけない）
+; 　NoShadow       = 自分の影を消す。
+; 　GlobalNoShadow = 画面中に存在する全てのプレイヤー（ヘルパーとProjectileも含む）の影を消す。
+; 　NoMusic        = 演奏しているＢＧＭを止める。（プラグインによってはＢＧＭがバグるので要注意）
+; 　NoWalk         = 歩かない。（前か後ろのキーを入力中コントロールが可能の時に勝手に[Statedef 20]にならない）
+; 　TimerFreeze    = タイムカウント（制限時間）を停止する。
+; 　UnGuardable    = 自分の全ての攻撃が『ガード不可』になる。
+;
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;バックステップ・改
+[Statedef 105]
+type     = S
+movetype = I
+physics  = C
+anim     = 105
+ctrl     = 0
+sprpriority = 1
+
+[State 105, 無敵]
+type = NotHitBy
+triggerall = time < 8
+trigger1  = 1
+value = SCA,AA,AT,AP
+time = 1
+
+[State 105, 残像]
+type = AfterImage
+triggerall = var(35) = 0
+trigger1 = Time = 0
+Time = 7
+PalBright   = 100,0,0
+PalContrast = 250,80,20
+Trans = Sub
+TimeGap  = 3
+FrameGap = 1
+length = 6
+
+[State 105, 移動速度]
+type = VelSet
+trigger1 = Time = 0
+x = -40
+
+[State 105, 移動速度]
+type = posset
+trigger1 = 1
+y = 0
+
+[State 105, 埃]
+type = MakeDust
+trigger1 = Time = 1
+pos = 0,0
+spacing = 1
+
+[State 105, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 1
+value = 0,21
+
+[State 105, ステート変更]
+type = ChangeState
+trigger1 = (animTime = 0) && (Pos Y >= 0)
+value = 0
+ctrl = 1
+;===========================================================================
+;---------------------------------------------------------------------------
+;勝利ポーズ分岐（common1.cnsには無いけど、これもコモンステート）
+[Statedef 180]
+type = S
+ctrl = 0
+
+;ストーリーボードを登録してない場合のキャラのエンディングは
+;「Congratulations!」の文字が表示され勝利ポーズを取るものが
+;デフォルトになります。
+
+[State 180, ステート変更];デフォルトキャラエンディング用に追加したもの
+type = ChangeState
+triggerall = (!NumEnemy)
+trigger1 = 1
+value = 183
+
+;***********************************
+[State 180, ステート変更]
+type = ChangeState
+triggerall = (MatchOver)
+triggerall = (NumEnemy)
+triggerall = (!NumPartner)
+trigger1 = var(28) = [1,40]
+value = 183
+
+[State 180, ステート変更]
+type = ChangeState
+triggerall = (NumEnemy)
+trigger1 = var(28) = [1,80]
+trigger1 = (PrevStateNo != 3502)
+value = 182
+
+[State 180, ステート変更]
+type = ChangeState
+triggerall = (NumEnemy)
+trigger1 = var(28) != [1,80]
+trigger1 = (PrevStateNo != 3502)
+value = 181
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;勝利ポーズ１（立ちつくす)
+[Statedef 181]
+type = S
+ctrl = 0
+anim = 183
+velset = 0,0
+sprpriority = 2
+
+[State 181, 特殊効果];これが有効な間は次のラウンドへは進まない
+type = AssertSpecial
+trigger1 = Time = [0,220]
+flag = RoundNotOver ;現在のラウンドを過ぎない
+
+;---------------------------------------------------------------------------
+;勝利ポーズ２（はははははははは）
+[Statedef 182]
+type = S
+ctrl = 0
+anim = 181
+velset = 0,0
+sprpriority = 2
+
+[State 182, 特殊効果]
+type = AssertSpecial
+trigger1 = Time = [0,260]
+flag = RoundNotOver
+
+[State 182,画面ゆれ]
+type = EnvShake
+trigger1 = time = 10
+time = 300
+freq = 110
+ampl = -3
+phase = 0
+
+[State 182, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 5
+value = 5,2
+Persistent = 0
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;勝利ポーズ３（ちょっとくいたりねえな）
+[Statedef 183]
+type    = A
+physics = N
+ctrl    = 0
+anim    = 20
+velset  = 2,0
+sprpriority = 1
+
+[State 183, 押し判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 183, 状態変更]
+type = StateTypeSet
+trigger1 = (Anim = 183)
+StateType = S
+Persistent = 1
+
+[State 183, 特殊効果]
+type = AssertSpecial
+trigger1 = Time = [0,500]
+flag = RoundNotOver
+
+[State 183, スクロール]
+type = ScreenBound
+trigger1 = 1
+value = 1
+MoveCamera = 1,0
+
+[State 183, 軸位置]
+type = PosSet
+triggerall = (Anim = 183)
+trigger1 = 1
+y = 0
+
+[State 183, スクロール]
+type = ScreenBound
+trigger1 = (Time > 1)
+value = 0
+MoveCamera = 0,0
+
+
+[State 183, 移動速度]
+type = VelSet
+triggerall = (Anim = 183)
+trigger1 = 1
+x = 2
+y = 0
+
+[State 183, 音を鳴らす]
+type = PlaySnd
+trigger1 = (Time = 1)
+trigger1 = (EnemyNear,Name != "doppo orochi")
+value = 5,26
+Persistent = 8
+
+[State 183, 音を鳴らす]
+type = PlaySnd
+trigger1 = (Time = 1)
+trigger1 = (EnemyNear,Name = "doppo orochi")
+value = 5,42
+Persistent = 8
+
+[State 183, ステート変更]
+type = ChangeState
+trigger1 = (Time > 1000)
+value = 0
+;===========================================================================
+;---------------------------------------------------------------------------
+;イントロ分岐・改
+[Statedef 190]
+type = S
+ctrl = 0
+
+[State 190,成長期バキイントロへ]
+type = ChangeState
+trigger1 = (EnemyNear,Name = "Gai Tendo")
+trigger2 = (EnemyNear,Name = "baki")
+value = 195
+
+[State 190,口数は多いが身体は錆びちゃいねえようだへ]
+type = ChangeState
+trigger1 = (EnemyNear,Name = "ROBO-KY1")
+trigger2 = (EnemyNear,Name = "ROBO-KY2")
+trigger3 = (EnemyNear,Name = "ROBO-KY3")
+value = 194
+
+[State 190,流石だオロチィ]
+type = ChangeState
+trigger1 = (EnemyNear,Name = "orochi")
+trigger2 = (EnemyNear,Name = "The Will of Earth")
+trigger3 = (EnemyNear,Name = "OrorinrinLand")
+value = 189
+
+[State 190,流石だオロチィ]
+type = ChangeState
+trigger1 = (Time = 0)
+trigger1 = (EnemyNear,Name = "doppo orochi")
+trigger1 = (random < 250)
+value = 19999
+
+[State 190,]
+type = ChangeState
+trigger1 = (EnemyNear,Name = "doppo orochi")
+value = 191
+
+[State 190,ゲスが・・・]
+type = ChangeState
+trigger1 = (EnemyNear,Name = "cvsadon")
+value = 186
+
+[State 190,花山]
+type = ChangeState
+trigger1 = (EnemyNear,Name = "K-Hanayama")
+value = 185
+
+[State 190, ステート変更]
+type = ChangeState
+trigger1 = Random <= 349
+trigger1 = 1
+value = 198
+
+[State 190, ステート変更]
+type = ChangeState
+trigger1 = Random <= 99
+trigger1 = 1
+value = 188
+
+[State 190, ステート変更]
+type = ChangeState
+trigger1 = 1
+value = 191
+
+;[State 190, ステート変更];固有の相手を特定する手段
+;type = ChangeState
+;trigger1 = (EnemyNear,AuthorName = "Elecbyte") && (EnemyNear,Name = "Kung Fu ;Man")
+;value = 193
+
+;---------------------------------------------------------------------------
+;イントロ（試合開始前の登場演出アクション）
+[Statedef 191]
+type = S
+ctrl = 0
+anim = 190
+velset = 0,0
+sprpriority = -1
+
+[State 191, 特殊効果];試合が開始するまではこのコントローラを使おう
+type = AssertSpecial
+trigger1 = 1
+flag = Intro ;イントロの状態
+
+[State 191, ステート変更]
+type = ChangeState
+trigger1 = (Time > 25)
+value = 0
+
+[State 191,アルバイト]
+type = ChangeState
+trigger1 = (EnemyNear,Name = "Shin Gouki")
+trigger1 = (EnemyNear,stateno = 188)
+trigger2 = (EnemyNear,Name = "Heart_Aino")
+trigger3 = (EnemyNear,Name = "Grappler_Shiki")
+trigger4 = (EnemyNear,Name = "Rasputin")
+trigger5 = (EnemyNear,Name = "syobo-n")
+trigger5 = (EnemyNear,stateno = 4070)
+value = 199
+
+[State 191, ヘルパーを出す];（※２）
+type = Helper
+trigger1 = Time = 18
+name = "Kick"
+stateno = 192
+pos = -160,-120
+postype = p1
+keyctrl = 0
+ownpal = 0
+size.xscale = const(size.xscale) ;『const(***)』はコンスタンツファイルの各パラメータを使う命令
+size.yscale = const(size.yscale)
+ID = 192
+Persistent = 0
+
+
+[State 191, エフェクト]
+type = Explod
+trigger1 = Time = 1
+anim = 4020
+postype = p1
+pos = 0,0
+scale = 0.5,0.5
+sprpriority = -2
+ownpal = 1
+ID = 4020
+
+[State 191, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 20
+value = 0,19
+
+;****************************** 蹴る（ヘルパー）
+[Statedef 192]
+type     = A
+movetype = I
+physics  = N
+anim     = 191
+ctrl     = 0
+velset   = 20,20
+sprpriority = -1
+
+[State 192, スクロール]
+type = ScreenBound
+trigger1 = 1
+value = 0
+MoveCamera = 0,0
+
+[State 192, 速度加算]
+type = VelAdd
+trigger1 = (Time > 0)
+y = 0.25
+
+[State 0,砂埃]
+type = Projectile
+trigger1 = time = 6
+Projscale = 0.9,0.9
+ProjAnim = 3021
+Projremanim = -1
+Projremovetime = 12
+Projpriority = 3
+Projemisstime = 1
+Offset = 53,0
+velocity = 0, 0
+
+[State 0,砂埃]
+type = Projectile
+trigger1 = time = 6
+Projscale = 0.7,0.7
+ProjAnim = 3022
+Projremanim = -1
+Projremovetime = 12
+Projpriority = 3
+Projemisstime = 1
+Offset = 53,0
+velocity = 0, 0
+
+[State 192,画面ゆれ]
+type = EnvShake
+trigger1 = time = 6
+time = 10
+freq = 120
+ampl = -4
+phase = 0
+
+[State 192, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 5
+value = 0,21
+
+[State 192, ヘルパーを消す]
+type = DestroySelf
+trigger1 = (Time > 0) && (Pos Y >= 0)
+
+;---------------------------------------------------------------------------
+;イントロ（愛などいらぬ）
+[Statedef 193]
+type = S
+ctrl = 0
+anim = 197
+velset = 0,0
+sprpriority = -1
+
+[State 193, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 0
+value = 5,36
+
+[State 193, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 193,]
+type = Changeanim
+trigger1 = (Time > 1100)
+value = 199
+
+[State 193, ステート変更]
+type = ChangeState
+trigger1 = (Time > 1200)
+value = 0
+
+;***********************************************************************
+;***********************************************************************
+;イントロ（口数は多いが、身体は錆びちゃいねえようだ）
+[Statedef 194]
+type = S
+ctrl = 0
+anim = 192
+velset = 0,0
+sprpriority = -1
+
+[State 194, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 194, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 350
+value = 5,38
+
+[State 194, ステート変更]
+type = ChangeState
+trigger1 = (Time > 570)
+value = 0
+
+;*******************************************************************
+;イントロ（成長期バキイントロ）
+[Statedef 195]
+type = S
+ctrl = 0
+anim = 193
+velset = 0,0
+sprpriority = 6
+
+[State 195,]
+type = Changeanim
+trigger1 = (Time > 498)
+value = 194
+
+[State 195, Helper]
+Type = Helper
+Trigger1 = time = 0
+Persistent = 0
+PosType = P1
+Pos = -40,-10
+ID = 197
+StateNo = 197
+
+[State 195, Helper]
+Type = Helper
+Trigger1 = time = 0
+Persistent = 0
+PosType = P1
+Pos = 0,5
+ID = 196
+StateNo = 196
+
+[State 195, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 195, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 150
+value = 5,39
+
+[State 195, ステート変更]
+type = ChangeState
+trigger1 = (Time > 500)
+value = 0
+
+;ガイア
+[Statedef 196]
+type = S
+ctrl = 0
+anim = 195
+velset = 0,0
+sprpriority = 7
+
+[State 196, 移動速度]
+type = VelSet
+trigger1 = Time = 500
+x = -10
+y = -10
+
+[State 196, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 500
+value = 0,1
+
+[State 196, 消す]
+type = DestroySelf
+trigger1 = Time = 520
+
+;ヘリ
+[Statedef 197]
+type = S
+ctrl = 0
+anim = 196
+velset = 0,0
+sprpriority = -1
+
+[State 197, 消す]
+type = DestroySelf
+trigger1 = Time = -1
+;*************************************************************
+;イントロ（地上最強は目の前だぜ）
+[Statedef 198]
+type = S
+ctrl = 0
+anim = 197
+velset = 0,0
+
+[State 198,アルバイト]
+type = ChangeState
+trigger1 = (EnemyNear,Name = "Shin Gouki")
+trigger1 = (EnemyNear,stateno = 188)
+trigger2 = (EnemyNear,Name = "Heart_Aino")
+trigger3 = (EnemyNear,Name = "Grappler_Shiki")
+trigger4 = (EnemyNear,Name = "Rasputin")
+trigger5 = (EnemyNear,Name = "syobo-n")
+trigger5 = (EnemyNear,stateno = 4070)
+value = 199
+
+[State 198, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 198, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 0
+value = 5,7
+
+[State 198, ステート変更]
+type = ChangeState
+trigger1 = (Time > 200)
+value = 0
+;************************************************************************:
+;イントロ（アルバイト）
+[Statedef 199]
+type = S
+ctrl = 0
+anim = 198
+velset = 0,0
+sprpriority = -1
+
+[State 199, 音を鳴らす]
+type = PlaySnd
+trigger1 = time = 0
+value = 5,41
+channel = 1
+
+
+[State 199, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 160
+value = 5,40
+channel = 2
+
+[State 199, 音を鳴らす]
+type = PlaySnd
+trigger1 = time = 168
+value = 0,21
+channel = 1
+
+[State 0,]
+type = Projectile
+trigger1 = time = 167
+Projscale = 0.5,0.5
+ProjAnim = 4212
+Projremanim = -1
+Projremovetime = 18
+Projpriority = 3
+Projemisstime = 1
+Offset = 30,-80
+velocity = 0, 0
+
+
+[State 199, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 280
+value = 5,29
+channel = 1
+
+
+[State 199, Helper]
+Type = Helper
+Trigger1 = time = 142
+Persistent = 0
+PosType = P1
+Pos = 0,-1000
+ID = 201
+StateNo = 201
+
+[State 199, Helper]
+Type = Helper
+Trigger1 = time = 0
+Persistent = 0
+PosType = P1
+Pos = 25,5
+ID = 202
+StateNo = 202
+
+[State 199, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 199, ステート変更]
+type = ChangeState
+triggerall = animtime = 0
+trigger1 = (EnemyNear,Name = "Heart_Aino")
+trigger2 = (EnemyNear,Name = "Grappler_Shiki")
+trigger3 = (EnemyNear,Name = "Rasputin")
+value = 193
+
+[State 199, ステート変更]
+type = ChangeState
+trigger1 = animtime = 0
+value = 0
+
+[Statedef 201,禊落下]
+type = S
+ctrl = 0
+anim = 189
+velset = 0,40
+sprpriority = -1
+
+[State 201, 消す]
+type = DestroySelf
+trigger1 = pos y >= 0
+
+;******************************************
+[Statedef 202,天内]
+type = S
+ctrl = 0
+anim = 201
+velset = 0,0
+sprpriority = 1
+
+[State 196, 移動速度]
+type = VelSet
+trigger1 = Time = 293
+x = -30
+y = -3
+
+[State 202, 残像]
+type = AfterImage
+triggerall = var(35) = 0
+trigger1 = Time = 0
+Time = 90
+PalBright   = 100,0,0
+PalContrast = 200,250,200
+Trans = Sub
+TimeGap  = 10
+FrameGap = 1
+length = 10
+
+[State 202, 消す]
+type = DestroySelf
+trigger1 = animtime = 0
+;*************************************************************************
+;イントロ（流石だオロチィ）
+[Statedef 189]
+type = S
+ctrl = 0
+anim = 197
+velset = 0,0
+sprpriority = -1
+
+[State 189, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 10
+value = 5,15
+channel = 1
+
+[State 189, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 220
+value = 5,6
+channel = 1
+
+[State 189, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 189,]
+type = Changeanim
+trigger1 = (Time > 220)
+value = 202
+
+[State 189,画面ゆれ]
+type = EnvShake
+trigger1 = time = 200
+time = 100
+freq = 110
+ampl = -3
+phase = 0
+
+[State 189, ステート変更]
+type = ChangeState
+trigger1 = (Time > 330)
+value = 0
+
+;*****************************************************************
+;イントロ（アドン）
+[Statedef 188]
+type = S
+ctrl = 0
+anim = 1008
+velset = 0,0
+sprpriority = 6
+
+[State 188,アルバイト]
+type = ChangeState
+triggerall = animtime = 0
+trigger1 = (EnemyNear,Name = "Shin Gouki")
+trigger1 = (EnemyNear,stateno = 188)
+trigger2 = (EnemyNear,Name = "Heart_Aino")
+trigger3 = (EnemyNear,Name = "Grappler_Shiki")
+trigger4 = (EnemyNear,Name = "Rasputin")
+trigger5 = (EnemyNear,Name = "syobo-n")
+trigger5 = (EnemyNear,stateno = 4070)
+value = 199
+
+[State 188, Helper]
+Type = Helper
+Triggerall = time = 0
+trigger1 = (EnemyNear,Name != "Shin Gouki")
+trigger2 = (EnemyNear,Name != "Heart_Aino")
+trigger3 = (EnemyNear,Name != "Grappler_Shiki")
+trigger4 = (EnemyNear,Name != "Rasputin")
+trigger5 = (EnemyNear,Name = "syobo-n")
+trigger5 = (EnemyNear,stateno = 4070)
+Persistent = 0
+PosType = P1
+Pos = 60,0
+ID = 197
+size.xscale = 0.8
+size.yscale = 1
+StateNo = 187
+
+[State 0,砂埃]
+type = Projectile
+trigger1 = animelem = 5
+Projscale = 0.9,0.9
+ProjAnim = 3021
+Projremanim = -1
+Projremovetime = 12
+Projpriority = 3
+Projemisstime = 1
+Offset = 83,0
+velocity = 0, 0
+
+[State 188,画面ゆれ]
+type = EnvShake
+trigger1 = animelem = 5
+time = 10
+freq = 120
+ampl = -4
+phase = 0
+
+[State 0,砂埃]
+type = Projectile
+trigger1 = animelem = 5
+Projscale = 0.7,0.7
+ProjAnim = 3022
+Projremanim = -1
+Projremovetime = 12
+Projpriority = 3
+Projemisstime = 1
+Offset = 83,0
+velocity = 0, 0
+
+[State 0,]
+type = Projectile
+trigger1 = time = 78
+Projscale = 0.5,0.5
+ProjAnim = 4212
+Projremanim = -1
+Projremovetime = 18
+Projpriority = 7
+Projemisstime = 1
+Offset = 70,-2
+velocity = 0, 0
+
+[State 188, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 78
+value = 0,21
+
+[State 188, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 78
+value = 0,40
+channel = 2
+
+[State 188, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 188, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 20
+value = 5,24
+
+[State 188, ステート変更]
+type = ChangeState
+trigger1 = (Time > 100)
+value = 0
+
+;アドン
+[Statedef 187]
+type = S
+ctrl = 0
+anim = 188
+velset = 0,0
+sprpriority = 0
+
+[State 187,]
+type = SprPriority
+trigger1 = animelemtime(3) = 0
+value = 5
+;*****************************************************************
+;イントロ（ゲスが・・・）
+[Statedef 186]
+type = S
+ctrl = 0
+anim = 197
+velset = 0,0
+
+[State 186, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 186, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 10
+value = 5,35
+
+[State 186, ステート変更]
+type = ChangeState
+trigger1 = (Time > 50)
+value = 0
+
+;*****************************************************************
+;イントロ（花山）
+[Statedef 185]
+type = S
+ctrl = 0
+anim = 197
+velset = 0,0
+
+[State 185, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 185, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 10
+value = 5,33
+
+[State 185, ステート変更]
+type = ChangeState
+trigger1 = (Time > 400)
+value = 0
+
+;*************************************************************************
+;イントロ（流石だオロチィ）
+[Statedef 19999]
+type = S
+ctrl = 0
+anim = 0
+velset = 0,0
+sprpriority = -1
+
+[State 189, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 960
+value = 5,15
+channel = 1
+
+[State 189,]
+type = Changeanim
+trigger1 = (Time = 950)
+value = 197
+
+[State 189, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 1190
+value = 5,6
+channel = 1
+
+[State 189, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Intro
+
+[State 189,]
+type = Changeanim
+trigger1 = (Time > 1170)
+value = 202
+
+[State 189,画面ゆれ]
+type = EnvShake
+trigger1 = time = 1150
+time = 100
+freq = 110
+ampl = -3
+phase = 0
+
+[State 189, ステート変更]
+type = ChangeState
+trigger1 = (Time > 1280)
+value = 0
+
+;*********************************************************************
+;*********************************************************************
+
+;形態変化、空中やられ
+[Statedef 2701]
+type    = A
+movetype= I
+physics = A
+anim = 2701
+ctrl = 0
+
+[State 2701, アニメ変更]
+type = ChangeAnim2
+trigger1 = time = 0
+value = 2701
+
+
+[State 2701,]
+type = velset
+trigger1 = time = 1
+x = -2
+y = -12
+
+[State 2701,]
+type = Pause
+Triggerall = pos y < 0
+trigger1 = timemod = 1,0
+time = 2
+
+[State 2701, 速度加算];重力分
+type = VelAdd
+trigger1 = (Time > 3)
+y = 0.4
+
+[State 2701, ステート変更]
+type = ChangeState
+trigger1 = Pos y >= 0
+value = 2700
+
+;形態変化
+[Statedef 2700]
+type    = S
+movetype= I
+physics = N
+anim = 2700
+
+[State 2700, 音を鳴らす]
+type = PlaySnd
+trigger1 = (Time = 70)
+value = 5,15
+channel = 1
+
+[State 2700,画面ゆれ]
+type = EnvShake
+trigger1 = time = 0
+time = 490
+freq = 120
+ampl = -2
+phase = 0
+
+[State 2700, アニメ変更]
+type = ChangeAnim2
+trigger1 = time = 0
+value = 2700
+
+[State 2700, 超必殺技暗転時間停止]
+type = SuperPause
+trigger1 = Time = 5
+anim = -1
+pos = 0,0
+sound = -1
+time = 495
+movetime = 495
+darken = 0
+p2defmul = 1.0
+
+[State 2700,]
+type = velset
+trigger1 = 1
+x = 0
+y = 0
+
+[State 2700,]
+type = VarSet
+trigger1 = 1
+var(1) = 1
+
+[State 2700,]
+type = VarSet
+trigger1 = 1
+var(3) = 1
+
+[State 2700, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2700,]
+type = posset
+trigger1 = 1
+y = 0
+
+;回復
+[State 2700,]
+Type = lifeAdd
+Triggerall = (palno = [1,11])
+Triggerall = stateNo = 2700
+Trigger1   = gametime%1 = 0
+value = 2
+
+[State 2700, ステート変更]
+type = ChangeState
+trigger1 = time = 500
+value = 0
+ctrl = 1
+
+;歩く（AI用）
+[Statedef 999]
+type     = S
+movetype = I
+physics  = N
+anim     = 20
+ctrl     = 0
+sprpriority = 1
+
+[State 999, 状態変更]
+type = StateTypeSet
+trigger1 = (Anim = 47)
+Physics = S
+
+[State 999,通り過ぎる]
+type = ChangeState
+trigger1 = (Time > 5)&&(P2Dist X < 0)
+value = 0
+ctrl = 1
+
+[State 999, 埃]
+type = MakeDust
+trigger1 = (Anim = 47)
+pos = 0,0
+spacing = 1
+Persistent = 0
+
+[State 999, 軸位置]
+type = PosSet
+trigger1 = 1
+y = 0
+
+[State 999, 移動速度]
+type = VelSet
+trigger1 = 1
+y = 0
+
+[State 999, 移動速度]
+type = VelSet
+trigger1 = (Anim != 47)
+x = const(velocity.walk.fwd.x)
+
+[State 999, ステート変更]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 0
+ctrl = 1
+
+;ダッシュ（AI用）
+[Statedef 998]
+type     = S
+movetype = I
+physics  = N
+anim     = 100
+ctrl     = 0
+sprpriority = 1
+
+[State 998, 音を鳴らす]
+type = PlaySnd
+trigger1 = TimeMod = 20, 0
+value = 0,20
+channel = 1
+
+[State 0,移動用砂埃]
+type = Projectile
+trigger1 = 1
+Projscale = 0.5,0.5
+ProjAnim = 3012
+Projremanim = -1
+Projremovetime = 10
+Projpriority = 3
+Projemisstime = 1
+Offset = -25,0
+velocity = 0, 0
+
+[State 998, 状態変更]
+type = StateTypeSet
+trigger1 = (Anim = 100)
+Physics = S
+
+[State 998, 埃]
+type = MakeDust
+trigger1 = (Anim = 100)
+pos = 0,0
+spacing = 1
+Persistent = 0
+
+[State 998, 軸位置]
+type = PosSet
+trigger1 = 1
+y = 0
+
+[State 998, 移動速度]
+type = VelSet
+trigger1 = 1
+y = 0
+
+[State 998, 移動速度]
+type = VelSet
+trigger1 = (Anim != 47)
+x = const(velocity.run.fwd.x)
+
+[State 999, ステート変更]
+type = ChangeState
+trigger1 = Time > 5
+value = 0
+ctrl = 1
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+
+

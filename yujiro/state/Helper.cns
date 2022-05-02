@@ -1,0 +1,3193 @@
+;===========================================================================
+;---------------------------------------------------------------------------
+; ここは全部ヘルパー用に設定したステート。
+;
+; ヘルパー専用ステートにも、ヘルパー専用のコントローラやトリガーがある。
+; それらも駆使して「Explodで表現出来ないエフェクト画像」など、
+; 様々なオブジェクトを画面中に出す事も可能。
+;===========================================================================
+; エフェクト用ヘルパー
+;===========================================================================
+;---------------------------------------------------------------------------
+; 飛び道具を発射するProjectile。実はどのヘルパーから出しても
+;『キャラ本体から出現する』という判定になる。
+; しかし『Parent』か『Root』をヘルパー内のトリガーに使わないと
+;「飛び道具がヒットした事」などをヘルパーで判断する事が出来ない。
+; ややこしい（苦笑
+;
+; それを有効活用して電刃波動拳用の気弾を作った。百聞は一見に如かず。
+;---------------------------------------------------------------------------
+;■ここで使っている変数■
+;★本体側★
+;　Var(27) = 気弾ヒット判定
+;★ヘルパー側★
+;　Var(40) = 溜めレベルを測定
+;　Var(41) = Projectileヒット回数制限
+;---------------------------------------------------------------------------
+;電刃波動拳の気弾
+[Statedef 2000]
+type     = A
+movetype = A
+physics  = N
+ctrl     = 0
+anim     = 3004
+SprPriority = 4
+
+[State 2000, クリップボード]
+type = DisplayToClipboard
+trigger1 = 1
+text = "Hit=%d, Count=%d, Proj=%d, Front-Screen-Edge=%d, Speed=%f"
+params = (Root,var(27)),var(40),var(41),floor(FrontEdgeDist),(Vel X)
+
+;***********************************
+[State 2000, 親の変数];気弾ヒット判定
+type = ParentVarSet                             ;ヘルパーで「親の変数」の設定や変更が出来るコントローラ
+trigger1 = (Root,ProjContactTime(2000) = [1,5]) ;特定のProjectileが相手に触れている時間を計測
+v = 27
+value = 1
+pausemovetime = 99999999
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2000, 溜めレベルを測定]
+type = VarSet
+trigger1 = (Time = [0,1])
+v = 40
+value = ifelse((Root,var(26)>149),2,ifelse((Root,var(26)=[71,149]),1,0))
+pausemovetime = 99999999
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2000, Projectileヒット回数制限]
+type = VarAdd
+trigger1 = (Root,ProjContactTime(2000) = 1)
+v = 41
+value = 1 ;当たる度に１増やす
+pausemovetime = 99999999
+IgnoreHitPause = 1
+Persistent = 1
+
+;***********************************
+[State 2000, アニメ変更]
+type = ChangeAnim
+triggerall = (Time > 0)
+trigger1 = var(41) > ceil(var(40)+1) ;Var(41)（ヒット回数）の値がVar(40)に１を足した数値以上になった時
+value = 3005                         ;という変則的な変数の使い方も出来る。
+IgnoreHitPause = 1
+Persistent = 0
+
+[State 2000, 状態変更]
+type = StateTypeSet
+trigger1 = (Anim = 3005) && (AnimElemTime(2) >= 0)
+MoveType = I
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2000, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2000, 食らい上書き];分身バグ対策
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2000, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow ;自分の影を消す
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2000, 残像]
+type = AfterImage
+trigger1 = Time = 0
+Time = 999
+PalBright   = 20,20,40
+PalContrast = 30,30,40
+Trans = Add
+TimeGap  = 4
+FrameGap = 1
+length = 8
+
+[State 2000, 残像表示時間]
+type = AfterImageTime
+trigger1 = (Anim = 3005)
+trigger2 = (FrontEdgeDist <= -48)
+time = 0
+
+;***********************************
+[State 2000, 移動速度]
+type = VelSet
+trigger1 = (Anim = 3004) && (Time > 0)
+x = ifelse((Root,var(27)>0),0,(5+var(40)*3))
+
+[State 2000, 移動速度]
+type = VelSet
+trigger1 = (Anim = 3005)
+x = 0
+y = 0
+
+;***********************************
+[State 2000, ヘルパー];スーパーアーツフィニッシュ
+type = Helper
+triggerall = (RoundState = 3) && (NumHelper(2500) = 0)
+trigger1 = (Root,WinKO) && (var(41) > 0)
+name = "SuperArts-Finish"
+stateno = 2500
+ID = 2500
+pos = 0,1000
+keyctrl = 0
+postype = p1
+supermovetime = 99999999
+pausemovetime = 99999999
+ownpal = 1
+IgnoreHitPause = 1
+Persistent = 0
+
+[State 2000, ヘルパー];相手側電流
+type = Helper
+triggerall = (Anim = 3005) && (NumHelper(2306) = 0)
+trigger1 = (Root,ProjContactTime(2000) = 1)
+name = "Electric-Current"
+stateno = 2306
+ID = 2306
+pos = 0,0
+keyctrl = 0
+postype = p1
+ownpal = 1
+size.xscale = 0.5
+size.yscale = 0.5
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+Persistent = 0
+
+;***********************************
+[State 2000, エフェクト];電流
+type = Explod
+triggerall = (Anim = 3004) && (Time > 0)
+trigger1 = (Time % 4 = 0)
+anim = ifelse(Random<500,3009,3008) ;「Random」は０～９９９までの『乱数（デタラメな数値）』を判断するトリガー
+postype = p1
+facing = ifelse(Random<500,-1,1)
+vfacing = ifelse(Random<500,-1,1)
+pos = 30,0
+scale = 0.25,0.25
+sprpriority = 5
+supermovetime = 99999999
+pausemovetime = 99999999
+ownpal = 1
+random = 20,20
+ID = 3008
+IgnoreHitPause = 1
+
+[State 2000, エフェクト];風しぶき
+type = Explod
+triggerall = (Anim = 3004) && (Time > 0)
+trigger1 = (Time % 6 = 0)
+anim = 3012
+postype = p1
+facing = 1
+pos = 20,ceil(0-(Pos Y))
+scale = 0.25,0.25
+sprpriority = 5
+ownpal = 1
+ID = 3011
+IgnoreHitPause = 1
+
+;***********************************
+;相手のReversalDef対策により、HitDefの代わりに攻撃範囲として使ってる。
+;ヘルパー専用のHitDefみたいなコントローラがあれば、こんなややこしい事しなくて済むのに(´・ω:;.:...
+
+[State 2000, 飛び道具];ヘルパーから発射しても「キャラ本体から出る」という判定
+type = Projectile
+triggerall = (Anim = 3004) && (Time > 0)
+trigger1 = (Time % 5 = 0) ;フレーム数を５で割って、余りが０（無い）の時
+attr             = A, HP
+damage           = 40,4
+getpower         = 0,0
+animtype         = Back
+pausetime        = 0,10
+;-----------------------------------
+offset           = 0,0
+velocity         = 0,0
+accel            = 0,0
+projID           = 2000
+projanim         = 3006  ;透明の「攻撃判定専用アニメ」を設定してる
+projhitanim      = 20000
+projremanim      = 20000
+projscale        = 1,1
+projshadow       = 0,0,0
+projhits         = 1
+projmisstime     = 0
+projpriority     = 5
+projremovetime   = 1
+projsprpriority  = -1
+;-----------------------------------
+guardflag        =        ;相手の体勢を何も書かない事でガード不可になる
+priority         = 4
+sparkno          = s(Root,var(46))
+sparkxy          = ceil(ifelse((P2Dist X<0),0+Random/40,60-Random/40)),ceil(ifelse(Random<500,0+Random/70,0-Random/70))
+guard.sparkno    = s4216
+hitsound         = s0,7
+guardsound       = s0,10
+ground.type      = High
+ground.slidetime = 16
+ground.hittime   = 19
+ground.velocity  = -4.5,0
+guard.velocity   = -3
+air.velocity     = -4.5,-2.25
+airguard.velocity= -3,-4
+yaccel           = 0.4
+air.juggle       = 1
+air.fall         = 1
+fall.recover     = 0
+kill             = ifelse((EnemyNear,StateType=A),1,0)
+palfx.time       = 25
+palfx.add        = 60,60,256      ;色合い赤,色合い緑,色合い青
+palfx.sinadd     = 100,100,180,3  ;振幅赤,振幅緑,振幅青,周期
+palfx.invertall  = 1              ;色反転
+P2StateNo        = ifelse((EnemyNear,StateType=A),15003,floor(15000+var(40)))
+P2Facing         = 1
+
+[State 2000, 飛び道具];フィニッシュ
+type = Projectile
+triggerall = (Anim = 3005)
+trigger1 = AnimElemTime(2) = 0
+attr             = A, HP
+damage           = 40,4
+getpower         = 0,0
+animtype         = Back
+pausetime        = 0,10
+;-----------------------------------
+offset           = 0,0
+velocity         = 0,0
+accel            = 0,0
+projID           = 2000
+projanim         = 3006
+projhitanim      = 20000
+projremanim      = 20000
+projscale        = 1,1
+projshadow       = 0,0,0
+projhits         = 1
+projmisstime     = 0
+projpriority     = 5
+projremovetime   = 1
+projsprpriority  = -1
+;-----------------------------------
+guardflag        =
+priority         = 4
+sparkno          = s(Root,var(46))
+sparkxy          = ceil(ifelse((P2Dist X<0),0+Random/40,60-Random/40)),ceil(ifelse(Random<500,0+Random/70,0-Random/70))
+guard.sparkno    = s4216
+hitsound         = s0,7
+guardsound       = s0,10
+ground.type      = High
+ground.slidetime = 16
+ground.hittime   = 19
+ground.velocity  = -4.5,0
+guard.velocity   = -3
+air.velocity     = -4.5,-2.5
+airguard.velocity= -3,-4
+yaccel           = 0.4
+air.juggle       = 1
+air.fall         = 1
+fall.recover     = 0
+palfx.time       = 25
+palfx.add        = 60,60,256
+palfx.sinadd     = 100,100,180,3
+palfx.invertall  = 1
+P2StateNo        = ifelse((EnemyNear,StateType=A),15003,floor(15000+var(40)))
+P2Facing         = 1
+
+;***********************************
+[State 2000, ヘルパーを消す] 
+type = DestroySelf
+trigger1 = (FrontEdgeDist <= -50)
+trigger2 = (Anim = 3005) && (AnimTime = 0)
+trigger3 = (Time > 1000)
+
+;===========================================================================
+;---------------------------------------------------------------------------
+; ヘルパーを「キャラ本体を追ってついて来るオプションキャラクター」に
+; したい場合は、Vel系のコントローラと『RootDist』や『ParentDist』の
+; ヘルパー専用トリガーを組み合わせれば出来る。
+;
+; RootDistは『「キャラ本体」との軸位置の距離を計測する』命令で、
+; ParentDistは『「そのヘルパーを出した親」との軸位置の距離を計測する』命令。
+; 親キャラとの位置取りには必需品。
+;
+; あと、「Angle」系コントローラは『軸を中心に画像の角度を変える処理』をする。
+;（※「キャラそのものの軸位置」ではなく「sffでの軸位置」である事に注意！）
+; airファイルでも言った通り、角度を変えると『airでの透過処理が無効になる』。
+; 角度を変更しながら画像を半透明などにしたい場合は、
+; Win版から追加された新コントローラ『Trans』で透過処理を実行しよう。
+; さらに画像の角度を変えても『判定ボックスの角度は変わらない』事にも注意。
+;
+; もちろんAngle系とTransはキャラ本体にも使えるコントローラ。
+;
+; そこでオロの「天狗石」という丁度良いネタをチョイスしてみた。
+; え？実際に何が飛んで来るかって？ふっふっふ、それは見てのお楽しみ。
+;---------------------------------------------------------------------------
+;天狗石の浮遊物
+[Statedef 2001]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = ifelse(IsHelper(3015),3015,ifelse(IsHelper(3014),3014,3013))
+SprPriority = 5
+
+[State 2001, クリップボード]
+type = DisplayToClipboard
+trigger1 = 1
+text = "Root.Distance X=%d,Y=%d - Enemy.Distance X=%d,Y=%d"
+params = floor(RootDist X),floor(RootDist Y),floor(P2Dist X),floor(P2Dist Y)
+
+[State 2001, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2001, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2001, 振り返る]
+type = Turn
+trigger1 = (P2Dist X < 0)
+
+;***********************************
+[State 2001, 角度を有効にする];これを有効にしないと角度が適用されない
+type = AngleDraw
+trigger1 = 1
+
+[State 2001, 角度を加える]
+type = AngleAdd
+trigger1 = 1
+value = -10 ;角度を右向きなら逆時計回りに、左向きなら時計回りに１０度加える
+            ;（正の値ならその真逆に傾く）
+
+[State 2001, 透過処理];これがあれば角度を変えた画像にも透過処理を適用出来る
+type = Trans
+trigger1 = 1
+Trans = AddAlpha
+Alpha = 256,64
+
+;*********************************** 移動速度：Ｘ軸
+[State 2001, 中央・定位置で止まる]
+type = VelSet
+triggerall = IsHelper(3013)    ;このヘルパーが「ＩＤナンバーが3013のヘルパー」だったら
+trigger1 = RootDist X = [-5,5] ;キャラ本体との軸位置の距離を測る
+x = 0
+
+[State 2001, 後方・定位置で止まる]
+type = VelSet
+triggerall = IsHelper(3014)
+trigger1 = RootDist X = [50,60]
+x = 0
+
+[State 2001, 前方・定位置で止まる]
+type = VelSet
+triggerall = IsHelper(3015)
+trigger1 = RootDist X = [-60,-50]
+x = 0
+
+;+++++++++++++++++++++++++++++++++++
+[State 2001, 中央・基本速度]
+type = VelSet
+triggerall = IsHelper(3013)
+trigger1 = RootDist X != [-5,5]
+x = ifelse((RootDist X>5),1.25,ifelse((RootDist X<-5),-1.25,0))
+
+[State 2001, 後方・基本速度]
+type = VelSet
+triggerall = IsHelper(3014)
+trigger1 = RootDist X != [50,60]
+x = ifelse((RootDist X>60),1.25,ifelse((RootDist X<50),-1.25,0))
+
+[State 2001, 前方・基本速度]
+type = VelSet
+triggerall = IsHelper(3015)
+trigger1 = RootDist X != [-60,-50]
+x = ifelse((RootDist X>-50),1.25,ifelse((RootDist X<-60),-1.25,0))
+
+;+++++++++++++++++++++++++++++++++++
+[State 2001, 中央・速度加算];遠くなればある程度速く、近くなれば遅くなる
+type = VelAdd
+triggerall = IsHelper(3013)
+trigger1 = RootDist X != [-5,5]
+x = (RootDist X)*0.03
+
+[State 2001, 後方・速度加算]
+type = VelAdd
+triggerall = IsHelper(3014)
+trigger1 = RootDist X != [50,60]
+x = (RootDist X-55)*0.03
+
+[State 2001, 前方・速度加算]
+type = VelAdd
+triggerall = IsHelper(3015)
+trigger1 = RootDist X != [-60,-50]
+x = (RootDist X+55)*0.03
+
+;*********************************** 移動速度：Ｙ軸
+[State 2001, 中央・定位置で止まる]
+type = VelSet
+triggerall = IsHelper(3013)
+trigger1 = RootDist Y = [110,120]
+y = 0
+
+[State 2001, 前方＆後方・定位置で止まる]
+type = VelSet
+triggerall = IsHelper(3014) || IsHelper(3015)
+trigger1 = RootDist Y = [105,115]
+y = 0
+
+;+++++++++++++++++++++++++++++++++++
+[State 2001, 中央・基本速度]
+type = VelSet
+triggerall = IsHelper(3013)
+trigger1 = RootDist Y != [110,120]
+y = ifelse((RootDist Y>120),1.25,ifelse((RootDist Y<110),-1.25,0))
+
+[State 2001, 前方＆後方・基本速度]
+type = VelSet
+triggerall = IsHelper(3014) || IsHelper(3015)
+trigger1 = RootDist Y != [105,115]
+y = ifelse((RootDist Y>115),1.25,ifelse((RootDist Y<105),-1.25,0))
+
+;+++++++++++++++++++++++++++++++++++
+[State 2001, 中央・速度加算]
+type = VelAdd
+triggerall = IsHelper(3013)
+trigger1 = RootDist Y != [110,120]
+y = (RootDist Y-115)*0.03
+
+[State 2001, 前方＆後方・速度加算]
+type = VelAdd
+triggerall = IsHelper(3014) || IsHelper(3015)
+trigger1 = RootDist Y != [105,115]
+y = (RootDist Y-120)*0.03
+
+;*********************************** ステート変更
+[State 2001, 攻撃ステートへ]
+type = ChangeState
+triggerall = (Root,fvar(13) > 0) && (Root,StateNo = [200,699])
+;■■■中央■■■
+trigger1 = IsHelper(3013)
+trigger1 = Root,MoveType = A
+trigger1 = RootDist X = [-20,20]
+trigger1 = RootDist Y = [100,130]
+;■■■後方■■■
+trigger2 = IsHelper(3014)
+trigger2 = Root,MoveType = A
+trigger2 = RootDist X = [35,75]
+trigger2 = RootDist Y = [95,125]
+;■■■前方■■■
+trigger3 = IsHelper(3015)
+trigger3 = Root,MoveType = A
+trigger3 = RootDist X = [-75,-35]
+trigger3 = RootDist Y = [95,125]
+value = 2003
+
+;+++++++++++++++++++++++++++++++++++
+[State 2001, 消えて終了するステートへ]
+type = ChangeState
+trigger1 = (Root,var(34) < 1)
+trigger2 = (Root,fvar(13) <= 0)
+trigger3 = (Time > 1000);不具合時の予備動作
+value = 2002
+
+;---------------------------------------------------------------------------
+;浮遊物消える
+[Statedef 2002]
+type     = U
+movetype = U
+physics  = U
+ctrl     = 0
+SprPriority = 5
+
+[State 2002, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2002, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2002, 透過処理]
+type = Trans
+trigger1 = 1
+Trans = AddAlpha
+Alpha = 256,64
+
+[State 2002, 移動速度]
+type = VelSet
+trigger1 = Time = 0
+x = -16
+y = -2
+
+[State 2002, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (BackEdgeDist < -10)
+trigger2 = (Time > 50)
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;浮遊物の攻撃
+[Statedef 2003]
+type     = U
+movetype = A
+physics  = U
+ctrl     = 0
+SprPriority = 5
+facep2   = 1
+
+[State 2003, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2003, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2003, 透過処理]
+type = Trans
+trigger1 = 1
+Trans = AddAlpha
+Alpha = 256,64
+
+[State 2003, 移動速度]
+type = VelSet
+trigger1 = Time = 0
+x = 10
+y = ifelse((P2Dist Y>0),3,ifelse((P2Dist Y<0),-3,1)) 
+
+[State 2003, 飛び道具]
+type = Projectile
+trigger1 = Time = 0
+attr             = A, HP
+damage           = 30,3
+getpower         = 0,0
+animtype         = Back
+pausetime        = 0,5
+;-----------------------------------
+offset           = 0,0
+velocity         = 10,ifelse((P2Dist Y>0),3,ifelse((P2Dist Y<0),-3,1))
+accel            = 0,0
+projID           = 2003
+projanim         = 3016
+projhitanim      = 20000
+projremanim      = 20000
+projscale        = 1,1
+projshadow       = 0,0,0
+projhits         = 1
+projmisstime     = 0
+projpriority     = 3
+projremovetime   = 12
+projsprpriority  = -1
+;-----------------------------------
+guardflag        = MA
+priority         = 4
+sparkno          = s(Root,var(45))
+sparkxy          = 5,0
+guard.sparkno    = s4216
+hitsound         = s0,5
+guardsound       = s0,10
+ground.type      = High
+ground.slidetime = 16
+ground.hittime   = 19
+ground.velocity  = -4.5,0
+guard.velocity   = -3
+air.velocity     = -4.5,-2.5
+airguard.velocity= -3,-4
+air.juggle       = 1
+
+[State 2003, ステート変更]
+type = ChangeState
+trigger1 = (Time > 12)
+value = 2001
+
+;===========================================================================
+;---------------------------------------------------------------------------
+; そのインチキ仕様の縦横無尽に飛びまくるカンフーマンのヘルパー。
+; IsHelperさえあれば一つのステートだけで複数の演出も出来る。
+;---------------------------------------------------------------------------
+;X.F.L.A.T.用ヘルパー
+[Statedef 2004]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+SprPriority = 2
+
+[State 2004, アニメ変更];上
+type = ChangeAnim
+trigger1 = IsHelper(2010)
+value = 2010
+Persistent = 0
+
+[State 2004, アニメ変更];斜め上
+type = ChangeAnim
+trigger1 = IsHelper(2011)
+value = 2011
+Persistent = 0
+
+[State 2004, アニメ変更];斜め下
+type = ChangeAnim
+trigger1 = IsHelper(2012)
+value = 2012
+Persistent = 0
+
+[State 2004, アニメ変更];下
+type = ChangeAnim
+trigger1 = IsHelper(2013)
+value = 2013
+Persistent = 0
+
+;***********************************
+[State 2004, 移動速度]
+type = VelSet
+triggerall = IsHelper(2010)
+trigger1 = Time = 0
+x = 15
+y = 40
+
+[State 2004, 移動速度]
+type = VelSet
+triggerall = IsHelper(2011)
+trigger1 = Time = 0
+x = 40
+y = 15
+
+[State 2004, 移動速度]
+type = VelSet
+triggerall = IsHelper(2012)
+trigger1 = Time = 0
+x = 40
+y = -15
+
+[State 2004, 移動速度]
+type = VelSet
+triggerall = IsHelper(2013)
+trigger1 = Time = 0
+x = 15
+y = -40
+
+;***********************************
+[State 2004, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2004, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2004, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2004, 残像]
+type = AfterImage
+trigger1 = Time = 0
+Time = 999
+PalBright   = 90,90,150
+PalContrast = 180,180,256
+Trans = Add1
+
+;***********************************
+[State 2004, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (Time > 20)
+
+;===========================================================================
+;---------------------------------------------------------------------------
+;■ここで使っている変数■
+;★ヘルパー側★
+;　Var(30) = フェードアウト
+; FVar(20) = 拡大縮小
+;---------------------------------------------------------------------------
+;禊用残像
+[Statedef 2100]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 20000
+velset   = 0,0
+
+[State 2100, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time > 20)
+v = 30
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2100, 変数増減]
+type = VarAdd
+trigger1 = (Time = [0,20])
+v = 30
+value = 1
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2100, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2100, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2100, 軸位置]
+type = PosSet
+trigger1 = 1
+y = 0
+
+;*********************************
+[State 2100, エフェクト]
+type = Explod
+trigger1 = Time = [1,20]
+anim = 2505
+postype = p1
+pos = floor(var(30)),0
+sprpriority = 4
+ownpal = 1
+ID = 2505
+Trans = AddAlpha
+Alpha = floor(256-(var(30)*12)),256
+IgnoreHitPause = 1
+
+[State 2100, エフェクト]
+type = Explod
+trigger1 = Time = [1,20]
+anim = 2505
+postype = p1
+pos = -ceil(var(30)),0
+sprpriority = 3
+ownpal = 1
+ID = 2505
+Trans = AddAlpha
+Alpha = floor(256-(var(30)*12)),256
+IgnoreHitPause = 1
+
+[State 2100, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time > 20)
+ID = 2505
+
+;***********************************
+[State 2100, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (Time > 20)
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;禊用エフェクト（下降）
+[Statedef 2101]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 3019
+velset   = 0,40
+SprPriority = 4
+
+[State 2101, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2101, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2101, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow
+IgnoreHitPause = 1
+
+;*********************************
+[State 2101, 角度を有効にする]
+type = AngleDraw
+trigger1 = 1
+scale = 0.05,0.5
+
+[State 2101, 透過処理]
+type = Trans
+trigger1 = 1
+Trans = AddAlpha
+Alpha = 256,256
+
+;***********************************
+[State 2101, ステート変更]
+type = ChangeState
+triggerall = (Root,var(19) = 1)
+trigger1 = (Time > 0) && (Pos Y >= 0)
+value = 2102
+
+[State 2101, このヘルパーを消す]
+type = DestroySelf
+triggerall = (Root,var(19) = 0)
+trigger1 = (Time > 0) && (Pos Y >= 0)
+
+;---------------------------------------------------------------------------
+;禊用エフェクト（拡縮）
+[Statedef 2102]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+velset   = 0,0
+SprPriority = 4
+
+[State 2102, 変数]
+type = VarSet
+trigger1 = (fvar(20) > 1)
+fv = 20
+value = 1
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2102, 変数増減]
+type = VarAdd
+trigger1 = Time = [0,10]
+fv = 20
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;***********************************
+[State 2102, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2102, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2102, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow
+IgnoreHitPause = 1
+
+;***********************************
+[State 2102, 軸位置]
+type = PosSet
+trigger1 = 1
+y = 0
+
+[State 2102, 移動速度]
+type = VelSet
+trigger1 = 1
+x = 0
+y = 0
+
+;***********************************
+[State 2102, 角度を有効にする]
+type = AngleDraw
+trigger1 = 1
+scale = 0.05+(fvar(20)*8),1-(fvar(20)*8.35)
+
+[State 2102, 透過処理]
+type = Trans
+trigger1 = 1
+Trans = AddAlpha
+Alpha = 256,256
+
+;***********************************
+[State 2101, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (Time > 10)
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;===========================================================================
+; システムエフェクト用ヘルパー
+;===========================================================================
+;---------------------------------------------------------------------------
+; ここから下はほとんど一枚絵のExplodを小数の変数と『ModifyExplod』を使って
+;「大きさを伸縮させるエフェクト」を表現しているヘルパーばっかり。
+;「ModifyExplod」はまさに「Explodで出ているエフェクトを操作する」命令。
+;
+; ただしこの伸縮エフェクトは僕のやり方なので、参考に出来るかどうかは
+; あなた次第だ！m9っ｀Д´)
+;---------------------------------------------------------------------------
+;■ここから下に使っている変数■
+;★各ヘルパー★
+; FVar(38) = エフェクト伸縮処理
+; FVar(39) = エフェクトフェードイン・フェードアウト用
+;---------------------------------------------------------------------------
+;スーパーアーツ発動（メイン）
+[Statedef 2300]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 20000
+
+[State 2300, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time >= 15)
+fv = 38
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2300, 変数]
+type = VarAdd
+trigger1 = (Time = [1,14])
+fv = 38
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;+++++++++++++++++++++++++++++++++
+[State 2300, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time >= 15)
+fv = 39
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2300, 変数]
+type = VarAdd
+trigger1 = (Time = [10,14])
+fv = 39
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2300, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2300, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2300, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2300, 押し判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2300, ヘルパー]
+type = Helper
+triggerall = NumHelper(2301) = 0
+trigger1 = Time = 1
+name = "Rolling-Effect"
+stateno = 2301
+ID = 2301
+pos = 0,0
+keyctrl = 0
+postype = p1
+supermovetime = 99999999
+pausemovetime = 99999999
+ownpal = 0
+IgnoreHitPause = 1
+Persistent = 0
+
+;*********************************
+;airで１フレームしか表示しない１枚絵のアニメを毎フレーム表示
+[State 2300, エフェクト]
+type = Explod
+trigger1 = (Time = [1,14])
+anim = 4000
+postype = p1
+pos = 0,0
+sprpriority = 7
+ownpal = 1
+ontop = 1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+ID = 4000
+
+[State 2300, エフェクト操作];ここでその１枚絵の伸縮と透過フェードアウトを行う
+type = ModifyExplod
+trigger1 = (Time = [1,14])
+scale = 0.1+(fvar(38)*4.2),0.1+(fvar(38)*4.2)
+supermovetime = 99999999
+pausemovetime = 99999999
+Trans = AddAlpha
+Alpha = ceil(150-fvar(39)*2600),256
+ID = 4000
+
+[State 2300, エフェクトを消す];消えない場合の補正処理
+type = RemoveExplod
+trigger1 = (Time > 14)
+ID = 4000
+
+;+++++++++++++++++++++++++++++++++
+[State 2300, エフェクト]
+type = Explod
+trigger1 = (Time = [1,14])
+anim = 4000
+postype = p1
+pos = 0,0
+sprpriority = 7
+ownpal = 1
+ontop = 1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+ID = 2300
+
+[State 2300, エフェクト操作]
+type = ModifyExplod
+trigger1 = (Time = [1,14])
+scale = 0.1+(fvar(38)*1.8),0.1+(fvar(38)*1.8)
+supermovetime = 99999999
+pausemovetime = 99999999
+Trans = AddAlpha
+Alpha = ceil(150-fvar(39)*2600),256
+ID = 2300
+
+[State 2300, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time > 14)
+ID = 2300
+
+;+++++++++++++++++++++++++++++++++
+[State 2300, エフェクト]
+type = Explod
+trigger1 = (Time = [1,14])
+anim = 4001
+postype = p1
+pos = 0,0
+sprpriority = 7
+ownpal = 1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+ID = 4001
+
+[State 2300, エフェクト操作]
+type = ModifyExplod
+trigger1 = (Time = [1,14])
+scale = 0.1+(fvar(38)*4.5),0.1+(fvar(38)*4.5)
+supermovetime = 99999999
+pausemovetime = 99999999
+Trans = AddAlpha
+Alpha = ceil(256-fvar(39)*4000),256
+ID = 4001
+
+[State 2300, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time > 14)
+ID = 4001
+
+;*********************************
+[State 2300, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (Time > 14)
+
+;---------------------------------------------------------------------------
+;スーパーアーツ発動（回転部分）
+[Statedef 2301]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 4002
+SprPriority = 6
+
+[State 2301, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time > 25)
+fv = 38
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2301, 変数]
+type = VarAdd
+trigger1 = (Time = [1,25])
+fv = 38
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;+++++++++++++++++++++++++++++++++
+[State 2301, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time > 25)
+fv = 39
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2301, 変数]
+type = VarAdd
+trigger1 = (Time = [9,25])
+fv = 39
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2301, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2301, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2301, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2301, 押し判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2301, 角度を有効にする]
+type = AngleDraw
+trigger1 = 1
+scale = 0.1+(fvar(38)*7.25),0.1+(fvar(38)*7.25)
+
+[State 2301, 角度]
+type = AngleSet
+trigger1 = Time = 0
+value = 0
+
+[State 2301, 角度を加える]
+type = AngleAdd
+trigger1 = (Time > 0)
+value = 1
+
+[State 2301, 透過処理]
+type = Trans
+trigger1 = 1
+Trans = AddAlpha
+Alpha = ceil(256-fvar(39)*2000),256
+
+;*********************************
+[State 2301, ヘルパー]
+type = Helper
+triggerall = NumHelper(4005) = 0
+trigger1 = Time = 18
+name = "Senkou-1"
+stateno = 2302
+ID = 4005
+pos = 0,0
+keyctrl = 0
+postype = p1
+supermovetime = 99999999
+pausemovetime = 99999999
+ownpal = 0
+IgnoreHitPause = 1
+Persistent = 0
+
+[State 2301, ヘルパー]
+type = Helper
+triggerall = NumHelper(4006) = 0
+trigger1 = Time = 25
+name = "Senkou-2"
+stateno = 2302
+ID = 4006
+pos = 0,0
+keyctrl = 0
+postype = p1
+supermovetime = 99999999
+pausemovetime = 99999999
+ownpal = 0
+IgnoreHitPause = 1
+Persistent = 0
+
+;*********************************
+[State 2301, エフェクト]
+type = Explod
+trigger1 = (Time = [1,25])
+anim = 4003
+postype = p1
+pos = 0,0
+sprpriority = 6
+ownpal = 1
+ontop = 1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+ID = 4003
+
+[State 2301, エフェクト操作]
+type = ModifyExplod
+trigger1 = (Time = [1,25])
+scale = 0.1+(fvar(38)*3.2),0.1+(fvar(38)*3.2)
+supermovetime = 99999999
+pausemovetime = 99999999
+Trans = AddAlpha
+Alpha = ceil(256-fvar(39)*2000),256
+ID = 4003
+
+[State 2301, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time > 25)
+ID = 4003
+
+;*********************************
+[State 2301, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (Time > 25)
+
+;---------------------------------------------------------------------------
+;スーパーアーツ発動（ストⅢタイプの閃光）
+[Statedef 2302]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 20000
+
+[State 2302, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time > 14)
+fv = 38
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2302, 変数]
+type = VarAdd
+trigger1 = (Time = [1,14])
+fv = 38
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;+++++++++++++++++++++++++++++++++
+[State 2302, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time > 14)
+fv = 39
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2302, 変数]
+type = VarAdd
+trigger1 = (Time = [9,14])
+fv = 39
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2302, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2302, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2302, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2302, 押し判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2302, 本体に付く位置]
+type = BindToRoot
+trigger1 = (Time >= 0)
+pos = 0,-60
+;pos = ceil(((Root,Pos X)-(Root,ScreenPos X))+160),ceil(Root,Pos Y-60)
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2302, 角度を有効にする]
+type = AngleDraw
+trigger1 = 1
+scale = 0.1+(fvar(38)*7.25),0.1+(fvar(38)*7.25)
+
+[State 2302, 透過処理]
+type = Trans
+trigger1 = 1
+Trans = AddAlpha
+Alpha = ceil(256-fvar(39)*2000),256
+
+;*********************************
+[State 2302, エフェクト]
+type = Explod
+trigger1 = (Time = [1,14])
+anim = ifelse(IsHelper(4006),4006,4004)
+postype = p1
+pos = 0,0
+sprpriority = 6
+ownpal = 1
+ontop = 1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+ID = 4005
+
+[State 2302, エフェクト操作]
+type = ModifyExplod
+trigger1 = (Time = [1,14])
+scale = ifelse(IsHelper(4006),1-(fvar(38)*1.2),1+(fvar(38)*1.2)),ifelse(IsHelper(4006),1+(fvar(38)*1.2),1-(fvar(38)*1.2))
+supermovetime = 99999999
+pausemovetime = 99999999
+Trans = AddAlpha
+Alpha = ceil(256-fvar(39)*4000),256
+ID = 4005
+
+[State 2302, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time > 14)
+ID = 4005
+
+;+++++++++++++++++++++++++++++++++
+[State 2302, エフェクト]
+type = Explod
+trigger1 = (Time = [1,14])
+anim = ifelse(IsHelper(4006),4007,4005)
+postype = p1
+pos = 0,0
+sprpriority = 7
+ownpal = 1
+ontop = 1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+ID = 4006
+
+[State 2302, エフェクト操作]
+type = ModifyExplod
+trigger1 = (Time = [1,14])
+scale = ifelse(IsHelper(4006),0.5-(fvar(38)*1.2),1+(fvar(38)*1.2)),ifelse(IsHelper(4006),1+(fvar(38)*1.2),0.5-(fvar(38)*1.2))
+supermovetime = 99999999
+pausemovetime = 99999999
+Trans = AddAlpha
+Alpha = ceil(236-fvar(39)*3000),256
+ID = 4006
+
+[State 2302, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time > 14)
+ID = 4006
+
+;*********************************
+[State 2302, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (Time > 14)
+
+;===========================================================================
+;---------------------------------------------------------------------------
+;オリジナルコンボ・発動エフェクト
+[Statedef 2303]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 20000
+
+[State 2303, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time = 11)
+trigger3 = (Time > 29)
+fv = 38
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2303, 変数]
+type = VarAdd
+trigger1 = (Time = [1,10])
+trigger2 = (Time = [12,29])
+fv = 38
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;+++++++++++++++++++++++++++++++++
+[State 2303, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time > 29)
+fv = 39
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2303, 変数]
+type = VarAdd
+trigger1 = (Time = [20,29])
+fv = 39
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2303, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2303, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2303, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2303, 押し判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2303, 背景色]
+type = BGPalFX
+trigger1 = 1
+Add = -100,-100,-100
+Time = 2
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2303, エフェクト]
+type = Explod
+trigger1 = (Time = [1,10])
+anim = 4008
+postype = p1
+pos = 0,0
+sprpriority = 7
+ownpal = 1
+ontop = 1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+ID = 4008
+
+[State 2303, エフェクト操作]
+type = ModifyExplod
+trigger1 = (Time = [1,10])
+scale = 1-(fvar(38)*10.4),1-(fvar(38)*10.4)
+supermovetime = 99999999
+pausemovetime = 99999999
+ID = 4008
+
+[State 2303, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time > 10)
+ID = 4008
+
+;*********************************
+[State 2303, エフェクト]
+type = Explod
+trigger1 = (Time = [11,29])
+anim = 4009
+postype = p1
+pos = 0,0
+sprpriority = 7
+ownpal = 1
+ontop = 1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+ID = 4009
+
+[State 2303, エフェクト操作]
+type = ModifyExplod
+trigger1 = (Time = [11,29])
+scale = 0.1+(fvar(38)*6.2),0.1+(fvar(38)*6.2)
+supermovetime = 99999999
+pausemovetime = 99999999
+Trans = AddAlpha
+Alpha = ceil(256-fvar(39)*4000),256
+ID = 4009
+
+[State 2303, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time > 29)
+ID = 4009
+
+;*********************************
+[State 2303, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (Time > 29)
+
+;===========================================================================
+;---------------------------------------------------------------------------
+;ガードキャンセルエフェクト
+[Statedef 2304]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 4010
+SprPriority = 7
+
+[State 2304, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time > 14)
+fv = 38
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2304, 変数]
+type = VarAdd
+trigger1 = (Time = [1,14])
+fv = 38
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;+++++++++++++++++++++++++++++++++
+[State 2304, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time > 14)
+fv = 39
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2304, 変数]
+type = VarAdd
+trigger1 = (Time = [9,14])
+fv = 39
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2304, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2304, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2304, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2304, 押し判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2304, 角度を有効にする]
+type = AngleDraw
+trigger1 = 1
+scale = 1+(fvar(38)*24.8),1-(fvar(38)*5.8)
+
+[State 2304, 透過処理]
+type = Trans
+trigger1 = 1
+Trans = AddAlpha
+Alpha = ceil(256-fvar(39)*4000),256
+
+;*********************************
+[State 2304, エフェクト]
+type = Explod
+trigger1 = (Time = [1,14])
+anim = 4010
+postype = p1
+pos = 0,0
+sprpriority = 7
+ownpal = 1
+ontop = 1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+ID = 4010
+
+[State 2304, エフェクト操作]
+type = ModifyExplod
+trigger1 = (Time = [1,14])
+scale = 0.5-(fvar(38)*2.2),0.5-(fvar(38)*2.2)
+supermovetime = 99999999
+pausemovetime = 99999999
+Trans = AddAlpha
+Alpha = ceil(256-fvar(39)*4000),256
+ID = 4010
+
+[State 2304, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time > 14)
+ID = 4010
+
+;*********************************
+[State 2304, エフェクト]
+type = Explod
+trigger1 = (Time = [1,14])
+anim = 4011
+postype = p1
+pos = 0,0
+sprpriority = 7
+ownpal = 1
+ontop = 1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+ID = 4011
+
+[State 2304, エフェクト操作]
+type = ModifyExplod
+trigger1 = (Time = [1,14])
+scale = 0.1+(fvar(38)*5.2),0.1+(fvar(38)*5.2)
+supermovetime = 99999999
+pausemovetime = 99999999
+Trans = AddAlpha
+Alpha = ceil(256-fvar(39)*4000),256
+ID = 4011
+
+[State 2304, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time > 14)
+ID = 4011
+
+;*********************************
+[State 2304, エフェクト]
+type = Explod
+trigger1 = (Time = [1,14])
+anim = 4012
+postype = p1
+pos = 0,0
+sprpriority = 7
+ownpal = 1
+ontop = 1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+ID = 4012
+
+[State 2304, エフェクト操作]
+type = ModifyExplod
+trigger1 = (Time = [1,14])
+scale = 0.1+(fvar(38)*4.8),0.1+(fvar(38)*4.8)
+supermovetime = 99999999
+pausemovetime = 99999999
+Trans = AddAlpha
+Alpha = ceil(256-fvar(39)*4000),256
+ID = 4012
+
+[State 2304, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time > 14)
+ID = 4012
+
+;*********************************
+[State 2304, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (Time > 14)
+
+;===========================================================================
+;---------------------------------------------------------------------------
+;投げ抜けエフェクト
+[Statedef 2305]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 4013
+SprPriority = 7
+
+[State 2305, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time > 14)
+fv = 38
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2305, 変数]
+type = VarAdd
+trigger1 = (Time = [1,14])
+fv = 38
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;+++++++++++++++++++++++++++++++++
+[State 2305, 変数]
+type = VarSet
+trigger1 = (Time = 0)
+trigger2 = (Time > 14)
+fv = 39
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2305, 変数]
+type = VarAdd
+trigger1 = (Time = [9,14])
+fv = 39
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2305, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2305, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2305, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2305, 押し判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************
+[State 2305, 角度を有効にする]
+type = AngleDraw
+trigger1 = 1
+scale = 1-(fvar(38)*2.4),1-(fvar(38)*2.4)
+
+[State 2305, 透過処理]
+type = Trans
+trigger1 = 1
+Trans = AddAlpha
+Alpha = ceil(256-fvar(39)*4000),256
+
+;*********************************
+[State 2305, エフェクト]
+type = Explod
+trigger1 = (Time = [1,14])
+anim = 4014
+postype = p1
+pos = 0,0
+sprpriority = 7
+ownpal = 1
+ontop = 1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+IgnoreHitPause = 1
+ID = 4014
+
+[State 2305, エフェクト操作]
+type = ModifyExplod
+trigger1 = (Time = [1,14])
+scale = 0.1+(fvar(38)*3.2),0.1+(fvar(38)*3.2)
+supermovetime = 99999999
+pausemovetime = 99999999
+Trans = AddAlpha
+Alpha = ceil(256-fvar(39)*4000),256
+ID = 4014
+
+[State 2305, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time > 14)
+ID = 4014
+
+;*********************************
+[State 2305, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (Time > 14)
+
+;===========================================================================
+;---------------------------------------------------------------------------
+;「ヨガファイヤーが当たった時に相手が燃焼する効果」なども、
+; 下のテクニックを使えば・・・形式的には再現出来る。
+; Simulの問題もあるので、あくまでも「形式的」。
+; ヘルパーを相手の軸位置に常に引っ付けるようにすればＯＫ。
+;---------------------------------------------------------------------------
+;電刃波動拳用・相手側エフェクト
+[Statedef 2306]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 4022
+SprPriority = 7
+
+[State 2306, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2306, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2306, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2306, 軸位置]
+type = PosSet
+trigger1 = 1
+x = (EnemyNear,Pos X)     ;相手のＸ軸に
+y = (EnemyNear,Pos Y)-50  ;相手のＹ軸に
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2306, エフェクト]
+type = Explod
+trigger1 = (Time % 4 = 0)
+anim = ifelse(Random<500,3011,3010)
+postype = p1
+facing = ifelse(Random<500,-1,1)
+vfacing = ifelse(Random<500,-1,1)
+pos = 0,0
+scale = 0.5,0.5
+sprpriority = ifelse(Random<300,-5,5)
+supermovetime = 99999999
+pausemovetime = 99999999
+ownpal = 1
+random = 50,60
+ID = 3010
+IgnoreHitPause = 1
+
+[State 2306, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (Time > 42)
+trigger2 = !(Root,NumTarget)
+trigger3 = (EnemyNear,MoveType != H)
+trigger4 = (EnemyNear,StateType = L)
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;===========================================================================
+; 背景効果用ヘルパー
+;===========================================================================
+;---------------------------------------------------------------------------
+; 最初にスパⅡＸで「あけぼのフィニッシュ」と呼ばれた、
+;『超必殺技などで相手をＫＯした時に変わる背景』も、
+; Explodやヘルパーを駆使すれば実現出来る。
+;
+; ↓はオリコンや瞬獄殺でフィニッシュすれば色も変わるようになってるよ！
+; って言っても別スプライトなんだけどね。３枚分の容量を食った（苦笑
+; 瞬獄殺の場合、おなじみの「天」の文字も。
+;---------------------------------------------------------------------------
+;スーパーアーツフィニッシュ背景（オリジナルコンボフィニッシュも含む）
+[Statedef 2500]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 20000
+
+[State 2500, 変数]
+type = VarSet
+trigger1 = (Time >= 50)
+trigger2 = (fvar(39) < 0)
+fv = 39
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2500, 変数]
+type = VarSet
+trigger1 = (fvar(39) > 255)
+fv = 39
+value = 255
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2500, 変数]
+type = VarAdd
+trigger1 = (Time > 0)
+fv = 39
+value = 0.01
+IgnoreHitPause = 1
+Persistent = 1
+
+;***********************************
+[State 2500, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow
+flag2= NoBG  ;ステージの奥の画像を非表示にし、真っ黒の背景にする
+flag3= NoFG  ;ステージの手前の画像を非表示にする
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2500, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoBarDisplay  ;ライフバーを非表示にする
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2500, 特殊効果]
+type = AssertSpecial
+trigger1 = (Root,var(53) > 1)
+flag = NoMusic  ;演奏しているＢＧＭを止める（プラグインによってはＢＧＭがバグるので要注意）
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2500, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2500, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2500, 押し判定]
+type = PlayerPush
+trigger1 = 1
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+;***********************************
+[State 2500, 画像の色];Explodのフェード処理はこれでしか出来ない
+type = PalFX
+trigger1 = (Time > 0)
+add = ceil(-255+(fvar(39)*1300)),ceil(-255+(fvar(39)*1300)),ceil(-255+(fvar(39)*1300))
+time = 1
+IgnoreHitPause = 1
+Persistent = 1
+
+;***********************************
+[State 2500, エフェクト]
+type = Explod
+trigger1 = (Time = [2,49])
+anim = ifelse((Root,var(35)=1),4016,ifelse((Root,var(53)>1),4017,4015))
+postype = left
+pos = 160,120
+scale = 0.5,0.5
+sprpriority = -7
+bindtime = -1 ;postypeをleftに、かつbindtimeを-1にしてるので、常に画面を基準に動かなくなる
+ownpal = 0 ;これでヘルパーの色が変化した時に一緒に変色（フェード処理に使ってる）
+supermovetime = 99999999
+pausemovetime = 99999999
+ID = 4015
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2500, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time >= 50)
+trigger2 = (RoundState = [0,1])
+ID = 4015
+
+;*********************************** 瞬獄殺用の「天」
+[State 2500, エフェクト]
+type = Explod
+triggerall = (Root,var(53) > 1)
+trigger1 = (Time = [2,49])
+anim = ifelse((Root,PalNo=7),3018,3017)
+postype = left
+pos = 160,120
+sprpriority = -6
+bindtime = -1
+ownpal = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+ID = 3017
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2500, エフェクト操作]
+type = ModifyExplod
+trigger1 = (Time >= 3)
+scale = 1+(fvar(39)*0.2),1+(fvar(39)*0.2)
+supermovetime = 99999999
+pausemovetime = 99999999
+ID = 3017
+
+[State 2500, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time >= 50)
+trigger2 = (RoundState = [0,1])
+ID = 3017
+
+;***********************************
+[State 2500, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 0
+value = 0,ifelse((Root,var(53)>1),27,26)
+
+;***********************************
+[State 2500, ステート変更]
+type = ChangeState
+trigger1 = (Time >= 50)
+value = 2501
+
+;---------------------------------------------------------------------------
+;終了後「RoundState = 4」まで待機＆消去用
+[Statedef 2501]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+
+[State 2501, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2501, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2501, エフェクトを消す]
+type = RemoveExplod
+trigger1 = 1
+ID = 4015
+
+[State 2501, エフェクトを消す]
+type = RemoveExplod
+trigger1 = 1
+ID = 3017
+
+[State 2501, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (RoundState = [0,1])
+trigger2 = (RoundState > 3)
+trigger3 = (Time > 200)
+
+;===========================================================================
+;---------------------------------------------------------------------------
+; 瞬獄殺で相手を掴み暗闇の中で連撃をする時の背景。
+; 普通なら本体側で処理しても良いんだけど、やはり『Simul』の時の事を考えると
+; ヘルパーで処理した方が効率が良い。空いてる敵味方のパートナーが
+; SuperPauseを実行した時にも、暗闇の状態を維持させるにはこの方法しかない。
+;---------------------------------------------------------------------------
+;瞬獄殺用・黒背景
+[Statedef 2502]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 20000
+
+[State 2502, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoShadow
+flag2= NoBG
+flag3= NoFG
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2502, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = TimerFreeze   ;タイムカウント（制限時間）を停止する
+flag2= NoBarDisplay
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 2502, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 2502, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 2502, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (Root,var(18) = 0)
+trigger2 = (RoundState > 2)
+trigger3 = (Time > 800)
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;===========================================================================
+; サブシステム用ヘルパー
+;===========================================================================
+;---------------------------------------------------------------------------
+;『常駐ヘルパー』というテクニックを紹介。こんな使い方も出来る。
+; この方法はリダイレクションの「Helper,***」がこれにしか使えなくなるので注意。
+;
+; ヘルパーを常に置いておく事により、ライフゲージやパワーゲージでない
+;『第３のゲージ』などのシステムを設定する事も可能になる。
+;---------------------------------------------------------------------------
+;メイン（ゲージ準備用）
+[Statedef 30000]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 20000
+
+[State 30000, クリップボード]
+type = DisplayToClipboard
+trigger1 = 1
+text = "K.F.M.C. - Normal-Mode"
+
+;*********************************** 総合処理
+[State 30000, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Invisible   ;姿を消す（しかし残像は消せない）
+flag2= NoAutoTurn
+flag3= NoShadow
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30000, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 30000, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+;*********************************** Explod消去
+[State 30000, エフェクトを消す]
+type = RemoveExplod
+trigger1 = 1
+ID = 21000
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30000, エフェクトを消す]
+type = RemoveExplod
+trigger1 = 1
+ID = 21001
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30000, エフェクトを消す]
+type = RemoveExplod
+trigger1 = 1
+ID = 21002
+IgnoreHitPause = 1
+Persistent = 1
+
+;***********************************『擬似ＡＩプログラム』がＯＮになったら表示
+[State 30000, エフェクト]
+type = Explod
+triggerall = (Root,var(0) = 1)
+triggerall = (RoundState = 2)
+triggerall = !(Root,NumPartner)
+triggerall = (NumExplod(21003) = 0)
+trigger1 = 1
+anim = 21003
+scale = 0.5,0.5
+postype = left ;文字なので位置属性はこれで
+pos = ifelse((Root,TeamSide=2),295,25),200 ;「TeamSide」は「１」なら『１Ｐ側』、
+sprpriority = 6                            ;「２」なら『２Ｐ側』を判断するトリガー
+OnTop = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+bindtime = -1
+removetime = -1
+ownpal = 1
+ID = 21003
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30000, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (RoundState != 2)
+trigger2 = (Root,var(0) != 1)
+trigger3 = (PrevStateNo = [30001,30002]) && (Time = 0)
+ID = 21003
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************** 自動切り替え
+[State 30000, ステート変更];オリジナルコンボゲージへ
+type = ChangeState
+triggerall = (Root,fvar(13) <= 0)
+trigger1 = (Root,fvar(12) > 0)
+value = 30001
+
+[State 30000, ステート変更];天狗石ゲージへ
+type = ChangeState
+triggerall = (Root,fvar(12) <= 0)
+trigger1 = (Root,fvar(13) > 0)
+value = 30002
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+; オリコンを発動すれば、常駐ヘルパーがこのステートに切り替わるように設定。
+;
+; ここでは制限時間を「ゲージ」として視覚的に確認出来る処理をしてる。
+; 本当は-2でも出来るんだけど、常時監視ステートだとヒット硬直のせいで
+; 途中で表示しなくなる場合もあるから、ヘルパーに任せてる。
+;---------------------------------------------------------------------------
+;■ここで使っている変数■
+;★本体側★
+;　Var(35) = オリジナルコンボ・フラグ処理
+; FVar(12) = オリジナルコンボ・タイムゲージ伸縮処理用（制限時間でもある）
+;---------------------------------------------------------------------------
+;オリジナルコンボ・タイムゲージ（ＡＩ表示含む）
+[Statedef 30001]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 20000
+
+[State 30001, クリップボード]
+type = DisplayToClipboard
+trigger1 = 1
+text = "Flag=%d, Time-Gauge=%f \n"
+params = (Root,var(35)),(Root,fvar(12))
+
+[State 30001, クリップボード（追加専用）]
+type = AppendToClipboard
+trigger1 = 1
+text = "K.F.M.C. - Original-Combo Mode"
+
+;*********************************** 総合処理
+[State 30001, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Invisible
+flag2= NoAutoTurn
+flag3= NoShadow
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30001, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 30001, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+;*********************************** ゲージ伸縮処理
+[State 30001, ゲージ最小限界]
+type = ParentVarSet
+trigger1 = (Root,fvar(12) <= 0)
+fv = 12
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30001, ゲージ最大限界]
+type = ParentVarSet
+trigger1 = (Root,fvar(12) >= 0.5)
+fv = 12
+value = 0.5
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30001, ゲージ処理];ここで「ゲージの伸縮」及び「制限時間の経過」を処理
+type = ParentVarAdd
+triggerall = (RoundState = 2)
+triggerall = (Root,var(35) = 1)
+trigger1 = (Time % 2 = 0)
+fv = 12
+value = -0.003
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************** フラグチェック
+[State 30001, ノーマル状態]
+type = ParentVarSet
+trigger1 = (RoundState != 2)
+trigger2 = (Root,var(35) > 2)
+v = 35
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30001, オリコン状態];ゲージ伸縮用の変数が特定の数値以上になったら有効
+type = ParentVarSet
+trigger1 = (Root,fvar(12) >= 0.25)
+v = 35
+value = 1
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30001, 残像消去フラグ];オリコンの時間が終了したら増やす
+type = ParentVarAdd
+trigger1 = (Root,var(35) >= 1) && (Root,fvar(12) <= 0)
+v = 35
+value = 1
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************** ゲージ表示
+[State 30001, 枠]
+type = Explod
+triggerall = (Root,var(35) = 1)
+;triggerall = !(Root,NumPartner)
+triggerall = (RoundState = 2)
+triggerall = (NumExplod(21000) = 0)
+trigger1 = (Root,fvar(12) > 0)
+anim = 21000
+scale = 0.5,0.5
+postype = left ;文字が付いてるので位置属性はこれで
+pos = ifelse((Root,TeamSide=2),280,41),ifelse((Root,var(33)=1),200,185)
+sprpriority = 6
+OnTop = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+bindtime = -1
+removetime = -1
+ownpal = 1
+ID = 21000
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30001, バー]
+type = Explod
+triggerall = (Root,var(35) = 1)
+;triggerall = !(Root,NumPartner)
+triggerall = (RoundState = 2)
+triggerall = (NumExplod(21001) = 0)
+trigger1 = (Root,fvar(12) > 0)
+anim = 21001
+scale = 0,0.5
+postype = back
+pos = 76,ifelse((Root,var(33)=1),200,185)
+sprpriority = 7
+OnTop = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+bindtime = -1
+removetime = -1
+ownpal = 1
+ID = 21001
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************** ゲージ伸縮表示処理
+[State 30001, バー伸縮]
+type = ModifyExplod
+trigger1 = (Root,var(35) = 1)
+scale = 0+(Root,fvar(12)),0.5 ;ここにゲージ伸縮用のFVar(12)が使われている事もわかる
+supermovetime = 99999999
+pausemovetime = 99999999
+sprpriority = 7
+ID = 21001
+
+;*********************************** Explod消去
+[State 30001, 枠表示消去]
+type = RemoveExplod
+trigger1 = (Root,fvar(12) <= 0)
+trigger2 = (Root,var(35) = 0)
+trigger3 = (RoundState != 2)
+ID = 21000
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30001, バー表示消去]
+type = RemoveExplod
+trigger1 = (Root,fvar(12) <= 0)
+trigger2 = (Root,var(35) = 0)
+trigger3 = (RoundState != 2)
+ID = 21001
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************** ＡＩ表示
+[State 30001, エフェクト]
+type = Explod
+triggerall = (Root,var(0) = 1)
+triggerall = (RoundState = 2)
+triggerall = !(Root,NumPartner)
+triggerall = (NumExplod(21003) = 0)
+trigger1 = 1
+anim = 21003
+scale = 0.5,0.5
+postype = left
+pos = ifelse((Root,TeamSide=2),295,25),200
+sprpriority = 6
+OnTop = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+bindtime = -1
+removetime = -1
+ownpal = 1
+ID = 21003
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30001, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (RoundState != 2)
+trigger2 = (Root,var(0) != 1)
+trigger3 = (PrevStateNo = 30000) && (Time = 0)
+ID = 21003
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************** ここでゲージ準備ステートに戻す
+[State 30001, ステート変更]
+type = ChangeState
+triggerall = (Time > 0)
+trigger1 = (Root,var(35) = 0) && (Root,fvar(12) <= 0)
+value = 30000
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+; オリジナルコンボのゲージ処理を流用した、天狗石のゲージ処理。
+; 若干早く時間が減るように変更してる程度。
+; 同期させてないので、オリコンと天狗石を両方発動する事は出来なくしてる。
+;---------------------------------------------------------------------------
+;■ここで使っている変数■
+;★本体側★
+;　Var(34) = 天狗石・フラグ処理
+; FVar(13) = 天狗石・タイムゲージ伸縮処理用
+;---------------------------------------------------------------------------
+;天狗石・タイムゲージ（ＡＩ表示含む）
+[Statedef 30002]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 20000
+
+[State 30002, クリップボード]
+type = DisplayToClipboard
+trigger1 = 1
+text = "Tengu-Flag=%d, Tengu-Gauge=%f \n"
+params = (Root,var(34)),(Root,fvar(13))
+
+[State 30002, クリップボード（追加専用）]
+type = AppendToClipboard
+trigger1 = 1
+text = "K.F.M.C. - Tengu-Ishi Mode"
+
+;*********************************** 総合処理
+[State 30002, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Invisible
+flag2= NoAutoTurn
+flag3= NoShadow
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30002, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 30002, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+;*********************************** ゲージ伸縮処理
+[State 30002, ゲージ最小限界]
+type = ParentVarSet
+trigger1 = (Root,fvar(13) <= 0)
+fv = 13
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30002, ゲージ最大限界]
+type = ParentVarSet
+trigger1 = (Root,fvar(13) >= 0.5)
+fv = 13
+value = 0.5
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30002, ゲージ処理]
+type = ParentVarAdd
+triggerall = (RoundState = 2)
+triggerall = (Root,var(34) = 1)
+trigger1 = (Time % 2 = 0)
+fv = 13
+value = -0.004
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************** フラグチェック
+[State 30002, ノーマル状態]
+type = ParentVarSet
+trigger1 = (RoundState != 2)
+trigger2 = (Root,fvar(13) <= 0)
+v = 34
+value = 0
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30002, 天狗石状態]
+type = ParentVarSet
+trigger1 = (Root,fvar(13) >= 0.5)
+v = 34
+value = 1
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************** ゲージ表示
+[State 30002, 枠]
+type = Explod
+triggerall = (Root,var(34) = 1)
+;triggerall = !(Root,NumPartner)
+triggerall = (RoundState = 2)
+triggerall = (NumExplod(21000) = 0)
+trigger1 = (Root,fvar(13) > 0)
+anim = 21000
+scale = 0.5,0.5
+postype = left
+pos = ifelse((Root,TeamSide=2),280,41),ifelse((Root,var(33)=1),200,185)
+sprpriority = 6
+OnTop = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+bindtime = -1
+removetime = -1
+ownpal = 1
+ID = 21000
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30002, バー]
+type = Explod
+triggerall = (Root,var(34) = 1)
+;triggerall = !(Root,NumPartner)
+triggerall = (RoundState = 2)
+triggerall = (NumExplod(21002) = 0)
+trigger1 = (Root,fvar(13) > 0)
+anim = 21002
+scale = 0,0.5
+postype = back
+pos = 76,ifelse((Root,var(33)=1),200,185)
+sprpriority = 7
+OnTop = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+bindtime = -1
+removetime = -1
+ownpal = 1
+ID = 21002
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************** ゲージ伸縮表示処理
+[State 30002, バー伸縮]
+type = ModifyExplod
+trigger1 = (Root,var(34) = 1)
+scale = 0+(Root,fvar(13)),0.5
+supermovetime = 99999999
+pausemovetime = 99999999
+sprpriority = 7
+ID = 21002
+
+;*********************************** Explod消去
+[State 30002, 枠表示消去]
+type = RemoveExplod
+trigger1 = (Root,fvar(13) <= 0)
+trigger2 = (Root,var(34) = 0)
+trigger3 = (RoundState != 2)
+ID = 21000
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30002, バー表示消去]
+type = RemoveExplod
+trigger1 = (Root,fvar(13) <= 0)
+trigger2 = (Root,var(34) = 0)
+trigger3 = (RoundState != 2)
+ID = 21002
+IgnoreHitPause = 1
+Persistent = 1
+
+;*********************************** ＡＩ表示
+[State 30002, エフェクト]
+type = Explod
+triggerall = (Root,var(0) = 1)
+triggerall = (RoundState = 2)
+triggerall = !(Root,NumPartner)
+triggerall = (NumExplod(21003) = 0)
+trigger1 = 1
+anim = 21003
+scale = 0.5,0.5
+postype = left
+pos = ifelse((Root,TeamSide=2),295,25),200
+sprpriority = 6
+OnTop = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+bindtime = -1
+removetime = -1
+ownpal = 1
+ID = 21003
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 30002, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (RoundState != 2)
+trigger2 = (Root,var(0) != 1)
+trigger3 = (PrevStateNo = 30000) && (Time = 0)
+ID = 21003
+IgnoreHitPause = 1
+Persistent = 1
+
+;***********************************
+[State 30002, ステート変更]
+type = ChangeState
+triggerall = (Time > 0)
+trigger1 = (Root,var(34) = 0) && (Root,fvar(13) <= 0)
+value = 30000
+
+;===========================================================================
+;---------------------------------------------------------------------------
+; 前回（Ver.1.02）は急いでたので解説文を書けなかった（苦笑
+;
+;『ファーストアタック』及び『カウンターヒット』を成功させた時に
+; このヘルパーを出現させてる。実はアナウンス表示作るの初めてなんで、
+; 悪咲さんのやドロウィンさんのなどを参考に自分なりに作成してみた。
+; この場をもって色んなキャラを参考にさせてもらった事にお礼を申し上げます。
+; ありがとうございました。
+;
+; -2に発生条件も設定してるので、そっちも見てねー。
+;---------------------------------------------------------------------------
+;ファーストアタックとカウンターヒットのアナウンス表示
+[Statedef 31000]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 20000
+
+[State 31000, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = Invisible
+flag2= NoAutoTurn
+flag3= NoShadow
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 31000, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 31000, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 31000, 画面塗り潰し];カウンターヒット時の画面フラッシュ
+type = EnvColor
+triggerall = (Root,NumTarget != 0)
+triggerall = (Root,var(14) = 1)
+trigger1 = Time = 1
+trigger1 = (Root,MoveHit = [1,2]) || (Root,ProjHit = 1,<2)
+value = 255,255,255 ;画面全体を塗り潰す色合い（赤,緑,青）
+time = 1            ;画面全体を塗り潰している時間
+under = 1           ;画面奥だけを塗り潰すか否か（１ならキャラやライフバーは残す）
+Persistent = 0
+
+;***********************************
+[State 31000, エフェクト];ファーストアタック表示
+type = Explod
+triggerall = (NumHelper(31000) <= 1)
+triggerall = (NumExplod(21004) = 0)
+trigger1 = (Root,var(15) = [1,2])
+trigger1 = (EnemyNear,MoveType = H)
+anim = 21004
+scale = 0.5,0.5
+postype = left
+pos = ifelse((Root,TeamSide=2),285,35),ifelse((Root,var(33)=1),105,85)
+sprpriority = 6
+OnTop = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+bindtime = -1
+removetime = -1
+ownpal = 1
+ID = 21004
+IgnoreHitPause = 1
+Persistent = 0
+
+[State 31000, エフェクト];カウンターヒット表示
+type = Explod
+triggerall = (Root,NumTarget != 0)
+triggerall = (NumHelper(31000) <= 1)
+triggerall = (NumExplod(21005) = 0)
+trigger1 = (Root,var(14) > 0)
+trigger1 = (Root,MoveHit = [1,2]) || (Root,ProjHit = 1,<2)
+anim = 21005
+scale = 0.5,0.5
+postype = left
+pos = ifelse((Root,TeamSide=2),285,35),ifelse((Root,var(33)=1),115,95)
+sprpriority = 5
+OnTop = 1
+supermovetime = 99999999
+pausemovetime = 99999999
+bindtime = -1
+removetime = -1
+ownpal = 1
+ID = 21005
+IgnoreHitPause = 1
+Persistent = 0
+
+;***********************************
+[State 31000, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time >= 40)
+ID = 21004
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 31000, エフェクトを消す]
+type = RemoveExplod
+trigger1 = (Time >= 40)
+trigger2 = (RoundState > 2)
+ID = 21005
+IgnoreHitPause = 1
+Persistent = 1
+
+;***********************************
+[State 31000, このヘルパーを消す]
+type = DestroySelf
+triggerall = (Time > 40)
+trigger1 = (EnemyNear,MoveType != H)
+trigger2 = (RoundState > 2)
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;===========================================================================
+;---------------------------------------------------------------------------
+; 勝利メッセージ画面を表示させるためのヘルパー。
+; これもエフェクトヘルパーを作った時の副産物。
+;
+; 余談だけど、勝利ポーズ中は各ボタンで画面をスキップ出来るけど、
+; 方向キーとＳボタンでは出来なかったりもする。
+; これを利用して、僕の場合は勝利ポーズ中にＳボタンを押しっぱなしにすれば
+; 任意で勝利メッセージ画面の表示の有無を出来るようにしてる。
+; 勝利メッセージ画面が邪魔だと思ってる人への配慮。
+;---------------------------------------------------------------------------
+;■ここで使っている変数■
+;★ヘルパー側★
+;　Var(10) = セリフをランダムでセレクト
+;---------------------------------------------------------------------------
+;勝利メッセージ画面用ヘルパー
+[Statedef 35000]
+type     = A
+movetype = I
+physics  = N
+ctrl     = 0
+anim     = 20000
+
+[State 35000, 変数ランダム]
+type = VarRandom
+trigger1 = Time = 1
+v = 10
+range = 4502,4514
+IgnoreHitPause = 1
+Persistent = 1
+
+;***********************************
+[State 35000, 特殊効果]
+type = AssertSpecial
+trigger1 = 1
+flag = NoBarDisplay
+flag2= NoMusic
+flag3= NoFG
+IgnoreHitPause = 1
+Persistent = 1
+
+[State 35000, 無敵]
+type = NotHitBy
+trigger1 = 1
+value = SCA
+time = 2
+
+[State 35000, 食らい上書き]
+type = HitOverRide
+trigger1 = (Time >= 0)
+attr = SCA, NA, SA, HA, NP, SP, HP, NT, ST, HT, AA, AT, AP
+time = -1
+stateno = 9999
+IgnoreHitPause = 1
+
+[State 35000, ステージの色合い]
+type = BGPalFX
+trigger1 = 1
+Add = -80,-80,-80
+Time = 2
+IgnoreHitPause = 1
+Persistent = 1
+
+;***********************************
+[State 35000, エフェクト];カットイン
+type = Explod
+trigger1 = Time = 1
+anim = 4500
+postype = left
+facing = 1
+pos = 0,0
+sprpriority = -1
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+ownpal = 1
+OnTop = 1
+IgnoreHitPause = 1
+Persistent = 0
+ID = 4500
+Trans = AddAlpha
+Alpha = 256,32
+
+[State 35000, エフェクト];ウィンドウ
+type = Explod
+trigger1 = Time = 14
+anim = 4501
+postype = left
+facing = 1
+pos = 160,230
+scale = 0.5,0.5
+sprpriority = 9
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+ownpal = 1
+OnTop = 1
+IgnoreHitPause = 1
+Persistent = 0
+ID = 4500
+Trans = AddAlpha
+Alpha = 256,64
+
+[State 35000, エフェクト];セリフ
+type = Explod
+trigger1 = Time = 14
+anim = var(10)
+postype = left
+facing = 1
+pos = 160,230
+scale = 0.5,0.5
+sprpriority = 99
+bindtime = -1
+supermovetime = 99999999
+pausemovetime = 99999999
+ownpal = 1
+OnTop = 1
+IgnoreHitPause = 1
+Persistent = 0
+ID = 4500
+Trans = AddAlpha
+Alpha = 256,32
+
+[State 35000, エフェクト消し]
+type = RemoveExplod
+trigger1 = (RoundState < 2)
+ID = 4500
+
+;***********************************
+[State 35000, 音を鳴らす]
+type = PlaySnd
+trigger1 = Time = 1
+value = 0,28
+channel = 3
+
+;***********************************
+[State 35000, このヘルパーを消す]
+type = DestroySelf
+trigger1 = (RoundState < 2)
+
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;分身バグ対策用
+[Statedef 9999]
+[State 9999, ヘルパーを消す] 
+type = DestroySelf
+trigger1 = (Time >= 0)
+IgnoreHitPause = 1
+Persistent = 1
+
+
+
+
+
+
+
+
+
+
+;アーマー
+[Statedef 26666]
+type     = S
+movetype = I
+physics  = N
+ctrl     = 0
+SprPriority = 4
+
+[State ]
+type = posset
+trigger1 = 1
+x = root,pos X
+y = root,pos Y
+
+[State ]
+type = changeanim
+trigger1 = root,anim = 0
+trigger2 = root,anim = 707
+trigger3 = root,anim = [10,12]
+trigger4 = root,anim = [5,6]
+trigger5 = root,anim = [41,43]
+value = 1
+
+[State ]
+type = changeanim
+trigger1 = root,anim = [20,21]
+value = 2
+
+[State ]
+type = changeanim
+trigger1 = root,anim = 100
+value = 3
+
+[State ]
+type = changeanim
+trigger1 = root,anim = [41,43]
+value = 4
+
+[State ]
+type = changeanim
+trigger1 = root,anim = 52
+value = 7
+
+[State ]
+type = NotHitby
+trigger1 = gethitvar(damage)=0
+value = ,NT,ST,HT
+time = 1
+
+[State ]
+type = NotHitby
+trigger1 = gethitvar(damage)>0
+value = SCA,NT,ST,HT,NA,SA,HA,NP,SP,HP
+time = 5
+ignorehitpause = 1
+
+[State ]
+type = HitOverride
+trigger1 = 1
+attr = SCA,NA,SA,HA,NP,SP,HP
+time = -1
+stateno = 26666
+ignorehitpause = 1
+
+[State ]
+type = destroyself
+trigger1 = root,anim != 0
+trigger1 = root,anim != 707
+trigger1 = root,anim != [10,12]
+trigger1 = root,anim != [5,6]
+trigger1 = root,anim != 52
+trigger1 = root,anim != 100
+trigger1 = root,anim != [20,21]
+trigger1 = root,anim != [41,43]
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------

@@ -43,7 +43,11 @@ https://www.bilibili.com/video/av66199493
 ![Hinako](https://github.com/zinclee123/mugen_chars/blob/master/Resources/MasterRyu.gif)    
 修改自BetterHans，做了点AI优化，无性能改动
 对战演示视频 可以从10:20秒开始:
-https://www.bilibili.com/video/BV1u7411B7AW     
+https://www.bilibili.com/video/BV1u7411B7AW    
+
+## 范马·勇次郎(Yujiro-Hamma) 
+![Yujiro](https://github.com/zinclee123/mugen_chars/blob/master/Resources/yujiro.gif)  
+AI补丁，原人物请自行下载
 
 ## 最后
 以上所有人物不可避免的有Bug，可以https://github.com/zinclee123/mugen_chars 提问题或者改进意见可通过Github的提交issue功能

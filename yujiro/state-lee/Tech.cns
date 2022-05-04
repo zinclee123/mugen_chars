@@ -315,6 +315,7 @@ p1stateno = 801
 p2stateno = 803
 guard.dist = 0 ;相手のガード態勢に入る距離を０にしてるので、ガード不可
 fall = 1
+ID = 800
 
 [State 800, ステート変更]
 type = ChangeState

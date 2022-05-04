@@ -385,6 +385,7 @@ envshake.time    = 12
 envshake.ampl    = 6
 envshake.freq    = 120
 Fall.Recover = 0
+ID = 250
 
 [State 0]
 type = Projectile
@@ -429,6 +430,7 @@ projhits = 1
 fall = 1
 fall.recover = 0
 p2stateno = 1025
+ID = 250
 
 [State 250, ステート変更]
 type = ChangeState
@@ -576,6 +578,7 @@ envshake.time    = 12
 envshake.ampl    = 6
 envshake.freq    = 100
 Fall.Recover = 0
+ID = 210
 
 [State 210, ステート変更]
 type = ChangeState
@@ -1789,6 +1792,7 @@ projhits = 1
 fall = 1
 fall.recover = 0
 P2stateno = 666
+ID = 430
 
 
 [State 430, ステート変更]

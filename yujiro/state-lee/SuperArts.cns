@@ -1360,7 +1360,7 @@ trigger1 = time = 101
 trigger2 = time = 111
 trigger3 = (time = 121) && (palno = [7,12])
 Projscale = 0.5,0.5
-hitflag = MDFP
+hitflag = MADFP
 affectteam = B
 ProjAnim = 2016
 Projremanim = -1
@@ -1413,7 +1413,7 @@ trigger11 = (time = 201) && (palno = 12)
 trigger12 = (time = 211) && (palno = 12)
 trigger13 = (time = 211) && (palno = 12)
 Projscale = 0.5,0.5
-hitflag = MDFP
+hitflag = MADFP
 affectteam = B
 ProjAnim = 2016
 Projremanim = -1
@@ -2622,13 +2622,12 @@ anim     = 2503
 [State 3581, ‰¹‚ð–Â‚ç‚·]
 type = PlaySnd
 trigger1 = (Time = 15)
-trigger1 = (random < 500)
 value = 1,30
 volume = 130
 channel = 6
 
 [State 3581, ‰¹‚ð–Â‚ç‚·]
-type = PlaySnd
+type = Null;PlaySnd
 trigger1 = (Time = 15)
 value = 1,31
 volume = 130

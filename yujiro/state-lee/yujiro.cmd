@@ -163,125 +163,6 @@ command.buffer.time = 1  ;標準のコマンド入力記憶時間。
 ; 　　　　　　「前斜め下」→「前」を入力した後、ＡとＹとＣを同時押ししたままにする
 ;
 ;------------------------------------------------------------------------------
-;-| ＡＩ発動用コマンド |-------------------------------------------------------
-
-;※ＣＰＵに『人間には入力出来ないコマンド』を入力させる事で、
-;　『擬似ＡＩプログラム』を発動させるようにするテクニック。
-;　発動確率はまさにランダムなので、運任せ。
-
-[Command]
-name = "AI-000"
-command = ~F,a,~D,y,~U,c+x,D,b+y,F,z,z,z+a
-time = 1
-
-[Command]
-name = "AI-001"
-command = ~F,c,~D,y,~U,c+a,D,b+x,B,z,z,z+b
-time = 1
-
-[Command]
-name = "AI-002"
-command = ~F,y,~D,y,~U,c+y,D,b+z,F,z,z,z+c
-time = 1
-
-[Command]
-name = "AI-003"
-command = ~F,b,~D,y,~U,c+b,D,b+a,B,z,z,z+x
-time = 1
-
-[Command]
-name = "AI-004"
-command = ~F,x,~D,x,~U,c+x,D,b+y,F,z,z,z+y
-time = 1
-
-[Command]
-name = "AI-005"
-command = ~F,z,~D,y,~U,c+a,D,b+c,B,z,z,z+a
-time = 1
-
-[Command]
-name = "AI-006"
-command = ~D,U,x+y+z,~F,F,b,c,y,B,~B,a+b+c,U
-time = 1
-
-[Command]
-name = "AI-007"
-command = ~U,D,x+b+z,~F,F,b,b,x,B,~B,a+y+c,F
-time = 1
-
-[Command]
-name = "AI-008"
-command = ~D,U,a+y+c,~F,F,b,a,z,B,~B,x+b+z,D
-time = 1
-
-[Command]
-name = "AI-009"
-command = ~U,D,x+b+c,~F,F,b,c,x,B,~B,a+y+z,B
-time = 1
-
-[Command]
-name = "AI-010"
-command = ~x,~y,~z,~a,~b,~c,~s,a+b+c,x+y+z,~F,B
-time = 1
-
-;***********************************
-[Command]
-name = "AI-011"
-command = F,D,F
-time = 0
-
-[Command]
-name = "AI-012"
-command = B,F,B
-time = 0
-
-[Command]
-name = "AI-013"
-command = U,B,U
-time = 0
-
-[Command]
-name = "AI-014"
-command = D,U,D
-time = 0
-
-;***********************************
-[Command]
-name = "AI-015"
-command = a,s,a
-time = 0
-
-[Command]
-name = "AI-016"
-command = b,a,b
-time = 0
-
-[Command]
-name = "AI-017"
-command = c,b,c
-time = 0
-
-[Command]
-name = "AI-018"
-command = x,c,x
-time = 0
-
-[Command]
-name = "AI-019"
-command = y,x,y
-time = 0
-
-[Command]
-name = "AI-020"
-command = z,y,z
-time = 0
-
-[Command]
-name = "AI-021"
-command = s,z,s
-time = 0
-
-;------------------------------------------------------------------------------
 ;-| スーパーアーツ |-----------------------------------------------------------
 
 ;※名前が同じならば、違うコマンドでも同じステートの技を出す事が可能。
@@ -528,10 +409,17 @@ time = 1
 ;==============================================================================
 ; スーパーアーツ
 ;==============================================================================
+[State -1, Test]
+type = ChangeState
+trigger1 = var(0) = 0
+trigger1 = (command = "start")
+value = 1011
+
 ;------------------------------------------------------------------------------
 
 [State -1, 悪魔に授かった筋肉でただ思いきりブン殴る]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "fatality")
 triggerall = (Power > 2999)
 triggerall = (StateType != A)
@@ -546,6 +434,7 @@ value = 3580
 
 [State -1, 瞬獄殺]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "syungoku")
 triggerall = (Power > 1999)
 trigger1 = (StateType != A) && (Ctrl)
@@ -608,6 +497,7 @@ value = 1600
 
 [State -1, 瞬間移動]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "z")
 triggerall = (Ctrl)
 trigger1 = (StateType != A) && (Stateno != 20)
@@ -617,6 +507,7 @@ value = 1011
 
 [State -1, ジェノサイド]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "sinsain")
 trigger1 = (StateType != A) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -624,6 +515,7 @@ value = 1002
 
 [State -1, 運送]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "unsou")
 trigger1 = (StateType != A) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -631,6 +523,7 @@ value = 1000
 
 [State -1, 鼓膜破壊]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "parn") && (var(35) <= 0)
 trigger1 = (StateType != A) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -638,6 +531,7 @@ value = 1009
 
 [State -1, ベアハッグ]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "bearhug") && (var(35) <= 0)
 trigger1 = (StateType != A) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -647,6 +541,7 @@ value = 2003
 
 [State -1, カンフーブロー・改]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "blow")
 trigger1 = (StateType != A) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -659,6 +554,7 @@ value = 1007
 
 [State -1, カンフースルー・改]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "y")
 triggerall = (StateNo != 100)
 triggerall = (StateNo != 101)
@@ -677,12 +573,14 @@ value = 800
 
 [State -1, うどぅんでい]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "z")
 trigger1 = (StateType != A) && (Stateno = 20)
 value = 2002
 
 [State -1,消力]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (palno = [7,12])
 triggerall = (Power > 999)
 triggerall = (command = "syaori")
@@ -695,6 +593,7 @@ value = 2502
 
 [State -1, どけ]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (palno = [7,12])
 triggerall = (Power > 999)
 triggerall = (command = "z")
@@ -713,12 +612,14 @@ value = 2501
 
 [State -1, 走る]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (StateNo != 100)
 trigger1 = (command = "FF") && (StateType = S) && (Ctrl)
 value = 100
 
 [State -1, バックステップ]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (StateNo != 100)
 trigger1 = (command = "BB") && (StateType = S) && (Ctrl)
 value = 105
@@ -728,6 +629,7 @@ value = 105
 ;------------------------------------------------------------------------------
 [State -1, チョップ]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "back_y") && (command != "holddown")
 trigger1 = (StateType = S) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -736,6 +638,7 @@ value = 270
 
 [State -1, 立ち強パンチ]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "fwd_x") && (command != "holddown")
 trigger1 = (StateType = S) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -744,6 +647,7 @@ value = 210
 
 [State -1, 立ち弱パンチ]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "x") && (command != "holddown")
 trigger1 = (StateType = S) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -753,6 +657,7 @@ value = 200
 
 [State -1, 強パンチ]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "y") && (command != "holddown")
 trigger1 = (StateType = S) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -760,6 +665,7 @@ value = 250
 
 [State -1, 立ち弱キック]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "a") && (command != "holddown")
 trigger1 = (StateType = S) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -768,6 +674,7 @@ value = 230
 
 [State -1, 立ち強キック]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "fwd_b") && (command != "holddown")
 trigger1 = (StateType = S) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -776,6 +683,7 @@ value = 240
 
 [State -1, ハイキック]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "b") && (command != "holddown")
 trigger1 = (StateType = S) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -786,6 +694,7 @@ value = 260
 
 [State -1, しゃがみ弱パンチ]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "x") && (command = "holddown")
 trigger1 = (StateType = C) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -793,6 +702,7 @@ value = 400
 
 [State -1, しゃがみ強パンチ]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "y") && (command = "holddown")
 trigger1 = (StateType = C) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -800,6 +710,7 @@ value = 410
 
 [State -1, しゃがみ弱キック]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "a") && (command = "holddown")
 trigger1 = (StateType = C) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -807,6 +718,7 @@ value = 430
 
 [State -1, しゃがみ強キック]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "b") && (command = "holddown")
 trigger1 = (StateType = C) && (Ctrl)
 trigger2 = (StateNo = 1011) && (time > 6)
@@ -816,24 +728,28 @@ value = 440
 
 [State -1, ジャンプ弱パンチ]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "x")
 trigger1 = (StateType = A) && (Ctrl)
 value = 600
 
 [State -1, ジャンプ強パンチ]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "y")
 trigger1 = (StateType = A) && (Ctrl)
 value = 1090
 
 [State -1, ジャンプ弱キック]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "a")
 trigger1 = (StateType = A) && (Ctrl)
 value = 630
 
 [State -1, ジャンプ強キック]
 type = ChangeState
+triggerall = var(0) = 0
 triggerall = (command = "b")
 trigger1 = (StateType = A) && (Ctrl)
 value = 640

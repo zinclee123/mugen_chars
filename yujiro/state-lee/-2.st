@@ -12,6 +12,108 @@
 ;---------------------------------------------------------------------------
 
 [Statedef -2] ;←この行は絶対に消さないでね
+
+
+;---------------------------------------------------------------------------------
+;X方向速度
+;---------------------------------------------------------------------------------
+[State -3]
+Type = varset
+trigger1 = Facing != EnemyNear,Facing
+Trigger1 = !MoveContact &&  EnemyNear,MoveType != H
+Trigger1 = fvar(14) != EnemyNear,Vel x
+fvar(14) = EnemyNear,Vel x
+ignorehitpause = 1
+
+[State -3]
+Type = varset
+trigger1 = Facing = EnemyNear,Facing
+Trigger1 = !MoveContact &&  EnemyNear,MoveType != H
+Trigger1 = fvar(14) != EnemyNear,Vel x
+fvar(14) = -EnemyNear,Vel x
+ignorehitpause = 1
+
+[State -3]
+Type = varset
+Trigger1 = facing = -1
+Trigger1 = MoveContact || EnemyNear,MoveType = H
+Trigger1 = fvar(14) != EnemyNear,gethitvar(xVel)
+fvar(14) = EnemyNear,gethitvar(xVel)
+ignorehitpause = 1
+
+
+[State -3]
+Type = varset
+Trigger1 = facing = 1
+Trigger1 = MoveContact || EnemyNear,MoveType = H
+Trigger1 = fvar(14) != -(EnemyNear,gethitvar(xVel))
+fvar(14) = -(EnemyNear,gethitvar(xVel))
+ignorehitpause = 1
+
+;---------------------------------------------------------------------------------
+;重力加速度
+;---------------------------------------------------------------------------------
+[State -3]
+Type = varSet
+TriggerAll = !isHelper
+Trigger1 = !MoveContact
+Trigger1 = EnemyNear,StateType = A
+fvar(15) = EnemyNear,const(movement.yaccel)
+IgnoreHitPause = 1
+
+[State -3]
+Type = varSet
+TriggerAll = !isHelper
+Trigger1 = MoveContact
+Trigger1 = EnemyNear,StateType = A
+fvar(15) = EnemyNear,gethitvar(yaccel)
+IgnoreHitPause = 1
+
+[State -3]
+Type = varSet
+TriggerAll = !isHelper
+Trigger1 = MoveContact
+Trigger1 = EnemyNear,StateType != A
+fvar(15) = 0
+IgnoreHitPause = 1
+
+;---------------------------------------------------------------------------------
+;距前版
+;---------------------------------------------------------------------------------
+[State -3]
+Type = varSet
+Trigger1 = !isHelper
+Trigger1 = TeamSide = 1
+fvar(16) = IfElse(Facing > 0, Helper(33001),rootdist x, Helper(33002),rootdist x)
+
+[State -3]
+Type = varSet
+Trigger1 = !isHelper
+Trigger1 = TeamSide = 2
+fvar(16) = IfElse(Facing > 0, Helper(33002),rootdist x, Helper(33001),rootdist x)
+
+;---------------------------------------------------------------------------------
+;立回限制
+;---------------------------------------------------------------------------------
+[State -2]
+Type = VarSet
+Trigger1 = RoundState = 1
+var(16) = 90
+
+[State -2]
+Type = VarAdd
+Trigger1 = RoundState = 2
+Trigger1 = MoveType != H
+Trigger1 = StateType != L
+Trigger1 = var(16) > 0
+var(16) = -1
+
+[State -2]
+Type = varset
+Trigger1 = var(16) < 0
+var(16) = 0
+IgnoreHitPause = 1
+
 ;---------------------------------------------------------------------------
 ; Simul用
 ;---------------------------------------------------------------------------
@@ -667,21 +769,33 @@ trigger1 = (!Alive) || (Life <= 0) || (Lose)
 value = 10004
 IgnoreHitPause = 1
 
+
+[State -2, 普通技立回\?起身被当身??]
+Type = varset
+triggerall = !isHelper
+triggerall = MoveReversed = 1
+triggerall = MoveType = H
+triggerall = enemynear,moveType = A || enemynear,moveType = I
+triggerall = EnemyNear,StateNo < 2000
+trigger1 = var(11)/100 = [200,999]
+var(4) = var(4) | 2**6
+ignorehitpause = 1
+
 ;---------------------------------------------------------------------------
 ; クリップボード
 ;---------------------------------------------------------------------------
 [State -2, クリップボード]
 type = DisplayToClipboard
 trigger1 = 1
-text = "AI=%d, Button=%d, Player=%d, Blocking=%d,%d \n"
-params = var(0),var(53),var(33),var(56),var(57)
+text = "Trace=%d, P2Dist=%d, P2Time=%d, P2AnimTime=%d,P2State=%d \n"
+params = var(11),p2bodydist x,EnemyNear,Time,EnemyNear,AnimTime,EnemyNear,StateNo
 IgnoreHitPause = 1
 
 [State -2, クリップボード（追加専用）]
 type = AppendToClipboard
 trigger1 = 1
-text = "BG=%d, O.C.=%d, Tengu=%d, Denjin=%d,%d"
-params = var(18),var(35),var(34),var(25),var(26)
+text = "DD=%d, V35=%d, P2G=%d, P2Y=%d, DDist=%d"
+params = var(56), var(35), fvar(15),EnemyNear,Pos Y,PlayerId((Helper(33333333),var(3))),p2bodydist x
 IgnoreHitPause = 1
 
 ;---------------------------------------------------------------------------

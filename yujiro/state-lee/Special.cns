@@ -646,6 +646,7 @@ envshake.time    = 12
 envshake.ampl    = 6
 envshake.freq    = 100
 Fall.Recover = 0
+ID = 1002
 
 [State 1002, ヒット定義]
 type = HitDef
@@ -677,6 +678,7 @@ envshake.time    = 12
 envshake.ampl    = 6
 envshake.freq    = 100
 Fall.Recover = 0
+ID = 1002
 
 ;***********************************
 [State 1002, ステート変更]
@@ -1875,6 +1877,7 @@ yaccel           = 0.6
 Fall = 1
 air.Fall = 1
 Fall.Recover = 0
+ID = 1007
 
 
 [State 1007, ステート変更]
@@ -2024,9 +2027,9 @@ value = 0,21
 ;***********************************
 [State 1011, ステート変更]
 type = ChangeState
-trigger1 = (Time > 15)
-trigger2 = (Time > 15) && (FrontEdgeBodyDist <= 0)
-trigger3 = (Time > 15) && (BackEdgeBodyDist <= 0)
+trigger1 = (Time = 15)
+trigger2 = (Time = 15) && (FrontEdgeBodyDist <= 0)
+trigger3 = (Time = 15) && (BackEdgeBodyDist <= 0)
 value = 0
 ctrl = 1
 
@@ -2108,6 +2111,7 @@ envshake.freq    = 120
 projhits = 1
 fall = 1
 fall.recover = 0
+ID = 1015
 
 [State 0]
 type = Projectile
@@ -2154,7 +2158,7 @@ envshake.freq    = 120
 projhits = 1
 fall = 1
 fall.recover = 0
-
+ID = 1015
 
 [State 1015, 軸位置]
 type = PosSet

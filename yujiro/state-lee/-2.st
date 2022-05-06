@@ -13,24 +13,156 @@
 
 [Statedef -2] ;←この行は絶対に消さないでね
 
+;--------------------------------------
+;血量?示
+[State -2,个位]
+Type = Explod
+trigger1 = !ishelper
+trigger1 = roundState >= 2
+anim = F310+life%10
+pos = IfElse(TeamSide=1,122,204), 28
+posType = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+
+
+[State -2,十位]
+Type =  Explod
+trigger1 = !ishelper
+trigger1 = roundState >= 2
+anim = F310+floor(life/10)%10
+pos = IfElse(TeamSide=1,118,200), 28
+posType = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+
+
+[State -2,百位]
+Type =  Explod
+trigger1 = !ishelper
+trigger1 = roundState >= 2
+anim = F310+floor(life/100)%10
+pos = IfElse(TeamSide=1,114,196), 28
+posType = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1 
+
+
+[State -2,千位]
+Type =  Explod
+trigger1 = !ishelper
+trigger1 = roundState >= 2
+anim = F310+floor(life/1000)%10
+pos = IfElse(TeamSide=1,110,192), 28
+posType = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+
+;--------------------------------------
+
+;--------------------------------------
+;气量?示
+
+[State -2,个位]
+Type = Explod
+trigger1 = !ishelper
+trigger1 = roundState >= 2
+anim = F300+Power%10
+pos = IfElse(TeamSide=1,122,208), 4
+posType = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+
+
+[State -2,十位]
+Type =  Explod
+trigger1 = !ishelper
+trigger1 = roundState >= 2
+anim = F300+floor(Power/10)%10
+pos = IfElse(TeamSide=1,118,204), 4
+posType = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+
+
+[State -2,百位]
+Type =  Explod
+trigger1 = !ishelper
+trigger1 = roundState >= 2
+anim = F300+floor(Power/100)%10
+pos = IfElse(TeamSide=1,114,200), 4
+posType = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1 
+
+
+[State -2,千位]
+Type =  Explod
+trigger1 = !ishelper
+trigger1 = roundState >= 2
+anim = F300+floor(Power/1000)%10
+pos = IfElse(TeamSide=1,110,196), 4
+posType = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+
+
+[State -2,万位]
+Type =  Explod
+trigger1 = !ishelper
+trigger1 = roundState >= 2
+anim = F300+floor(Power/10000)%10
+pos = IfElse(TeamSide=1,106,192), 4
+posType = Left
+bindtime = -1
+ownpal = 1
+ontop = 1
+pausemovetime = 999999
+supermovetime = 999999
+ignorehitpause = 1
+;--------------------------------------
+
 
 ;---------------------------------------------------------------------------------
 ;X方向速度
 ;---------------------------------------------------------------------------------
 [State -3]
 Type = varset
-trigger1 = Facing != EnemyNear,Facing
 Trigger1 = !MoveContact &&  EnemyNear,MoveType != H
 Trigger1 = fvar(14) != EnemyNear,Vel x
 fvar(14) = EnemyNear,Vel x
-ignorehitpause = 1
-
-[State -3]
-Type = varset
-trigger1 = Facing = EnemyNear,Facing
-Trigger1 = !MoveContact &&  EnemyNear,MoveType != H
-Trigger1 = fvar(14) != EnemyNear,Vel x
-fvar(14) = -EnemyNear,Vel x
 ignorehitpause = 1
 
 [State -3]
@@ -99,6 +231,13 @@ fvar(16) = IfElse(Facing > 0, Helper(33002),rootdist x, Helper(33001),rootdist x
 Type = VarSet
 Trigger1 = RoundState = 1
 var(16) = 90
+
+[State -2]
+Type = VarAdd
+Trigger1 = RoundState = 2
+Trigger1 = StateNo = 5120 && AnimTime = -1
+Trigger1 = var(11)/100 = [200,499]
+var(16) = 180
 
 [State -2]
 Type = VarAdd
@@ -793,8 +932,8 @@ IgnoreHitPause = 1
 
 [State -2, クリップボード（追加専用）]
 type = AppendToClipboard
-trigger1 = 1
-text = "DD=%d, V35=%d, P2G=%d, P2Y=%d, DDist=%d"
+trigger1 = !isHelper
+text = "DD=%d, V35=%d, P2G=%d, P2Y=%d, GD=%d"
 params = var(56), var(35), fvar(15),EnemyNear,Pos Y,PlayerId((Helper(33333333),var(3))),p2bodydist x
 IgnoreHitPause = 1
 

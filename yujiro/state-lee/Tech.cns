@@ -440,6 +440,18 @@ type = TargetState
 trigger1 = AnimElem = 3
 value = 666
 
+[State 800, 無敵]
+type = NotHitBy
+trigger1  = 1
+value = SCA,AA,AT,AP
+time = 1
+
+[State -2]
+type = CtrlSet
+triggerall = !Win
+trigger1 = AnimTime = -1
+value = 1
+
 [State 801, ステート変更]
 type = ChangeState
 trigger1 = (StateType != A) && (AnimTime = 0)

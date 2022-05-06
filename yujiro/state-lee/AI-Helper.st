@@ -1,3 +1,222 @@
+[Statedef 33334]
+
+[State -2]
+type=selfstate
+trigger1=!ishelper
+value=0
+
+[State -2]
+Type = AssertSpecial
+Trigger1 = IsHelper
+flag = invisible
+
+[State -2]
+Type = NotHitBy
+Trigger1 = 1
+Value = SCA
+Time = 1
+IgnoreHitPause = 1
+
+[State -2]
+Type = Varset
+trigger1 = 1
+var(59) = 0
+
+
+[State -2]
+Type = Varset
+Triggerall = EnemyNear,MoveType != H
+Triggerall = var(0) = 0
+;
+Trigger1 = Root,StateNo = 250
+Trigger1 = Root,AnimElemTime(5) > 1
+Trigger1 = root,var(11) = [25061,25069]
+;
+Trigger2 = Root,StateNo = 430
+Trigger2 = Root,AnimElemTime(3) > 1
+Trigger2 = root,var(11) = [43061,43069]
+;
+Trigger3 = Root,StateNo = 270
+Trigger3 = Root,AnimElemTime(6) > 1
+Trigger3 = root,var(11) = [27061,27069]
+;
+Trigger4 = Root,StateNo = 210
+Trigger4 = Root,AnimElemTime(5) > 1
+Trigger4 = root,var(11) = [21061,21069]
+;
+Trigger5 = Root,StateNo = 230
+Trigger5 = Root,AnimElemTime(2) > 1
+Trigger5 = root,var(11) = [23061,23069]
+;
+v = 0
+value = EnemyNear,StateNo
+IgnoreHitPause = 1
+
+[State -2]
+Type = Varset
+Triggerall = EnemyNear,MoveType != H
+Triggerall = var(0) != EnemyNear,StateNo
+Triggerall = var(1) = 0
+;
+Trigger1 = Root,StateNo = 250
+Trigger1 = Root,AnimElemTime(5) > 1
+Trigger1 = root,var(11) = [25061,25069]
+;
+Trigger2 = Root,StateNo = 430
+Trigger2 = Root,AnimElemTime(3) > 1
+Trigger2 = root,var(11) = [43061,43069]
+;
+Trigger3 = Root,StateNo = 270
+Trigger3 = Root,AnimElemTime(6) > 1
+Trigger3 = root,var(11) = [27061,27069]
+;
+Trigger4 = Root,StateNo = 210
+Trigger4 = Root,AnimElemTime(5) > 1
+Trigger4 = root,var(11) = [21061,21069]
+;
+Trigger5 = Root,StateNo = 230
+Trigger5 = Root,AnimElemTime(2) > 1
+Trigger5 = root,var(11) = [23061,23069]
+;
+v = 1
+value = EnemyNear,StateNo
+IgnoreHitPause = 1
+
+[State -2]
+Type = Varset
+Triggerall = EnemyNear,MoveType != H
+Triggerall = var(0) != EnemyNear,StateNo
+Triggerall = var(1) != EnemyNear,StateNo
+Triggerall = var(2) = 0
+;
+Trigger1 = Root,StateNo = 250
+Trigger1 = Root,AnimElemTime(5) > 1
+Trigger1 = root,var(11) = [25061,25069]
+;
+Trigger2 = Root,StateNo = 430
+Trigger2 = Root,AnimElemTime(3) > 1
+Trigger2 = root,var(11) = [43061,43069]
+;
+Trigger3 = Root,StateNo = 270
+Trigger3 = Root,AnimElemTime(6) > 1
+Trigger3 = root,var(11) = [27061,27069]
+;
+Trigger4 = Root,StateNo = 210
+Trigger4 = Root,AnimElemTime(5) > 1
+Trigger4 = root,var(11) = [21061,21069]
+;
+Trigger5 = Root,StateNo = 230
+Trigger5 = Root,AnimElemTime(2) > 1
+Trigger5 = root,var(11) = [23061,23069]
+;
+v = 2
+value = EnemyNear,StateNo
+IgnoreHitPause = 1
+
+[State -2]
+Type = Varset
+Triggerall = EnemyNear,MoveType != H
+Triggerall = var(0) != EnemyNear,StateNo
+Triggerall = var(1) != EnemyNear,StateNo
+Triggerall = var(2) != EnemyNear,StateNo
+Triggerall = var(3) = 0
+;
+Trigger1 = Root,StateNo = 250
+Trigger1 = Root,AnimElemTime(5) > 1
+Trigger1 = root,var(11) = [25061,25069]
+;
+Trigger2 = Root,StateNo = 430
+Trigger2 = Root,AnimElemTime(3) > 1
+Trigger2 = root,var(11) = [43061,43069]
+;
+Trigger3 = Root,StateNo = 270
+Trigger3 = Root,AnimElemTime(6) > 1
+Trigger3 = root,var(11) = [27061,27069]
+;
+Trigger4 = Root,StateNo = 210
+Trigger4 = Root,AnimElemTime(5) > 1
+Trigger4 = root,var(11) = [21061,21069]
+;
+Trigger5 = Root,StateNo = 230
+Trigger5 = Root,AnimElemTime(2) > 1
+Trigger5 = root,var(11) = [23061,23069]
+;
+v = 3
+value = EnemyNear,StateNo
+IgnoreHitPause = 1
+
+[State -2]
+Type = Varset
+Triggerall = EnemyNear,MoveType != H
+Triggerall = var(0) != EnemyNear,StateNo
+Triggerall = var(1) != EnemyNear,StateNo
+Triggerall = var(2) != EnemyNear,StateNo
+Triggerall = var(3) != EnemyNear,StateNo
+Triggerall = var(4) = 0
+;
+Trigger1 = Root,StateNo = 250
+Trigger1 = Root,AnimElemTime(5) > 1
+Trigger1 = root,var(11) = [25061,25069]
+;
+Trigger2 = Root,StateNo = 430
+Trigger2 = Root,AnimElemTime(3) > 1
+Trigger2 = root,var(11) = [43061,43069]
+;
+Trigger3 = Root,StateNo = 270
+Trigger3 = Root,AnimElemTime(6) > 1
+Trigger3 = root,var(11) = [27061,27069]
+;
+Trigger4 = Root,StateNo = 210
+Trigger4 = Root,AnimElemTime(5) > 1
+Trigger4 = root,var(11) = [21061,21069]
+;
+Trigger5 = Root,StateNo = 230
+Trigger5 = Root,AnimElemTime(2) > 1
+Trigger5 = root,var(11) = [23061,23069]
+;
+v = 4
+value = EnemyNear,StateNo
+IgnoreHitPause = 1
+
+[State -2]
+Type = Varset
+Triggerall = EnemyNear,StateNo != 0
+Trigger1 = EnemyNear,StateNo = var(0)
+Trigger2 = EnemyNear,StateNo = var(1)
+Trigger3 = EnemyNear,StateNo = var(2)
+Trigger4 = EnemyNear,StateNo = var(3)
+Trigger5 = EnemyNear,StateNo = var(4)
+var(59) = 1
+
+
+[State -2]
+type = Varset
+trigger1 = RoundState != 2
+var(11) = 0
+
+[State -2]
+type = Varset
+trigger1 = EnemyNear,StateNo = 2229 && EnemyNear,MoveType = H
+var(11) = 1 
+
+
+[State -2]
+type = DisplayToClipboard
+trigger1 = 1
+text = "v0=%d v1=%d v2=%d v3=%d v59=%d"
+params = var(0),var(1),var(2),var(3),var(59)
+IgnoreHitPause = 1
+
+
+
+
+
+
+
+
+
+
+
 [Statedef 33000]
 
 [State 33000]
@@ -1301,9 +1520,6 @@ trigger10 = var(4) := (var(3)-10)
 ignorehitpause = 1
 
 
-
-
- 
 [State 33333333, BindToRoot]
 type = BindToRoot
 trigger1 = PlayerIdExist(Root,ID)

@@ -211,6 +211,12 @@ trigger1 = (Time = 11)
 value = 0,11
 channel = 1
 
+[State -2]
+type = CtrlSet
+triggerall = !Win
+trigger1 = AnimTime = -1
+value = 1
+
 
 ;***********************************
 [State 1000, ステート変更]
@@ -481,6 +487,12 @@ value = 1004
 [State 1004, screenbound]
 type = screenbound
 trigger1 = 1
+value = 1
+
+[State -2]
+type = CtrlSet
+triggerall = !Win
+trigger1 = AnimTime = -1
 value = 1
 
 
@@ -2024,6 +2036,13 @@ type = PlaySnd
 trigger1 = Time = 1
 value = 0,21
 
+[State -2]
+type = CtrlSet
+triggerall = !Win
+trigger1 = Time = 14
+value = 1
+
+
 ;***********************************
 [State 1011, ステート変更]
 type = ChangeState
@@ -2177,6 +2196,12 @@ ownpal = 1
 IgnoreHitPause = 1
 Persistent = 0
 ID = 3021
+
+[State -2]
+type = CtrlSet
+triggerall = !Win
+trigger1 = AnimTime = -1
+value = 1
 
 [State 1015, ステート変更]
 type = ChangeState
@@ -2570,6 +2595,12 @@ invertall = 1
 type = TargetBind
 trigger1 = AnimElemTime(2) < 0
 pos = 10, -80  ;自分の軸位置から相手の軸をX=28・Y=0の位置にする
+
+[State -2]
+type = CtrlSet
+triggerall = !Win
+trigger1 = AnimTime = -1
+value = 1
 
 [State 801, ステート変更]
 type = ChangeState

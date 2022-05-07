@@ -1164,27 +1164,6 @@ Trigger14 = var(10) := ifelse(Fvar(25)>=180,3,-3)
 Trigger14 = var(50) := 140014
 
 
-[State -1, 升龙]
-type = changestate
-value = 1100
-triggerall = AIlevel && NumEnemy
-triggerall = roundstate = 2 && statetype != A
-;空振切返
-trigger1 = ((stateno = [200, 299]) && time <= 2) || (stateno = 200 || stateno = 230 || stateno = 245)
-Trigger1 = EnemyNear,StateType != A
-Trigger1 = (EnemyNear,Time*3 < (-EnemyNear,AnimTime)*2)
-Trigger1 = EnemyNear,MoveType = A
-Trigger1 = EnemyNear,StateNo >= 1000
-Trigger1 = EnemyNear,Time >= 4
-Trigger1 = P2bodydist x - fvar(21)*4 < 50
-Trigger1 = var(50) := 110071
-;连段用
-Trigger2 = EnemyNear,StateType = A
-Trigger2 = EnemyNear,MoveType = H && EnemyNear,StateNo >= 5000
-Trigger2 = StateNo = 210 && MoveHit
-Trigger2 = P2BodyDist x < 30
-Trigger2 = var(50) := 110072
-
 [State -1, 空振打精防用]
 type = changestate
 triggerall = AIlevel && NumEnemy
@@ -4481,6 +4460,7 @@ trigger1 = Random < (20 + 210*(!(var(46) & 32) && (P2MoveType = A))) * (AIlevel 
 Trigger1 = !inguarddist || (EnemyNear,MoveType = A && EnemyNear,Time < -EnemyNear,AnimTime)
 trigger1 = var(50) := 100001
 ;Hit and Combo
+Trigger2 = EnemyNear,MoveType = H
 trigger2 = (Ctrl || StateNo = 21) && (NumHelper(1005) || NumHelper(1025))
 trigger2 = Helper,var(3)
 trigger2 = (P2bodydist x = [70,160]) && P2Statetype != A && P2Movetype = H
@@ -4492,8 +4472,10 @@ trigger3 = (stateno = [205, 213]) || StateNo=235 || (StateNo=214 && Animelemtime
 trigger3 = stateno != 207 && MoveContact = 1 && P2Bodydist x > (11 + 14*(var(1)>1))
 trigger3 = !(StateNo = 212 && Animelemtime(7)<0) && !(StateNo=214 && Animelemtime(3)<0)
 trigger3 = Random < ((700 + 200*movehit) * (AIlevel ** 2 / 64.0))
+Trigger3 = EnemyNear,MoveType = H
 trigger3 = var(50) := 100003
 ;Tasu Combo
+Trigger4 = EnemyNear,MoveType = H
 trigger4 = (Ctrl || StateNO=21) && Numtarget(3120)
 trigger4 = (Time = 0 && P2Bodydist x > 110 && Enemynear,BackEdgeBodyDist >= 10) || (Time = 10 && (P2Bodydist x = [50,110]) && Enemynear,BackEdgeBodyDist < 10)
 trigger4 = Random < 800 * (AIlevel ** 2 / 64.0)
@@ -4545,11 +4527,54 @@ triggerall = var(59) = 0
 triggerall = (p2bodydist x = [-11, 50]) && (p2bodydist y = [ -50, 50]) && p2statetype = S && !(enemynear, hitfall)
 triggerall = (enemynear, const(size.head.pos.y) <= -40) || (enemynear, statetype = A)
 triggerall = !(P2StateNo = [5100,5499]) || var(59)
+trigger1 = EnemyNear,Life < Life
 trigger1 = ctrl && random < (65 * (AIlevel ** 2 / 64.0))
 trigger1 = var(50) := 020501
 trigger2 = ctrl && (NumTarget(200) || NumTarget(201)) && Time<3
 trigger2 = random < (600 * (AIlevel ** 2 / 64.0))
 trigger2 = var(50) := 020502
+
+[State -3, 远轻拳]
+Type = ChangeState
+triggerall = AIlevel && numenemy
+triggerall = ctrl || stateno = 21 || (stateno = [99,101]) || (StateNo = [120,149])
+triggerall = statetype != A && roundstate = 2
+triggerall = var(59) = 0
+TriggerAll = !IsHelper
+TriggerAll = StateType != A
+TriggerAll = !PlayerIdExist(Helper(33333333),var(3)) || abs(PlayerId(Helper(33333333),var(3)),P2BodyDist x) > 50
+TriggerAll = EnemyNear,Facing != Facing
+;一段抢空
+Trigger1 = (EnemyNear,MoveType = A && EnemyNear,Time < 2) || EnemyNear,MoveType = I || EnemyNear,MoveType = H
+Trigger1 = EnemyNear,StateType = A
+Trigger1 = P2BodyDist x - fvar(11) * 2 = [5,49]
+Trigger1 = EnemyNear,pos y + EnemyNear,Vel Y * 2 + fvar(12) * 2 * (2 + 1) / 2 = [-55,-25]
+Trigger1 = var(50) := 020031
+;对地面立回
+Trigger2 = EnemyNear,MoveType = I || EnemyNear,CTRL  
+Trigger2 = EnemyNear,StateType = S
+Trigger2 = P2BodyDist x = [-5,42]
+trigger2 = random < 500
+Trigger2 = var(50) := 020032
+Value = 200
+
+[State -1, CLP]
+type = changestate
+value = 230
+triggerall = AIlevel && numenemy
+triggerall = statetype != A && roundstate = 2
+triggerall = var(59) = 0
+triggerall = (p2bodydist x = [-11, 41]) && (p2bodydist y = [ -50, 50]) && p2statetype != L && p2statetype != A && !(enemynear, hitfall)
+triggerall = P2MoveType != H && (Enemynear,P2Dist x > 0)
+triggerall = !(P2StateNo = [5100,5499]) || var(59)
+;
+trigger1 = ctrl || stateno = 21 || (stateno = [99,101]) || (StateNo = [120,149])
+trigger1 = random < 300
+trigger1 = var(50) := 023001
+;
+trigger2 = stateno = 200 && (movehit = [1, 16])
+trigger2 = random < (100 * (AIlevel ** 2 / 64.0))
+trigger2 = var(50) := 023002
 
 [State -1, SMK]
 type = changestate
@@ -4595,7 +4620,7 @@ triggerall = !(P2StateNo = [5100,5499]) || (P2StateNo = [5300,5339])
 trigger1 = Ctrl || StateNo=21 || (StateNo=100 && P2Bodydist x < 25)
 trigger1 = (p2bodydist x = [-5,46]) && (p2dist y = [-60,0]) && Enemynear,vel y > -2
 trigger1 = Ifelse(P2StateType=A && P2MoveType=A,0,1)
-trigger1 = Random < ((20 + 200*(Var(1)>1 || P2bodydist x<26)) * (AIlevel ** 2 / 64.0))
+trigger1 = Random < ((20 + 50*(Var(1)>1 || P2bodydist x<26)) * (AIlevel ** 2 / 64.0))
 trigger1 = var(50) := 021001
 
 [State -1, SHP for Tasks]
@@ -4625,30 +4650,6 @@ trigger3 = var(59) = 1310 && NumTarget(1310) && P2Bodydist x < 25
 trigger3 = (((Target(1310),Pos x - pos x) * facing) - Const(Size.ground.front) - IFElse(Target(1310),facing = facing,Target(1310),Const(Size.ground.back),Target(1310),Const(Size.ground.front))) = [-20,25]
 trigger3 = ((Target(1310),pos y - pos y) + (Target(1310),vel y * 4)) = [-32,-10]
 trigger3 = var(50) := 021083
-
-[State -3, 远轻拳]
-Type = ChangeState
-triggerall = AIlevel && numenemy
-triggerall = ctrl || stateno = 21 || (stateno = [99,101]) || (StateNo = [120,149])
-triggerall = statetype != A && roundstate = 2
-triggerall = var(59) = 0
-TriggerAll = !IsHelper
-TriggerAll = StateType != A
-TriggerAll = !PlayerIdExist(Helper(33333333),var(3)) || abs(PlayerId(Helper(33333333),var(3)),P2BodyDist x) > 50
-TriggerAll = EnemyNear,Facing != Facing
-;一段抢空
-Trigger1 = (EnemyNear,MoveType = A && EnemyNear,Time < 2) || EnemyNear,MoveType = I || EnemyNear,MoveType = H
-Trigger1 = EnemyNear,StateType = A
-Trigger1 = P2BodyDist x - fvar(11) * 2 = [5,49]
-Trigger1 = EnemyNear,pos y + EnemyNear,Vel Y * 2 + fvar(12) * 2 * (2 + 1) / 2 = [-55,-25]
-Trigger1 = var(50) := 020031
-;对地面立回
-Trigger2 = EnemyNear,MoveType = I || enemynear,CTRL 
-Trigger2 = EnemyNear,StateType = S
-Trigger2 = P2BodyDist x = [5,42]
-trigger2 = random < (100 * (AIlevel ** 2 / 64.0))
-Trigger2 = var(50) := 020032
-Value = 200
 
 [State -1, SMK2]
 type = changestate
@@ -4681,7 +4682,6 @@ trigger4 = P2StateType != A && !(Enemynear,Ctrl)
 trigger4 = P2Bodydist x < 80
 trigger4 = var(50) := 022204
 
-
 [State -1, SHK]
 type = changestate
 value = 225
@@ -4695,23 +4695,6 @@ triggerall = !(P2StateNo = [5100,5499]) || var(59)
 trigger1 = ctrl && (P2Bodydist x =[40,59])
 trigger1 = random < (40 * (AIlevel ** 2 / 64.0))
 trigger1 = var(50) := 022501
-
-[State -1, CLP]
-type = changestate
-value = 230
-triggerall = AIlevel && numenemy
-triggerall = statetype != A && roundstate = 2
-triggerall = var(59) = 0
-triggerall = (p2bodydist x = [-11, 41]) && (p2bodydist y = [ -50, 50]) && p2statetype != L && p2statetype != A && !(enemynear, hitfall)
-triggerall = P2MoveType != H && (Enemynear,P2Dist x > 0)
-triggerall = !(Enemynear,P2dist x < 5)
-triggerall = !(P2StateNo = [5100,5499]) || var(59)
-trigger1 = ctrl || stateno = 21 || (stateno = [99,101]) || (StateNo = [120,149])
-trigger1 = random < (100 + 100* !(Enemynear,Ctrl||StateNo=21) + 100 * (Enemynear,vel x >1)) * (AIlevel ** 2 / 64.0)
-trigger1 = var(50) := 023001
-trigger2 = stateno = 200 && (movehit = [1, 16])
-trigger2 = random < (100 * (AIlevel ** 2 / 64.0))
-trigger2 = var(50) := 023002
 
 [State -1, CMP]
 type = changestate
@@ -4774,13 +4757,13 @@ value = 255
 triggerall = AIlevel && numenemy
 triggerall = var(59) = 0
 triggerall = statetype != A && roundstate = 2 && (StateNo != [700,701])
-triggerall = (p2bodydist x = [35, 56]) && (p2bodydist y = [ -50, 50]) && p2statetype != L
+triggerall = (p2bodydist x = [45, 56]) && (p2bodydist y = [ -50, 50]) && p2statetype != L
 triggerall = !(P2StateNo = [5100,5499]) || var(59)
 trigger1 = (Ctrl || StateNo = 21 || StateNo = 100) && !(enemynear, hitfall) && p2statetype = S
 trigger1 = Random < ((160 - 160*(vel x < 0) + 100*(StateType = C) + 300*(PrevStateNo=52 && !(Enemynear,Ctrl))) * (AIlevel ** 2 / 64.0))
 trigger1 = var(50) := 025501
 trigger2 = (Ctrl || StateNo = 21 || StateNo = 100) && NumTarget(245)
-trigger2 = random < 480 * (AIlevel ** 2 / 64.0)
+trigger2 = random < 50 * (AIlevel ** 2 / 64.0)
 trigger2 = var(50) := 025502
 trigger3 = (Ctrl || StateNo = 21 || StateNo = 100) && NumTarget(1250)
 trigger3 = (P2Dist y + (Target,vel y * 9)) = [-14,-1]
@@ -4799,7 +4782,7 @@ triggerall = !(P2StateNo = [5100,5499]) || var(59)
 trigger1 = (Ctrl || StateNo=21 || StateNo=100)
 trigger1 = EnemyNear,MoveType != A
 trigger1 = !(Enemynear,Anim=5300) && !(!(Enemynear,ctrl) && P2MoveType = I && (P2StateNo = [1000,4999]) && Enemynear,time > 60)
-trigger1 = Random < ((95 + 280*(P2StateNo<1000 && P2StateType=S && !(Enemynear,Ctrl||StateNo=21) && Enemynear,time < 2)) * (AIlevel ** 2 / 64.0))
+trigger1 = Random < ((50 + 50*(P2StateNo<1000 && P2StateType=S && !(Enemynear,Ctrl||StateNo=21) && Enemynear,time < 2)) * (AIlevel ** 2 / 64.0))
 trigger1 = var(50) := 025001
 ;Have Target
 trigger2 = (Ctrl || StateNo = 21) && time < 2
@@ -5118,7 +5101,6 @@ trigger1 = AnimElemTime(3)>0 && MoveHit
 trigger1 = stateno = 1100 && EnemyNear,StateType = A
 trigger1 = var(50) := 320061
 
-
 [State -1, 1气波，兜底连段用]
 type = changestate
 value = 3000
@@ -5131,3 +5113,20 @@ Triggerall = EnemyNear,StateNo >= 5000 && EnemyNear,MoveType = H
 trigger1 = EnemyNear,Life < 180
 trigger1 = stateno = 1300 && EnemyNear,StateType = A && MoveHit
 trigger1 = var(50) := 320061
+
+[State -3, 轻拳/蹲轻拳立回兜底]
+Type = ChangeState
+triggerall = AIlevel && numenemy
+triggerall = ctrl || stateno = 21 || (stateno = [99,101]) || (StateNo = [120,149])
+triggerall = statetype != A && roundstate = 2
+triggerall = var(59) = 0
+TriggerAll = !IsHelper
+TriggerAll = StateType != A
+Triggerall = EnemyNear,StateType != A
+TriggerAll = !PlayerIdExist(Helper(33333333),var(3)) || abs(PlayerId(Helper(33333333),var(3)),P2BodyDist x) > 50
+TriggerAll = EnemyNear,Facing != Facing
+;对地面立回
+Trigger1 = EnemyNear,MoveType = I || EnemyNear,CTRL  
+Trigger1 = P2BodyDist x = [-5,30]
+Trigger1 = var(50) := 020092
+Value = 200 + ifelse(EnemyNear,StateType = S, 0, 30)

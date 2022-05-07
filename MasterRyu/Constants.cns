@@ -4,7 +4,7 @@
 ;===================<CONSTANTS>================
 
 [Data]
-life = 1240
+life = 1000
 power = 5000
 attack = 100
 defence = 100

@@ -18,11 +18,11 @@
 
 ## 金家潘(Kim) 
 ![Kim](https://github.com/zinclee123/mugen_chars/blob/master/Resources/kim.gif)  
-98+02UM+Mow混合金家潘
-AI补丁，原人物请自行下载
-对战演示视频: 
-https://www.bilibili.com/video/BV1Tg411d7RS/
-https://www.bilibili.com/video/BV1jL4y1K76V/
+98+02UM+Mow混合金家潘   
+AI补丁，原人物请自行下载   
+对战演示视频:    
+https://www.bilibili.com/video/BV1Tg411d7RS/   
+https://www.bilibili.com/video/BV1jL4y1K76V/   
 
 ## K'
 ![K Dash](https://github.com/zinclee123/mugen_chars/blob/master/Resources/KDash.gif)  

@@ -1,0 +1,1141 @@
+
+;================================================
+;=======  helper state set for preinput  ========
+;================================================
+
+[statedef 10002]
+anim = 9999
+ctrl = 0
+
+[state 1]
+type = nothitby
+value = SCA
+trigger1 = 1
+
+;[state ]
+;type = turn
+;trigger1 = root,p2bodydist x < -5
+;trigger1 = facing = root,facing
+;trigger2 = root,p2bodydist x >= -5
+;trigger2 = facing != root,facing
+;ignorehitpause = 1
+
+
+[state ]
+type = turn
+trigger1 = root,p2dist x < 0
+trigger1 = facing = root,facing
+trigger2 = root,p2dist x >= 0
+trigger2 = facing != root,facing
+ignorehitpause = 1
+
+[state 1]
+type = posset
+x = -150
+;y = -100
+trigger1 = 1
+
+;-------------------
+;------ test -------
+;-------------------
+
+[state -1]
+type = displaytoclipboard
+trigger1 = 1
+text = "helper(10002),var(3) %d"
+params = (helper(10002),var(3))
+
+;===================================================
+;=======  1. hvar(1) set for input 100,105  ========
+;===================================================
+
+[state 1]
+type = varset
+var(1) = 0
+triggerall = root,var(59) = 0
+trigger1 = command = "holddown"
+trigger2 = command = "holdup"
+trigger3 = command = "a"
+trigger4 = command = "b"
+trigger5 = command = "c"
+trigger6 = command = "x"
+trigger7 = command = "y"
+trigger8 = command = "z"
+trigger9 = command = "start"
+;trigger10 = root,ctrl && root,time > 1
+ignorehitpause = 1
+
+[state 1]
+type = varset
+var(1) = 1
+triggerall = root,var(59) = 0
+triggerall = root,movetype != H
+triggerall = command = "FF"
+;------------------------------------------
+trigger1 = root,statetype = A
+trigger1 = root,vel y >= 0
+;------------------------------------------
+trigger2 = root,statetype != A
+trigger2 = root,movetype = A
+trigger2 = root,animtime >= -7
+;------------------------------------------
+trigger3 = root,stateno = [105,106]
+;------------------------------------------
+ignorehitpause = 1
+
+[state 1]
+type = varset
+var(1) = 2
+triggerall = root,var(59) = 0
+triggerall = root,movetype != H
+triggerall = command = "BB"
+;------------------------------------------
+trigger1 = root,statetype = A
+trigger1 = root,vel y >= 0
+;------------------------------------------
+trigger2 = root,statetype != A
+trigger2 = root,movetype = A
+trigger2 = root,animtime >= -7
+;------------------------------------------
+ignorehitpause = 1
+
+;===============================================
+;=======  2. hvar(2) set for previnput  ========
+;===============================================
+
+;------------------------------------
+;------ 2.1 5a,5b,5c,5x,5y,5z -------
+;------------------------------------
+
+[state 1]
+type = varset
+var(2) = 0
+trigger1 = root,stateno != 52
+
+[state ]
+type = null;varset
+triggerall = root,stateno = 52
+;----------------------------------------------------------
+trigger1 = root,command = "a" && root,command != "holddown"
+trigger1 = var(2) := 210
+;----------------------------------------------------------
+trigger2 = root,command = "b" && root,command != "holddown"
+trigger2 = var(2) := 230
+;----------------------------------------------------------
+trigger3 = root,command = "c" && root,command != "holddown"
+trigger3 = var(2) := 300
+;----------------------------------------------------------
+trigger4 = root,command = "x" && root,command != "holddown"
+trigger4 = var(2) := 200
+;----------------------------------------------------------
+trigger5 = root,command = "y" && root,command != "holddown"
+trigger5 = var(2) := 225
+;----------------------------------------------------------
+trigger6 = root,command = "z" && root,command != "holddown"
+trigger6 = var(2) := 361
+;----------------------------------------------------------
+trigger7 = root,command = "a" && root,command = "holddown"
+trigger7 = var(2) := 410
+;----------------------------------------------------------
+trigger8 = root,command = "b" && root,command = "holddown"
+trigger8 = var(2) := 430
+;----------------------------------------------------------
+trigger9 = root,command = "x" && root,command = "holddown"
+trigger9 = var(2) := 400
+;----------------------------------------------------------
+trigger10 = root,command = "y" && root,command = "holddown"
+trigger10 = var(2) := 420
+;----------------------------------------------------------
+trigger11 = root,command = "z"
+trigger11 = root,command = "holddown"
+trigger11 = root,command = "holdback"
+trigger11 = var(2) := 360
+;----------------------------------------------------------
+
+;----------------------------------------------------------
+
+;mark
+;[state 1]
+;type = varset
+;var(2) = 9
+;triggerall = root,vel y > 0
+;triggerall = root,pos y > -60
+;trigger1 = root,command = "c"
+;trigger1 = root,command = "holddown"
+
+;============================================================
+;========  hvar(3) set for supercancel [2000,2300]  =========
+;============================================================
+[state ]
+type = varset
+var(3) = 0
+trigger1 = root,stateno != 40
+trigger1 = root,stateno != 50
+trigger1 = root,stateno != 950
+
+[state ]
+type = null;varset
+triggerall = root,stateno = 40 || root,stateno = 50 || root,stateno = 950
+;-----------------------------
+trigger1 = root,command = "x"
+trigger1 = var(3) := 600
+;-----------------------------
+trigger2 = root,command = "y"
+trigger2 = var(3) := 620
+;-----------------------------
+trigger3 = root,command = "a"
+trigger3 = var(3) := 610
+;-----------------------------
+trigger4 = root,command = "b"
+trigger4 = var(3) := 630
+;-----------------------------
+trigger5 = root,command = "y"
+trigger5 = root,command = "holddown"
+trigger5 = var(3) := 621
+;-----------------------------
+trigger6 = root,command = "a"
+trigger6 = root,command = "holdback"
+trigger6 = var(3) := 625
+;-----------------------------
+trigger7 = root,command = "b"
+trigger7 = root,command = "holddown"
+trigger7 = var(3) := 636
+;-----------------------------
+trigger8 = root,command = "c"
+trigger8 = var(3) := 640
+;-----------------------------
+
+
+;================================================
+;========  hvar(4) set for SuperCancel  =========
+;================================================
+
+[state ]
+type = null;varset
+triggerall = root,stateno != 1102
+triggerall = var(4) = 0
+;------------------------------
+trigger1 = root,statetype != A
+trigger1 = root,stateno != [1020,1027]
+trigger1 = root,stateno != 1602
+trigger1 = root,stateno != 1607
+trigger1 = root,command = "Oriuken Corto"
+trigger1 = var(4) := 1
+;------------------------------
+trigger2 = root,statetype != A
+trigger2 = root,stateno != [1020,1027]
+trigger2 = root,stateno != 1602
+trigger2 = root,stateno != 1607
+trigger2 = root,command = "Oriuken Largo"
+trigger2 = var(4) := 2
+;------------------------------
+trigger3 = root,statetype != A
+trigger3 = root,stateno != [1100,1106]
+trigger3 = root,command = "Kuusajin 1"
+trigger3 = var(4) := 3
+;------------------------------
+trigger4 = root,statetype != A
+trigger4 = root,stateno != [1100,1106]
+trigger4 = root,command = "Kuusajin 2"
+trigger4 = var(4) := 4
+;------------------------------
+trigger5 = root,statetype != A
+trigger5 = root,stateno != [1200,1207]
+trigger5 = root,command = "Giro Patada Debil"
+trigger5 = var(4) := 5
+;------------------------------
+trigger6 = root,statetype != A
+trigger6 = root,stateno != [1200,1207]
+trigger6 = root,command = "Giro Patada Fuerte"
+trigger6 = var(4) := 6
+;------------------------------
+trigger7 = root,statetype != A
+trigger7 = root,stateno != [1450,1465]
+trigger7 = root,command = "Patada KOF-98"
+trigger7 = var(4) := 7
+;------------------------------
+trigger8 = root,statetype = A
+trigger8 = root,stateno != [1300,1305]
+trigger8 = root,command = "Hishou 1"
+trigger8 = var(4) := 8
+;------------------------------
+trigger9 = root,statetype = A
+trigger9 = root,stateno != [1300,1305]
+trigger9 = root,command = "Hishou 2"
+trigger9 = var(4) := 9
+;------------------------------
+trigger10 = root,statetype != A
+trigger10 = root,stateno != [1600,1609]
+trigger10 = root,command = "Traba Corta"
+trigger10 = var(4) := 10
+;------------------------------
+trigger11 = root,statetype != A
+trigger11 = root,stateno != [1600,1609]
+trigger11 = root,command = "Traba Larga"
+trigger11 = var(4) := 11
+;------------------------------
+trigger12 = root,statetype != A
+trigger12 = root,stateno != [1500,1501]
+trigger12 = root,command = "Pisoton Debil"
+trigger12 = var(4) := 12
+;------------------------------
+trigger13 = root,statetype != A
+trigger13 = root,stateno != [1500,1501]
+trigger13 = root,command = "Pisoton Fuerte"
+trigger13 = var(4) := 13
+;------------------------------
+ignorehitpause = 1
+
+
+[state ]
+type = varset
+var(4) = 0
+trigger1 = var(4) = 1
+trigger1 = root,stateno = 1020
+;------------------------------
+trigger2 = var(4) = 2
+trigger2 = root,stateno = 1025
+;------------------------------
+trigger3 = var(4) = 3
+trigger3 = root,stateno = 1100
+;------------------------------
+trigger4 = var(4) = 4
+trigger4 = root,stateno = 1105
+;------------------------------
+trigger5 = var(4) = 5
+trigger5 = root,stateno = 1200
+;------------------------------
+trigger6 = var(4) = 6
+trigger6 = root,stateno = 1205
+;------------------------------
+trigger7 = var(4) = 7
+trigger7 = root,stateno = 1450
+;------------------------------
+trigger8 = var(4) = 8
+trigger8 = root,stateno = 1305
+;------------------------------
+trigger9 = var(4) = 9
+trigger9 = root,stateno = 1300
+;------------------------------
+trigger10 = var(4) = 10
+trigger10 = root,stateno = 1600
+;------------------------------
+trigger11 = var(4) = 11
+trigger11 = root,stateno = 1605
+;------------------------------
+trigger12 = var(4) = 12
+trigger12 = root,stateno = 1500
+;------------------------------
+trigger13 = var(4) = 13
+trigger13 = root,stateno = 1501
+;------------------------------
+trigger14 = root,ctrl
+ignnorehitpause = 1
+
+
+;=======================================================
+;=======  5. hvar(5) set for input 1470 ~ 1471  ========
+;=======================================================
+[state 5]
+type = varset
+var(5) = 1
+triggerall = root,command = "holddown"
+triggerall = root,command = "a" || root,command = "b"
+triggerall = root,stateno = 1470
+triggerall = root,animelem = 7,>= 0
+triggerall = root,animelem = 12,< 0
+trigger1 = root,statetype = A
+ignorehitpause = 1
+
+[state 5]
+type = varset
+var(5) = -1
+trigger1 = root,stateno != 1470
+
+;=======================================================
+;=======  6. hvar(6) set for input 1106 ~ 1027  ========
+;=======================================================
+[state 5]
+type = varset
+var(6) = 1
+triggerall = root,command = "holddown"
+triggerall = root,command = "b"
+triggerall = root,stateno = 1106
+triggerall = root,animelem = 7,>= 0
+triggerall = root,animelem = 12,< 0
+trigger1 = root,statetype = A
+ignorehitpause = 1
+
+[state 5]
+type = varset
+var(6) = -1
+trigger1 = root,stateno != 1106
+
+;=====================================================
+;=======  7. hvar(7) set for input 363 ~ 364  ========
+;=====================================================
+
+[state 5]
+type = varset
+var(7) = 1
+trigger1 = root,command = "a" || root,command = "b" || root,command = "x" || root,command = "y"
+triggerall = root,stateno = 363
+triggerall = root,animelem = 4,< 0
+ignorehitpause = 1
+
+[state 5]
+type = varset
+var(7) = -1
+trigger1 = root,stateno != 363
+
+;============================================================
+;=======  8. hvar(8) set for input 300 ~ superskill  ========
+;============================================================
+[state 5]
+type = varset
+var(8) = -1
+trigger1 = root,stateno != [300,301]
+trigger1 = root,stateno != 420
+trigger1 = root,stateno != 430
+ignorehitpause = 1
+
+[state ]
+type = null;varset
+triggerall = (root,stateno = 300 && ((root,anim = 300 && root,animelem = 4,<= 0) + (root,anim = 302 && root,animelem = 10,<= 0))) || (root,stateno = 301 && root,animelem = 7,<= 0) || ((root,stateno = 430 && root,animelem = 4,<= 0) + (root,anim = 420 && root,animelem = 5,<=0) + (root,anim = 440 && root,animelem = 7,<=0))
+triggerall = var(8) = -1
+;----------------------------------------
+trigger1 = root,command = "Patada KOF-98"
+trigger1 = var(8) := 1450
+;----------------------------------------
+trigger2 = root,command = "Oriuken Corto"
+trigger2 = var(8) := 1020
+;----------------------------------------
+trigger3 = root,command = "Oriuken Largo"
+trigger3 = var(8) := 1025
+;----------------------------------------
+trigger4 = root,command = "Kuusajin 1"
+trigger4 = var(8) := 1100
+;----------------------------------------
+trigger5 = root,command = "Kuusajin 2"
+trigger5 = var(8) := 1105
+;----------------------------------------
+trigger6 = root,command = "Giro Patada Debil"
+trigger6 = var(8) := 1200
+;----------------------------------------
+trigger7 = root,command = "Giro Patada Fuerte"
+trigger7 = var(8) := 1205
+;----------------------------------------
+trigger8 = root,command = "Traba Corta"
+trigger8 = var(8) := 1600
+;----------------------------------------
+trigger9 = root,command = "Traba Larga"
+trigger9 = var(8) := 1605
+;----------------------------------------
+trigger10 = root,command = "Pisoton Debil"
+trigger10 = var(8) := 1500
+;----------------------------------------
+trigger11 = root,command = "Pisoton Fuerte"
+trigger11 = var(8) := 1501
+;----------------------------------------
+trigger12 = root,command = "×Æ»ðÒu1"
+trigger12 = var(8) := 1800
+;----------------------------------------
+trigger13 = root,command = "×Æ»ðÒu2"
+trigger13 = var(8) := 1850
+;----------------------------------------
+ignorehitpause = 1
+
+;============================================================
+;=======  9. hvar(9) set for input 300 ~ superskill  ========
+;============================================================
+[state 5]
+type = varset
+var(9) = -1
+trigger1 = root,stateno != [1200,1207]
+ignorehitpause = 1
+
+[state ]
+type = null;varset
+triggerall = root,stateno = [1200,1207]
+triggerall = var(9) = -1
+triggerall = root,movecontact = 1
+;----------------------------------------
+trigger1 = root,command = "Patada KOF-98"
+trigger1 = var(9) := 1450
+;----------------------------------------
+trigger2 = root,command = "Oriuken Corto"
+trigger2 = var(9) := 1020
+;----------------------------------------
+trigger3 = root,command = "Oriuken Largo"
+trigger3 = var(9) := 1025
+;----------------------------------------
+trigger4 = root,command = "Kuusajin 1"
+trigger4 = var(9) := 1100
+;----------------------------------------
+trigger5 = root,command = "Kuusajin 2"
+trigger5 = var(9) := 1105
+;----------------------------------------
+trigger6 = 0
+trigger7 = 0
+;----------------------------------------
+trigger8 = root,command = "Traba Corta"
+trigger8 = var(9) := 1600
+;----------------------------------------
+trigger9 = root,command = "Traba Larga"
+trigger9 = var(9) := 1605
+;----------------------------------------
+trigger10 = root,command = "Pisoton Debil"
+trigger10 = var(9) := 1500
+;----------------------------------------
+trigger11 = root,command = "Pisoton Fuerte"
+trigger11 = var(9) := 1501
+;----------------------------------------
+trigger12 = root,command = "×Æ»ðÒu1"
+trigger12 = var(9) := 1800
+;----------------------------------------
+trigger13 = root,command = "×Æ»ðÒu2"
+trigger13 = var(9) := 1850
+;----------------------------------------
+ignorehitpause = 1
+
+;==========================================================
+;=======  10. hvar(10) set for input Hyper Cancel  ========
+;==========================================================
+[state 5]
+type = varset
+var(10) = -1
+trigger1 = root,stateno != 1455
+trigger1 = root,stateno != 1465
+trigger1 = root,stateno != 1463
+trigger1 = root,stateno != 1461
+trigger1 = root,stateno != 1470
+trigger1 = root,stateno != 1471
+trigger1 = root,stateno != 1101
+trigger1 = root,stateno != 1106
+trigger1 = root,stateno != 1601
+trigger1 = root,stateno != 1603
+trigger1 = root,stateno != 1606
+trigger1 = root,stateno != 1608
+trigger1 = root,stateno != 1850
+trigger1 = root,stateno != 1800
+trigger1 = root,stateno != 1201
+trigger1 = root,stateno != 1202
+trigger1 = root,stateno != 1206
+trigger1 = root,stateno != 1207
+trigger1 = root,stateno != 1500
+trigger1 = root,stateno != 1501
+trigger1 = root,stateno != 1021
+trigger1 = root,stateno != 1025
+trigger1 = root,stateno != 1026
+trigger1 = root,stateno != 1027
+trigger1 = root,stateno != 622
+trigger1 = root,stateno != [1300,1301]
+trigger1 = root,stateno != [1380,1381]
+ignorehitpause = 1
+
+[state 5]
+type = varset
+var(10) = 2
+triggerall = var(10) = -1
+triggerall = root,command = "down"
+trigger1 = root,stateno = 1455
+trigger2 = root,stateno = 1465
+trigger3 = root,stateno = 1463
+trigger4 = root,stateno = 1461
+trigger5 = root,stateno = 1470
+trigger6 = root,stateno = 1471
+trigger7 = root,stateno = 1101
+trigger8 = root,stateno = 1106
+trigger9 = root,stateno = 1601
+trigger10 = root,stateno = 1603
+trigger11 = root,stateno = 1606
+trigger12 = root,stateno = 1608
+trigger13 = root,stateno = 1850
+trigger14 = root,stateno = 1800
+trigger15 = root,stateno = 1201
+trigger16 = root,stateno = 1202
+trigger17 = root,stateno = 1206
+trigger18 = root,stateno = 1207
+trigger19 = root,stateno = 1500
+trigger20 = root,stateno = 1501
+trigger21 = root,stateno = 1021
+trigger22 = root,stateno = 1025
+trigger23 = root,stateno = 1026
+trigger24 = root,stateno = 1027
+trigger25 = root,stateno = 622
+trigger26 = root,stateno = [1300,1301]
+trigger27 = root,stateno = [1380,1381]
+ignorehitpause = 1
+
+[state 5]
+type = varset
+var(10) = 26
+triggerall = var(10) = 2
+triggerall = root,command = "fwd" && root,command != "down"
+trigger1 = root,stateno = 1455
+trigger2 = root,stateno = 1465
+trigger3 = root,stateno = 1463
+trigger4 = root,stateno = 1461
+trigger5 = root,stateno = 1470
+trigger6 = root,stateno = 1471
+trigger7 = root,stateno = 1101
+trigger8 = root,stateno = 1106
+trigger9 = root,stateno = 1601
+trigger10 = root,stateno = 1603
+trigger11 = root,stateno = 1606
+trigger12 = root,stateno = 1608
+trigger13 = root,stateno = 1850
+trigger14 = root,stateno = 1800
+trigger15 = root,stateno = 1201
+trigger16 = root,stateno = 1202
+trigger17 = root,stateno = 1206
+trigger18 = root,stateno = 1207
+trigger19 = root,stateno = 1500
+trigger20 = root,stateno = 1501
+trigger21 = root,stateno = 1021
+trigger22 = root,stateno = 1025
+trigger23 = root,stateno = 1026
+trigger24 = root,stateno = 1027
+trigger25 = root,stateno = 622
+trigger26 = root,stateno = [1300,1301]
+trigger27 = root,stateno = [1380,1381]
+ignorehitpause = 1
+
+[state 5]
+type = varset
+var(10) = 262
+triggerall = var(10) = 26
+triggerall = root,command = "down"
+trigger1 = root,stateno = 1455
+trigger2 = root,stateno = 1465
+trigger3 = root,stateno = 1463
+trigger4 = root,stateno = 1461
+trigger5 = root,stateno = 1470
+trigger6 = root,stateno = 1471
+trigger7 = root,stateno = 1101
+trigger8 = root,stateno = 1106
+trigger9 = root,stateno = 1601
+trigger10 = root,stateno = 1603
+trigger11 = root,stateno = 1606
+trigger12 = root,stateno = 1608
+trigger13 = root,stateno = 1850
+trigger14 = root,stateno = 1800
+trigger15 = root,stateno = 1201
+trigger16 = root,stateno = 1202
+trigger17 = root,stateno = 1206
+trigger18 = root,stateno = 1207
+trigger19 = root,stateno = 1500
+trigger20 = root,stateno = 1501
+trigger21 = root,stateno = 1021
+trigger22 = root,stateno = 1025
+trigger23 = root,stateno = 1026
+trigger24 = root,stateno = 1027
+trigger25 = root,stateno = 622
+trigger26 = root,stateno = [1300,1301]
+trigger27 = root,stateno = [1380,1381]
+ignorehitpause = 1
+
+[state 5]
+type = varset
+var(10) = 2626
+triggerall = var(10) = 262
+triggerall = root,command = "fwd"
+trigger1 = root,stateno = 1455
+trigger2 = root,stateno = 1465
+trigger3 = root,stateno = 1463
+trigger4 = root,stateno = 1461
+trigger5 = root,stateno = 1470
+trigger6 = root,stateno = 1471
+trigger7 = root,stateno = 1101
+trigger8 = root,stateno = 1106
+trigger9 = root,stateno = 1601
+trigger10 = root,stateno = 1603
+trigger11 = root,stateno = 1606
+trigger12 = root,stateno = 1608
+trigger13 = root,stateno = 1850
+trigger14 = root,stateno = 1800
+trigger15 = root,stateno = 1201
+trigger16 = root,stateno = 1202
+trigger17 = root,stateno = 1206
+trigger18 = root,stateno = 1207
+trigger19 = root,stateno = 1500
+trigger20 = root,stateno = 1501
+trigger21 = root,stateno = 1021
+trigger22 = root,stateno = 1025
+trigger23 = root,stateno = 1026
+trigger24 = root,stateno = 1027
+trigger25 = root,stateno = 622
+trigger26 = root,stateno = [1300,1301]
+trigger27 = root,stateno = [1380,1381]
+ignorehitpause = 1
+
+[state 5]
+type = varset
+var(10) = 2624
+triggerall = var(10) = 262
+triggerall = root,command = "back"
+trigger1 = root,stateno = 1455
+trigger2 = root,stateno = 1465
+trigger3 = root,stateno = 1463
+trigger4 = root,stateno = 1461
+trigger5 = root,stateno = 1470
+trigger6 = root,stateno = 1471
+trigger7 = root,stateno = 1101
+trigger8 = root,stateno = 1106
+trigger9 = root,stateno = 1601
+trigger10 = root,stateno = 1603
+trigger11 = root,stateno = 1606
+trigger12 = root,stateno = 1608
+trigger13 = root,stateno = 1850
+trigger14 = root,stateno = 1800
+trigger15 = root,stateno = 1201
+trigger16 = root,stateno = 1202
+trigger17 = root,stateno = 1206
+trigger18 = root,stateno = 1207
+trigger19 = root,stateno = 1500
+trigger20 = root,stateno = 1501
+trigger21 = root,stateno = 1021
+trigger22 = root,stateno = 1025
+trigger23 = root,stateno = 1026
+trigger24 = root,stateno = 1027
+trigger25 = root,stateno = 622
+trigger26 = root,stateno = [1300,1301]
+trigger27 = root,stateno = [1380,1381]
+ignorehitpause = 1
+
+[state 5]
+type = varset
+var(10) = 24
+triggerall = var(10) = 2
+triggerall = root,command = "back"
+trigger1 = root,stateno = 1455
+trigger2 = root,stateno = 1465
+trigger3 = root,stateno = 1463
+trigger4 = root,stateno = 1461
+trigger5 = root,stateno = 1470
+trigger6 = root,stateno = 1471
+trigger7 = root,stateno = 1101
+trigger8 = root,stateno = 1106
+trigger9 = root,stateno = 1601
+trigger10 = root,stateno = 1603
+trigger11 = root,stateno = 1606
+trigger12 = root,stateno = 1608
+trigger13 = root,stateno = 1850
+trigger14 = root,stateno = 1800
+trigger15 = root,stateno = 1201
+trigger16 = root,stateno = 1202
+trigger17 = root,stateno = 1206
+trigger18 = root,stateno = 1207
+trigger19 = root,stateno = 1500
+trigger20 = root,stateno = 1501
+trigger21 = root,stateno = 1021
+trigger22 = root,stateno = 1025
+trigger23 = root,stateno = 1026
+trigger24 = root,stateno = 1027
+trigger25 = root,stateno = 622
+trigger26 = root,stateno = [1300,1301]
+trigger27 = root,stateno = [1380,1381]
+ignorehitpause = 1
+
+[state 5]
+type = varset
+var(10) = 242
+triggerall = var(10) = 24
+triggerall = root,command = "down"
+trigger1 = root,stateno = 1455
+trigger2 = root,stateno = 1465
+trigger3 = root,stateno = 1463
+trigger4 = root,stateno = 1461
+trigger5 = root,stateno = 1470
+trigger6 = root,stateno = 1471
+trigger7 = root,stateno = 1101
+trigger8 = root,stateno = 1106
+trigger9 = root,stateno = 1601
+trigger10 = root,stateno = 1603
+trigger11 = root,stateno = 1606
+trigger12 = root,stateno = 1608
+trigger13 = root,stateno = 1850
+trigger14 = root,stateno = 1800
+trigger15 = root,stateno = 1201
+trigger16 = root,stateno = 1202
+trigger17 = root,stateno = 1206
+trigger18 = root,stateno = 1207
+trigger19 = root,stateno = 1500
+trigger20 = root,stateno = 1501
+trigger21 = root,stateno = 1021
+trigger22 = root,stateno = 1025
+trigger23 = root,stateno = 1026
+trigger24 = root,stateno = 1027
+trigger25 = root,stateno = 622
+trigger26 = root,stateno = [1300,1301]
+trigger27 = root,stateno = [1380,1381]
+ignorehitpause = 1
+
+[state 5]
+type = varset
+var(10) = 2426
+triggerall = var(10) = 242
+triggerall = root,command = "fwd"
+trigger1 = root,stateno = 1455
+trigger2 = root,stateno = 1465
+trigger3 = root,stateno = 1463
+trigger4 = root,stateno = 1461
+trigger5 = root,stateno = 1470
+trigger6 = root,stateno = 1471
+trigger7 = root,stateno = 1101
+trigger8 = root,stateno = 1106
+trigger9 = root,stateno = 1601
+trigger10 = root,stateno = 1603
+trigger11 = root,stateno = 1606
+trigger12 = root,stateno = 1608
+trigger13 = root,stateno = 1850
+trigger14 = root,stateno = 1800
+trigger15 = root,stateno = 1201
+trigger16 = root,stateno = 1202
+trigger17 = root,stateno = 1206
+trigger18 = root,stateno = 1207
+trigger19 = root,stateno = 1500
+trigger20 = root,stateno = 1501
+trigger21 = root,stateno = 1021
+trigger22 = root,stateno = 1025
+trigger23 = root,stateno = 1026
+trigger24 = root,stateno = 1027
+trigger25 = root,stateno = 622
+trigger26 = root,stateno = [1300,1301]
+trigger27 = root,stateno = [1380,1381]
+ignorehitpause = 1
+
+
+;==============================================================
+;=======  11. hvar(11) set for input 950/50 ~ 600~699  ========
+;==============================================================
+[state ]
+type = varset
+var(11) = 0
+trigger1 = root,stateno != 40
+trigger1 = root,stateno != 50
+trigger1 = root,stateno != 950
+
+
+[state ]
+type = null;varset
+triggerall = root,stateno = 40 || root,stateno = 50 || root,stateno = 950
+;-----------------------------
+trigger1 = root,command = "x"
+trigger1 = var(11) := 600
+;-----------------------------
+trigger2 = root,command = "y"
+trigger2 = var(11) := 620
+;-----------------------------
+trigger3 = root,command = "a"
+trigger3 = var(11) := 610;615
+;-----------------------------
+trigger4 = root,command = "b"
+trigger4 = var(11) := 630;635
+;-----------------------------
+trigger5 = root,command = "a"
+trigger5 = root,command = "holddown"
+trigger5 = var(11) := 625
+;-----------------------------
+trigger6 = root,command = "a"
+trigger6 = root,command = "holdback"
+trigger6 = var(11) := 615
+;-----------------------------
+trigger7 = root,command = "y"
+trigger7 = root,command = "holddown"
+trigger7 = var(11) := 621
+;-----------------------------
+trigger8 = root,command = "b"
+trigger8 = root,command = "holddown"
+trigger8 = var(11) := 636
+;-----------------------------
+trigger9 = root,command = "c"
+trigger9 = var(11) := 640
+;-----------------------------
+ignorehitpause = 1
+
+
+;===============================================
+;========  hvar(12) set for SuperCancel  =========
+;===============================================
+;-------------------
+;SuperCancel
+;-------------------
+[state ]
+type = varset
+var(12) = -1
+trigger1 = root,time = 1
+trigger2 = root,movetype = H
+ignorehitpause = 1
+
+[state ]
+type = null;varset
+triggerall = (root,movecontact) || (root,movetype = A && (root,stateno = [0,999])) || (root,stateno = [1200,1207])
+;---------------------------------
+;trigger = root,stateno != 
+;trigger = root,
+;trigger = var(12) := 
+;---------------------------------
+trigger1 = root,stateno != 1020
+trigger1 = root,command = "Oriuken Corto"
+trigger1 = var(12) := 1020
+;---------------------------------
+trigger2 = root,stateno != 1025
+trigger2 = root,command = "Oriuken Largo"
+trigger2 = var(12) := 1025
+;---------------------------------
+trigger3 = root,stateno != 1020
+trigger3 = root,stateno != 1025
+trigger3 = root,stateno != 1040
+trigger3 = root,command = "Oriuken 3"
+trigger3 = var(12) := 1040
+;---------------------------------
+trigger4 = root,stateno != 1100
+trigger4 = root,command = "Kuusajin 1"
+trigger4 = var(12) := 1100
+;---------------------------------
+trigger5 = root,stateno != 1105
+trigger5 = root,command = "Kuusajin 2"
+trigger5 = var(12) := 1105
+;---------------------------------
+trigger6 = root,stateno != [1200,1210]
+trigger6 = root,command = "Giro Patada Debil"
+trigger6 = var(12) := 1200
+;---------------------------------
+trigger7 = root,stateno != [1200,1210]
+trigger7 = root,command = "Giro Patada Fuerte"
+trigger7 = var(12) := 1205
+;---------------------------------
+trigger8 = root,stateno != [1450,1471]
+trigger8 = root,command = "Patada KOF-98"
+trigger8 = var(12) := 1450
+;---------------------------------
+trigger9 = root,stateno != [1600,1602]
+trigger9 = root,command = "Traba Corta"
+trigger9 = var(12) := 1600
+;---------------------------------
+trigger10 = root,stateno != [1605,1607]
+trigger10 = root,command = "Traba Larga"
+trigger10 = var(12) := 1605
+;---------------------------------
+trigger11 = root,stateno != 1500
+trigger11 = root,command = "Pisoton Debil"
+trigger11 = var(12) := 1500
+;---------------------------------
+trigger12 = root,stateno != 1501
+trigger12 = root,command = "Pisoton Fuerte"
+trigger12 = var(12) := 1501
+;---------------------------------
+trigger13 = root,stateno != 1800
+trigger13 = root,command = "×Æ»ðÒu1"
+trigger13 = var(12) := 1800
+;---------------------------------
+trigger14 = root,stateno != [1850,1855]
+trigger14 = root,command = "×Æ»ðÒu2"
+trigger14 = var(12) := 1850
+;---------------------------------
+ignorehitpause = 1
+
+[state ]
+type = null;varset
+triggerall = (root,movecontact) || (root,movetype = A && (root,stateno = [0,999]))
+triggerall = root,statetype = A
+;---------------------------------
+trigger1 = root,stateno != [1300,1380]
+trigger1 = root,command = "Hishou 1"
+trigger1 = var(12) := 1305
+;---------------------------------
+trigger2 = root,stateno != [1300,1380]
+trigger2 = root,command = "Hishou 2"
+trigger2 = var(12) := 1300
+;---------------------------------
+trigger3 = root,stateno != [1300,1380]
+trigger3 = root,command = "Hishou 3"
+trigger3 = var(12) := 1380
+;---------------------------------
+trigger4 = root,stateno != 1210
+trigger4 = root,command = "Giro Patada Debil" || root,command = "Giro Patada Fuerte"
+trigger4 = var(12) := 1210
+;---------------------------------
+ignorehitpause = 1
+
+
+
+;-------------------
+;HyperCancel
+;-------------------
+[state ]
+type = varset
+var(17) = -1
+trigger1 = root,time = 1
+trigger2 = root,movetype = H
+trigger3 = root,stateno = var(17)
+ignorehitpause = 1
+
+[state ]
+type = null;varset
+triggerall = root,statetype != A
+triggerall = (root,movecontact) || helper(10000),var(3) = 2
+triggerall = var(17) = -1
+;---------------------------------
+;trigger = root,command = 
+;trigger = var(17) := 
+;---------------------------------
+trigger1 = root,command = "Especial Comun Corta"
+trigger1 = var(17) := 2000
+;---------------------------------
+trigger2 = root,command = "Especial Comun Larga"
+trigger2 = var(17) := 2015
+;---------------------------------
+trigger3 = root,command = "·ï»Ë·ÉÌì½Å"
+trigger3 = var(17) := 2060
+;---------------------------------
+trigger4 = root,command = "È«Ê½ÁÑ×¦ïwÌì½Å"
+trigger4 = var(17) := 2500
+;---------------------------------
+trigger5 = root,command = "·ï»ÊÁÑ×¦½Å"
+trigger5 = var(17) := 2450
+;---------------------------------
+ignorehitpause = 1
+
+[state ]
+type = null;varset
+triggerall = root,statetype = A
+triggerall = (root,movecontact) || helper(10000),var(3) = 2
+triggerall = var(17) = -1
+;---------------------------------
+;trigger = root,command = 
+;trigger = var(17) := 
+;---------------------------------
+trigger1 = root,command = "Especial Comun Aire"
+trigger1 = var(17) := 2001
+;---------------------------------
+trigger2 = root,command = "Especial Tembu"
+trigger2 = var(17) := 2100
+;---------------------------------
+ignorehitpause = 1
+
+
+
+
+
+;var(17)
+
+;"Especial Comun Aire"
+;2001
+
+;    ³¬±ØÉ±
+;-----------------------
+;       ·ï»ËÍÈ£¨µØÃæ»ò¿ÕÖÐ£© ¡ý¡û¡ý¡ú    +    A/B    (MAXMODEÖÐÇ¿»¯)
+;       hvar(14) = 5/hvar(5) = 2Ê±ÑÝ³ö±ä¸ü
+;2000
+;2001(air) 2015   2200(max) 2210(max air)
+;       ·ï»ËÌìÎè½Å£¨¿ÕÖÐ£©   ¡ý¡ú¡ý¡û    +    A/B    (MAXMODEÖÐÇ¿»¯)
+;2100 2300(max)
+;       È«Ê½ ÁÑ×¦·ÉÌì½Å      ¡ý¡ú¡ý¡ú    +    X
+;2500
+;       ·ï»Ë·ÉÌì½Å           ¡ý¡ú¡ý¡ú    +    A/B
+;2060
+;       ·ï»ÊÁÑ×¦½Å           ¡ý¡ú¡ý¡ú    +    Y      (MAXMODEÖÐÇ¿»¯)
+;2450 2460
+;       Áã¾àÀë·ï»Ë½Å         ¡ý¡û¡ý¡ú    +    C
+;2600
+;       ??????               ¡ý¡ú¡ý¡ú    +    C
+;2700
+
+
+
+
+;-------------------
+;HyperCancel
+;-------------------
+[state ]
+type = varset
+var(18) = -1
+trigger1 = root,time = 1
+trigger2 = root,movetype = H
+trigger3 = root,stateno = var(18)
+ignorehitpause = 1
+
+[state ]
+type = null;varset
+triggerall = root,statetype != A
+triggerall = (root,movecontact)
+triggerall = helper(10000),var(3) != 2 && helper(10000),var(4) = 0
+triggerall = var(18) = -1
+;---------------------------------
+;trigger = root,command = 
+;trigger = var(18) := 
+;---------------------------------
+trigger1 = root,command = "Super Comun"
+trigger1 = var(18) := 2200
+;---------------------------------
+ignorehitpause = 1
+
+
+[state ]
+type = null;varset
+triggerall = root,statetype = A
+triggerall = (root,movecontact)
+triggerall = helper(10000),var(3) != 2 && helper(10000),var(4) = 0
+triggerall = var(18) = -1
+;---------------------------------
+;trigger = root,command = 
+;trigger = var(18) := 
+;---------------------------------
+trigger1 = root,command = "Super Comun Aire"
+trigger1 = var(18) := 2210
+;---------------------------------
+trigger2 = root,command = "Super Tembu"
+trigger2 = var(18) := 2300
+;---------------------------------
+ignorehitpause = 1
+
+
+;===============================================
+;========  hvar(20) set for 410Cancel  =========
+;===============================================
+[state ]
+type = varset
+var(20) = -1
+trigger1 = root,stateno != 410
+trigger2 = root,stateno = 410 && root,time < 2
+
+[state ]
+type = null;varset
+triggerall = root,stateno = 410
+triggerall = root,time >= 2
+triggerall = var(20) = -1
+trigger1 = command = "x" && command = "holddown"
+trigger1 = var(20) := 400
+;
+trigger2 = command = "a" && command = "holddown"
+trigger2 = var(20) := 410
+;
+trigger3 = command = "x"
+trigger3 = var(20) := 200
+;
+trigger4 = command = "a"
+trigger4 = var(20) := 210
+;
+ignorehitpause = 1
+
+;===============================================
+;========  hvar(21) set for 240Cancel  =========
+;===============================================
+[state ]
+type = varset
+var(21) = -1
+trigger1 = root,stateno != 430
+trigger2 = root,stateno = 430 && root,time < 2
+
+[state ]
+type = null;varset
+triggerall = root,stateno = 430
+triggerall = root,time >= 2
+triggerall = var(21) = -1
+;
+trigger1 = command = "a" && command = "holdfwd"
+trigger1 = var(21) := 240
+;
+ignorehitpause = 1

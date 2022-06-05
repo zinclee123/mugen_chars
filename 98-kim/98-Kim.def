@@ -1,0 +1,47 @@
+;***************************************************************************;
+;******************* Created in Fighter Factory Ultimate *******************;
+;*******************      http://www.virtualltek.com     *******************;
+;***************************************************************************;
+
+[Info]
+name = "98-Kim"
+displayname = "Kim Kof-98"
+versiondate = 13/11/2011
+mugenversion = 14,04,2001
+author = "Facu-96";Edit by gdwb126, AI by lee
+pal.defaults = 1,1
+
+[Files]
+sprite = other/Kim.sff
+anim = other/Kim.air
+sound = lee/Kim.snd
+cmd = lee/Kim-cmd.st
+cns = lee/Kim.cns
+stcommon = lee/1.1.st
+st = lee/Kim.cns
+st1 = cns/hidden.cns
+st2 = lee/Kim-S.cns
+st3 = lee/Kim-H.cns
+st4 = lee/Kim-2-3.st
+st5 = lee/Targetstate.cns
+st6 = lee/Helper-Power.cns
+st7 = lee/Helper-Switch.cns
+st8 = lee/Kim-N.cns
+st9 = lee/Helper-Preinput.cns
+
+pal1 = pal/white.act
+pal2 = pal/black-98.act
+pal3 = pal/blue.act
+pal4 = pal/red.act
+pal5 = pal/green.act
+pal6 = pal/red-2.act
+pal7 = pal/JHUN.act
+pal8 = pal/KUSANAGI.act
+pal9 = pal/White-2.act
+pal10 = pal/blue-2.act
+pal11 = pal/Kof2002-4.act
+pal12 = pal/flame.act
+
+[Arcade]
+;intro.storyboard = 
+;ending.storyboard = 

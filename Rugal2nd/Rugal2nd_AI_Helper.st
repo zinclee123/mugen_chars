@@ -1200,7 +1200,7 @@ IgnoreHitPause = 1
 type = VarSet
 Triggerall = ishelper
 Trigger1 = Root,var(52) = 0
-var(16) = 3 + ifelse(root,life < 300,1,0)
+var(16) = 2;3 + ifelse(root,life < 300,1,0)
 IgnoreHitPause = 1
 
 [State 11990]
@@ -1216,7 +1216,7 @@ IgnoreHitPause = 1
 type = Varset
 Triggerall = IsHelper
 Trigger1 = var(15) = 0
-var(17) = 135
+var(17) = 150
 IgnoreHitPause = 1
 
 [State 11990 远AB距离调整]
@@ -1379,46 +1379,6 @@ trigger6 = var(41) != root,var(18)
 trigger6 = var(42) = 0
 trigger6 = var(42) := root,var(18) 
 IgnoreHitPause = 1
-
-[state 11990,对手当身技 记录]
-type = null
-triggerall = ishelper
-triggerall = root,var(19) = [700,1999]
-
-trigger1 = var(37) = 0
-trigger1 = var(37) := root,var(19) 
-
-trigger2 = var(37) != root,var(19) 
-trigger2 = var(38) = 0
-trigger2 = var(38) := root,var(19) 
-
-trigger3 = var(37) != root,var(19) 
-trigger3 = var(38) != root,var(19) 
-trigger3 = var(39) = 0
-trigger3 = var(39) := root,var(19) 
-
-trigger4 = var(37) != root,var(19) 
-trigger4 = var(38) != root,var(19) 
-trigger4 = var(39) != root,var(19) 
-trigger4 = var(40) = 0
-trigger4 = var(40) := root,var(19) 
-
-trigger5 = var(37) != root,var(19) 
-trigger5 = var(38) != root,var(19) 
-trigger5 = var(39) != root,var(19) 
-trigger5 = var(40) != root,var(19) 
-trigger5 = var(41) = 0
-trigger5 = var(41) := root,var(19) 
-
-trigger6 = var(37) != root,var(19) 
-trigger6 = var(38) != root,var(19) 
-trigger6 = var(39) != root,var(19) 
-trigger6 = var(40) != root,var(19) 
-trigger6 = var(41) != root,var(19) 
-trigger6 = var(42) = 0
-trigger6 = var(42) := root,var(19) 
-IgnoreHitPause = 1
-
 
 [state 11990,对手正在使用当身技]
 type = VarSet

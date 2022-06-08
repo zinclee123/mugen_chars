@@ -382,12 +382,12 @@ Time = 1
 [Statedef -1]
 
 [State -1,test]
-type = Null;ChangeState
+type = ChangeState
 Triggerall = !var(59)
 trigger1 = ctrl || StateNo = 100
 trigger1 = command = "start"
 ;trigger1 = var(4):=4
-value = 1400
+value = 1450
 
 [State -1, ステート奪取判定用]
 type = VarSet

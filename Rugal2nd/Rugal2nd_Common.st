@@ -631,25 +631,29 @@ type = ChangeAnim
 trigger1 = Time = 0
 value = 120 + (statetype = C) + (statetype = A)*2
 
-[State 120, Hi to Lo]
+[State 140, Hi to Lo]
 type = StateTypeSet
-triggerall = var(59) = 0
+TriggerAll = StateType = S
+trigger1 = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
+;
 trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 2
+trigger2 = helper(33000),var(11)!=2
+trigger2 = EnemyNear,MoveType=A
 trigger2 = EnemyNear,StateType != A
-trigger2 = EnemyNear,MoveType = A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) && PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger2 = helper(33000),var(11)=1||EnemyNear,StateType=C||(EnemyNear,Time-EnemyNear,AnimTime<=20)
+;
 trigger3 = var(59)
-trigger3 = EnemyNear,MoveType = A
-trigger3 = EnemyNear,StateType != A
-trigger3 = (EnemyNear,Time - EnemyNear,AnimTime <= 20)
+trigger3 = EnemyNear,MoveType=A
+trigger3 = EnemyNear,StateType!=A
+trigger3 = (EnemyNear,Time-EnemyNear,AnimTime<=20)
 statetype = C
 physics = C
 
-[State 120, Lo to Hi]
+[State 140, Lo to Hi]
 type = StateTypeSet
-triggerall = var(59) = 0
+TriggerAll = StateType = C
+trigger1 = var(59) = 0
 trigger1 = statetype = C && command != "holddown"
 ;中段切站
 trigger2 = var(59)
@@ -658,11 +662,9 @@ trigger2 = EnemyNear,MoveType = A
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;
 trigger3 = var(59)
-trigger3 = !EnemyNear,NumProj
-trigger3 = !PlayerIdExist(helper(33333333),var(3))
 trigger3 = EnemyNear,StateType != C
 trigger3 = EnemyNear,MoveType = A
-trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
+trigger3 = EnemyNear,Time-EnemyNear,AnimTime>20
 statetype = S
 physics = S
 
@@ -732,23 +734,24 @@ type = ctrlset
 trigger1 = var(59) && numenemy
 value = (enemynear, time >= 120 || time >= 180)
 
-[State 130, Hi to Lo]
-type = ChangeState
+[State 140, Hi to Lo]
+type = StateTypeSet
 TriggerAll = StateType = S
 trigger1 = var(59) = 0
-trigger1 = command = "holddown"
+trigger1 = statetype = S && command = "holddown"
+;
 trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 2
+trigger2 = helper(33000),var(11)!=2
+trigger2 = EnemyNear,MoveType=A
 trigger2 = EnemyNear,StateType != A
-trigger2 = EnemyNear,MoveType = A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger2 = helper(33000),var(11)=1||EnemyNear,StateType=C||(EnemyNear,Time-EnemyNear,AnimTime<=20)
+;
 trigger3 = var(59)
-trigger3 = helper(33000),var(11) != 2
-trigger3 = EnemyNear,MoveType = A
-trigger3 = EnemyNear,StateType != A
-trigger3 = (EnemyNear,Time - EnemyNear,AnimTime <= 20)
-value = 131
-IgnoreHitPause = 1
+trigger3 = EnemyNear,MoveType=A
+trigger3 = EnemyNear,StateType!=A
+trigger3 = (EnemyNear,Time-EnemyNear,AnimTime<=20)
+statetype = C
+physics = C
 
 [State 130, Stop Guarding]
 type = ChangeState
@@ -803,10 +806,10 @@ trigger1 = var(59) && numenemy
 value = (enemynear, time >= 120 || time >= 180)
 
 [State 131, Lo to Hi]
-type = ChangeState
+type = StateTypeSet
 TriggerAll = StateType = C
 trigger1 = var(59) = 0
-trigger1 = command != "holddown"
+trigger1 = statetype = C && command != "holddown"
 ;中段切站
 trigger2 = var(59)
 trigger2 = EnemyNear,StateType != C
@@ -814,13 +817,11 @@ trigger2 = EnemyNear,MoveType = A
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;
 trigger3 = var(59)
-trigger3 = !EnemyNear,NumProj
-trigger3 = !PlayerIdExist(helper(33333333),var(3))
-trigger3 = EnemyNear,MoveType = A
 trigger3 = EnemyNear,StateType != C
-trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
-value = 130
-IgnoreHitPause = 1
+trigger3 = EnemyNear,MoveType = A
+trigger3 = EnemyNear,Time-EnemyNear,AnimTime>20
+statetype = S
+physics = S
 
 [State 131, Stop Guarding]
 type = ChangeState
@@ -962,18 +963,19 @@ type = StateTypeSet
 TriggerAll = StateType = S
 trigger1 = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
+;
 trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 2
-trigger2 = EnemyNear,MoveType = A
+trigger2 = helper(33000),var(11)!=2
+trigger2 = EnemyNear,MoveType=A
 trigger2 = EnemyNear,StateType != A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger2 = helper(33000),var(11)=1||EnemyNear,StateType=C||(EnemyNear,Time-EnemyNear,AnimTime<=20)
+;
 trigger3 = var(59)
-trigger3 = EnemyNear,MoveType = A
-trigger3 = EnemyNear,StateType != A
-trigger3 = (EnemyNear,Time - EnemyNear,AnimTime <= 20)
+trigger3 = EnemyNear,MoveType=A
+trigger3 = EnemyNear,StateType!=A
+trigger3 = (EnemyNear,Time-EnemyNear,AnimTime<=20)
 statetype = C
 physics = C
-IgnoreHitPause = 1
 
 [State 140, Lo to Hi]
 type = StateTypeSet
@@ -987,14 +989,11 @@ trigger2 = EnemyNear,MoveType = A
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;
 trigger3 = var(59)
-trigger3 = !EnemyNear,NumProj
-trigger3 = !PlayerIdExist(helper(33333333),var(3))
 trigger3 = EnemyNear,StateType != C
 trigger3 = EnemyNear,MoveType = A
-trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
+trigger3 = EnemyNear,Time-EnemyNear,AnimTime>20
 statetype = S
 physics = S
-IgnoreHitPause = 1
 
 [State 140]
 type = NotHitBy
@@ -1090,25 +1089,26 @@ trigger1 = var(52) = IfElse((fvar(34) = 2 && var(53)),1560,1080)
 value = 151 + 2*(statetype = C)
 ignorehitpause = 1
 
-[State 150, Hi to Lo]
+[State 140, Hi to Lo]
 type = StateTypeSet
 TriggerAll = StateType = S
 trigger1 = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
+;
 trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 2
-trigger2 = EnemyNear,MoveType = A
+trigger2 = helper(33000),var(11)!=2
+trigger2 = EnemyNear,MoveType=A
 trigger2 = EnemyNear,StateType != A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
+trigger2 = helper(33000),var(11)=1||EnemyNear,StateType=C||(EnemyNear,Time-EnemyNear,AnimTime<=20)
+;
 trigger3 = var(59)
-trigger3 = EnemyNear,MoveType = A
-trigger3 = EnemyNear,StateType != A
-trigger3 = (EnemyNear,Time - EnemyNear,AnimTime <= 20)
+trigger3 = EnemyNear,MoveType=A
+trigger3 = EnemyNear,StateType!=A
+trigger3 = (EnemyNear,Time-EnemyNear,AnimTime<=20)
 statetype = C
 physics = C
-IgnoreHitPause = 1
 
-[State 150, Lo to Hi]
+[State 140, Lo to Hi]
 type = StateTypeSet
 TriggerAll = StateType = C
 trigger1 = var(59) = 0
@@ -1120,14 +1120,11 @@ trigger2 = EnemyNear,MoveType = A
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;
 trigger3 = var(59)
-trigger3 = !EnemyNear,NumProj
-trigger3 = !PlayerIdExist(helper(33333333),var(3))
 trigger3 = EnemyNear,StateType != C
 trigger3 = EnemyNear,MoveType = A
-trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
+trigger3 = EnemyNear,Time-EnemyNear,AnimTime>20
 statetype = S
 physics = S
-IgnoreHitPause = 1
 
 [State 150, 3]
 type = ForceFeedback
@@ -1161,44 +1158,24 @@ trigger1 = Time = GetHitVar(ctrltime)
 value = 1
 
 
-[State 151, Hi to Lo]
+[State 140, Hi to Lo]
 type = StateTypeSet
 TriggerAll = StateType = S
 trigger1 = var(59) = 0
 trigger1 = statetype = S && command = "holddown"
+;
 trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 2
-trigger2 = EnemyNear,MoveType = A
+trigger2 = helper(33000),var(11)!=2
+trigger2 = EnemyNear,MoveType=A
 trigger2 = EnemyNear,StateType != A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0 && EnemyNear,StateNo = [1000,4999])
-trigger3 = var(59)
-trigger3 = EnemyNear,MoveType = A
-trigger3 = EnemyNear,StateType != A
-trigger3 = (EnemyNear,Time - EnemyNear,AnimTime <= 20)
-statetype = C
-physics = C
-IgnoreHitPause = 1
-
-[State 151, Lo to Hi]
-type = StateTypeSet
-TriggerAll = StateType = C
-trigger1 = var(59) = 0
-trigger1 = statetype = C && command != "holddown"
-;中段切站
-trigger2 = var(59)
-trigger2 = EnemyNear,StateType != C
-trigger2 = EnemyNear,MoveType = A 
-trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
+trigger2 = helper(33000),var(11)=1||EnemyNear,StateType=C||(EnemyNear,Time-EnemyNear,AnimTime<=20)
 ;
 trigger3 = var(59)
-trigger3 = !EnemyNear,NumProj
-trigger3 = !PlayerIdExist(helper(33333333),var(3))
-trigger3 = EnemyNear,StateType != C
-trigger3 = EnemyNear,MoveType = A
-trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
-statetype = S
-physics = S
-IgnoreHitPause = 1
+trigger3 = EnemyNear,MoveType=A
+trigger3 = EnemyNear,StateType!=A
+trigger3 = (EnemyNear,Time-EnemyNear,AnimTime<=20)
+statetype = C
+physics = C
 
 [State 151, 4]
 type = ChangeState
@@ -1283,26 +1260,7 @@ trigger1 = var(52) = IfElse((fvar(34) = 2 && var(53)),1560,1080)
 value = 151 + 2*(statetype = C)
 ignorehitpause = 1
 
-
-[State 152, Hi to Lo]
-type = StateTypeSet
-TriggerAll = StateType = S
-trigger1 = var(59) = 0
-trigger1 = statetype = S && command = "holddown"
-trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 2
-trigger2 = EnemyNear,MoveType = A
-trigger2 = EnemyNear,StateType != A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0)
-trigger3 = var(59)
-trigger3 = EnemyNear,MoveType = A
-trigger3 = EnemyNear,StateType != A
-trigger3 = (EnemyNear,Time - EnemyNear,AnimTime <= 20)
-statetype = C
-physics = C
-IgnoreHitPause = 1
-
-[State 152, Lo to Hi]
+[State 140, Lo to Hi]
 type = StateTypeSet
 TriggerAll = StateType = C
 trigger1 = var(59) = 0
@@ -1314,14 +1272,11 @@ trigger2 = EnemyNear,MoveType = A
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;
 trigger3 = var(59)
-trigger3 = !EnemyNear,NumProj
-trigger3 = !PlayerIdExist(helper(33333333),var(3))
 trigger3 = EnemyNear,StateType != C
 trigger3 = EnemyNear,MoveType = A
-trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
+trigger3 = EnemyNear,Time-EnemyNear,AnimTime>20
 statetype = S
 physics = S
-IgnoreHitPause = 1
 
 [State 152, 4]
 type = ForceFeedback
@@ -1353,21 +1308,7 @@ type = CtrlSet
 trigger1 = Time = GetHitVar(ctrltime)
 value = 1
 
-[State 153, Hi to Lo]
-type = StateTypeSet
-TriggerAll = StateType = S
-trigger1 = var(59) = 0
-trigger1 = statetype = S && command = "holddown"
-trigger2 = var(59) 
-trigger2 = helper(33000),var(11) != 2
-trigger2 = EnemyNear,MoveType = A
-trigger2 = EnemyNear,StateType != A
-trigger2 = helper(33000),var(11) = 1 || EnemyNear,StateType = C || (EnemyNear,Time - EnemyNear,AnimTime <= 20) || EnemyNear,NumProj || (PlayerIdExist(helper(33333333),var(3)) &&  PlayerId(helper(33333333),var(3)),p2dist x > 0)
-statetype = C
-physics = C
-IgnoreHitPause = 1
-
-[State 153, Lo to Hi]
+[State 140, Lo to Hi]
 type = StateTypeSet
 TriggerAll = StateType = C
 trigger1 = var(59) = 0
@@ -1379,14 +1320,11 @@ trigger2 = EnemyNear,MoveType = A
 trigger2 = helper(33000),var(11) = 2 || EnemyNear,StateType = A 
 ;
 trigger3 = var(59)
-trigger3 = !EnemyNear,NumProj
-trigger3 = !PlayerIdExist(helper(33333333),var(3))
-trigger3 = EnemyNear,MoveType = A
 trigger3 = EnemyNear,StateType != C
-trigger3 = helper(33000),var(11) = 0 && (EnemyNear,Time - EnemyNear,AnimTime > 20)
+trigger3 = EnemyNear,MoveType = A
+trigger3 = EnemyNear,Time-EnemyNear,AnimTime>20
 statetype = S
 physics = S
-IgnoreHitPause = 1
 
 [State 153, 4]
 type = ChangeState

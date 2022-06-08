@@ -43,7 +43,7 @@ walk.fwd  = 2.8
 walk.back = -2.8
 run.fwd = 6.0
 run.back = -8.3,-5.5
-jump.neu = 0,-10.2
+jump.neu = 0,-9.5
 jump.fwd = 3.5
 jump.back = -3.5
 runjump.fwd = 4.6
@@ -5583,9 +5583,9 @@ hitsound = S5,IfElse(Random%2=1,7,12)
 guardsound = S6,0
 pausetime = 11,13
 guard.pausetime = 11,11
-ground.slidetime = 12
-ground.hittime = 12
-guard.ctrltime = 12
+ground.slidetime = 9
+ground.hittime = 9
+guard.ctrltime = 9
 air.hittime = 60
 ground.velocity = -5.75
 air.velocity = -4,-7
@@ -7580,7 +7580,6 @@ fall.recover = !(fvar(29) = 3 || fvar(29) = 6)
 fall.recovertime = 36+3+Ceil((-fvar(25))/10)
 getpower = 0,0
 givepower = 15,15
-air.juggle = var(9)*16
 
 [State 1010, カイザーウェイブ2段階目]
 type = Projectile
@@ -7705,7 +7704,6 @@ fall.recover = !(fvar(29) = 3 || fvar(29) = 6)
 fall.recovertime = 36+3+Ceil((-fvar(25))/10)
 getpower = 0,0
 givepower = 15,15
-air.juggle = var(9)*16
 
 [State 1010, カイザーウェイブ2段階目]
 type = Projectile
@@ -9330,7 +9328,7 @@ movecamera = 1,0
 
 [State 1300]
 type = NotHitBy
-trigger1 = AnimElem = 10, < 0
+trigger1 = AnimElem = 6, < 0
 value = SCA
 time = 1
 

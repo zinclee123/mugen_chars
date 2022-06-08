@@ -70,26 +70,6 @@ trigger1 = EnemyNear,StateNo  < 2000
 var(18) = EnemyNear,StateNo 
 ignorehitpause = 1
 
-[State -2]
-type = varset
-triggerall = MoveReversed = 2
-triggerall = MoveType = H
-trigger1 = enemynear,movetype = A || enemynear,movetype = I
-trigger1 = EnemyNear,PrevStateNo  < 2000
-var(19) = EnemyNear,PrevStateNo 
-ignorehitpause = 1
-
-[State -2]
-type = varset
-triggerall = MoveReversed = 1
-triggerall = MoveType = H
-trigger1 = PrevStateNo = 1950 || PrevStateNo = [600,699]
-trigger1 = enemynear,movetype = A || enemynear,movetype = I
-trigger1 = EnemyNear,StateNo < 2000
-fvar(18) = 1
-ignorehitpause = 1
-
-
 ;****************************************************************
 ;*************************【Config】*****************************
 ;****************************************************************
@@ -98,14 +78,14 @@ ignorehitpause = 1
 [State -2, Display Power Gauge]
 type = varset
 trigger1 = 1
-fvar(30) = 1;(1:on/0:off)
+fvar(30) = 0;(1:on/0:off)
 ignorehitpause = 1
 ;パワーゲージの表示の有無を切り替えます。
 
 [State -2, Display AI s Lv]
 type = varset
 trigger1 = 1
-fvar(31) = 1;(1:on/0:off)
+fvar(31) = 0;(1:on/0:off)
 ignorehitpause = 1
 ;AILvの表示の有無を切り替えます。
 
@@ -862,7 +842,7 @@ ignorehitpause = 1
 ;CornerPush
 
 [State -2, cornerpush 2002 && 98UM]
-type = Null;VelSet
+type = VelSet
 triggerall = !(EnemyNear(var(2)),StateType = A)
 triggerall = EnemyNear(var(2)),BackEdgeBodyDist <= 10
 triggerall = MoveContact = 1
@@ -893,7 +873,7 @@ trigger1 = StateNo = 215 && NumTarget(215)
 x = -8-(fvar(29)=4&&var(52)>0)
 
 [State -2, cornerpush 2002]
-type = VelSet
+type = Null;VelSet
 triggerall = !(EnemyNear(var(2)),StateType = A)
 triggerall = EnemyNear(var(2)),BackEdgeBodyDist <= 10
 triggerall = MoveContact = 1
@@ -906,7 +886,7 @@ triggerall = MoveContact = 1
 ;trigger7 = StateNo = 410 && NumTarget(410)
 ;trigger8 = StateNo = 430 && NumTarget(430)
 trigger1 = StateNo = 1450 && NumTarget(1453) && (fvar(29) = 1 && !fvar(26))
-x = -10.35-(fvar(29)=4&&var(52)>0)
+x = -5.75-(fvar(29)=4&&var(52)>0)*1.35
 
 [State -2, cornerpush 2002]
 type = Null;VelSet
@@ -923,7 +903,7 @@ triggerall = EnemyNear(var(2)),BackEdgeBodyDist <= 10
 triggerall = MoveContact = 1
 trigger1 = StateNo = 240 && NumTarget(240) && MoveGuarded = 1
 trigger2 = StateNo = 245 && NumTarget(245) && MoveGuarded = 1
-x = -13.75-(fvar(29)=4&&var(52)>0)*2.25
+x = -5.75-(fvar(29)=4&&var(52)>0)*1.35
 
 [State -2, Air.CornerPush]
 type = VarAdd
@@ -2989,13 +2969,25 @@ ignorehitpause = 1
 [State -2, Debug]
 type = displaytoclipboard
 Trigger1 = 1
-text = "P2StateNo = %d p2HitTime = %d X = %d, Y = %d p2posy = %d p2AnimTime = %d"
-params = P2StateNo, EnemyNear,GetHitVar(hittime), P2BodyDist x,  P2BodyDist y, EnemyNear,Pos y, EnemyNear,AnimTime
+text = "P2ST=%d PROJOK=%d X=%d Y=%d P2T=%d P2AT=%d"
+params = P2StateNo,(var(16)&2**4),P2BodyDist x,EnemyNear,Pos y,EnemyNear,Time,EnemyNear,AnimTime
 ignorehitpause = 1
 
 [State -2, Debug]
 type = appendtoclipboard
 Trigger1 = 1
-text="\nTRACE=%d FV15=%f FV11=%f HV44=%d FV12=%f P2Time=%d"   
-params= var(50), fvar(15),fvar(11), Helper(11990),var(44), fvar(12), EnemyNear,Time
+text="\nTRACE=%d FD=%d POSY=%d CTRL=%d VX=%d PROJ=%d"   
+params= var(50),fvar(15),POS y,var(17),vel x,EnemyNear,NumProj||PlayerIdExist(Helper(33333333),var(3))
 ignorehitpause = 1
+
+[State -2, Debug]
+type = Null;appendtoclipboard
+Trigger1 = 1
+text="\nTRACE=%d F=%d EF=%d EVX=%d EHX=%d FV12=%d"   
+params= var(50),Facing,EnemyNear,Facing,EnemyNear,Vel x,EnemyNear,GetHitVar(xvel),fvar(12)
+ignorehitpause = 1
+
+
+
+
+

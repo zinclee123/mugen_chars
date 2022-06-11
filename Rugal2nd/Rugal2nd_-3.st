@@ -3059,7 +3059,7 @@ Trigger7 = var(50) := 990507
 Trigger8 = Fvar(12) < 0
 Trigger8 = EnemyNear,MoveType = H
 Trigger8 = EnemyNear,StateType = A
-Trigger8 = P2BodyDist x = [50, 180]
+Trigger8 = P2BodyDist x = [50, 200]
 Trigger8 = var(50) := 990508
 ;敌人飞来
 Trigger9 = Fvar(12) > 0
@@ -3100,6 +3100,7 @@ Trigger2 = var(50) := 990512
 ;移动到合适的位置打敌人起身
 Trigger3 = EnemyNear,StateType = L
 Trigger3 = var(50) := 990513
+;
 value = 99
 IgnoreHitPause = 1
 
@@ -3198,11 +3199,13 @@ Trigger3 = EnemyNear,Ctrl
 Trigger3 = P2BodyDist x < 40
 Trigger3 = var(50) := 180503
 ;敌人飞过来
+Trigger4 = Fvar(15) >= 60
 Trigger4 = fvar(12) > 0
 Trigger4 = EnemyNear,MoveType = H && EnemyNear,StateType = A
 Trigger4 = P2BodyDist x = [20,60]
 Trigger4 = var(50) := 180504
 ;敌人飞走
+Trigger5 = Fvar(15) >= 60
 Trigger5 = fvar(12) < 0
 Trigger5 = EnemyNear,MoveType = H && EnemyNear,StateType = A
 Trigger5 = P2BodyDist x < 20
@@ -4066,6 +4069,7 @@ TriggerAll = BackEdgeBodyDist >= 60
 TriggerAll = InGuardDist
 TriggerAll = !(EnemyNear,numproj||PlayerIdExist(Helper(33333333),var(3)))||EnemyNear,AnimTime <= -20
 TriggerAll = EnemyNear,AnimTime <= -24
+TriggerAll = (var(16)&2**8)=0
 ;对方攻击的距离大于我们能攻击到的最大距离，就后撤一下
 Trigger1 = EnemyNear,Time<-EnemyNear,AnimTime
 Trigger1 = EnemyNear,StateNo=[1000,1999]
@@ -4082,7 +4086,6 @@ Trigger2 = EnemyNear,Vel y < -1
 Trigger2 = EnemyNear,pos y <= -60
 Trigger2 = var(50) := 91022
 ;躲对面压起身
-Trigger3 = (var(16)&2**8)=0
 Trigger3 = Helper(11990),var(43)!=1
 Trigger3 = P2BodyDist x>=45
 Trigger3 = EnemyNear,Facing!=Facing

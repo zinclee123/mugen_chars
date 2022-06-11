@@ -4764,42 +4764,18 @@ TriggerAll = EnemyNear,Time<-EnemyNear,AnimTime
 ;不能是投技
 TriggerAll = !(EnemyNear,HitDefAttr = SCA, AT)
 TriggerAll = Helper(33000),var(11) != 3
-Triggerall = EnemyNear,animtime<-36
-;穿敌人 非弹幕技能
-Trigger1 = !(PlayerIdExist(Helper(33333333),var(3))||EnemyNear,NumProj)
-Trigger1 = P2BodyDist x <= 165
-Trigger1 = EnemyNear,StateNo = [1000,4999]
+Triggerall = EnemyNear,animtime<-33
+Triggerall = EnemyNear,StateNo = [1000,4999]
+;不能有弹幕
+Triggerall = !EnemyNear,NumProj
+Triggerall = !PlayerIdExist(Helper(33333333),var(3))
+;穿敌人
+Trigger1 = StateNo=[98,102]
+Trigger1 = P2BodyDist x <= 95
 Trigger1 = var(50) := 36171
-;穿敌人 弹幕技能
-Trigger2 = PlayerIdExist(Helper(33333333),var(3))||EnemyNear,NumProj
-Trigger2 = P2BodyDist x <= ifelse((StateNo=[98,102]),100,60)
-Trigger2 = EnemyNear,StateNo = [1000,4999]
+;穿敌人
+Trigger2 = P2BodyDist x <= 64
 Trigger2 = var(50) := 36172
-;穿对面跳跃
-Trigger3 = EnemyNear,Facing!=Facing
-Trigger3 = EnemyNear,MoveType=A
-Trigger3 = EnemyNear,Vel Y<0
-Trigger3 = Helper(33334),Fvar(14)>34
-Trigger3 = EnemyNear,Vel X>0
-Trigger3 = Helper(33334),fvar(15)>120
-Trigger3 = P2BodyDist x<60
-Trigger3 = var(50) := 36173
-value = 361
-
-[State -3,前滚]
-Type = changestate
-TriggerAll = var(59)
-TriggerAll = RoundState = 2
-TriggerAll = !IsHelper
-TriggerAll = var(17) = 1
-TriggerAll = StateType != A 
-TriggerAll = EnemyNear,Vel x >= 0
-TriggerAll = EnemyNear,facing != facing
-Trigger1 = EnemyNear,MoveType=A
-Trigger1 = EnemyNear,Pos Y<-75
-Trigger1 = EnemyNear,Vel Y <0
-Trigger1 = P2BodyDist x<35
-Trigger1 = var(50) := 36176
 value = 361
 
 [State -3,耗气前滚]
@@ -5562,7 +5538,7 @@ type = varset
 TriggerAll = RoundState = 2
 TriggerAll = !IsHelper
 Triggerall = var(56)/1000 = 1
-Trigger1 = StateNo = 1207 && MoveHit
+Trigger1 = StateNo = 1207 && AnimElemTime(1)>1
 Trigger1 = var(7) > 0
 var(56) = 1303
 IgnoreHitPause = 1

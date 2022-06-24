@@ -1458,6 +1458,7 @@ TriggerAll = var(59)
 TriggerAll = var(17) = 1
 TriggerAll = StateType!=A
 TriggerAll = EnemyNear,MoveType = A
+Triggerall = EnemyNear,StateType != A
 TriggerAll = EnemyNear,StateNo=[200,999]
 ;对地
 Trigger1 = EnemyNear,StateNo = Helper(33000),var(2)
@@ -1474,9 +1475,9 @@ Trigger2 = EnemyNear,Time < 6
 Trigger2 = EnemyNear,AnimTime<-30
 Trigger2 = var(50) := 40092
 ;没记录就直接抢
-Trigger3 = Helper(33000),var(3)=0||Helper(33000),var(3)=1
+Trigger3 = Helper(33000),var(3)=0
 Trigger3 = P2BodyDist x=[-50,50]
-Trigger3 = EnemyNear,time<=2
+Trigger3 = EnemyNear,time<=1
 Trigger3 = var(50) := 40093
 IgnoreHitPause = 1
 
@@ -1507,9 +1508,9 @@ Trigger3 = P2BodyDist x = [40,64]
 Trigger3 = EnemyNear,time <= 1
 Trigger3 = var(50) := 42093
 ;没记录就直接抢
-Trigger4 = Helper(33000),var(3)=0||Helper(33000),var(3)=1
+Trigger4 = Helper(33000),var(3)=0
 Trigger4 = P2BodyDist x=[40,64]
-Trigger4 = EnemyNear,time<=2
+Trigger4 = EnemyNear,time<=1
 Trigger4 = var(50) := 42094
 IgnoreHitPause = 1
 
@@ -1561,6 +1562,7 @@ TriggerAll = (abs(P2BodyDist X) <= 18)
 TriggerAll = EnemyNear,StateNo != 52
 TriggerAll = EnemyNear,StateNo != 5120
 TriggerAll = EnemyNear,Vel Y=0
+Triggerall = EnemyNear,StateType!=A
 TriggerAll = (var(16)&2**6)=0
 Triggerall = EnemyNear,Facing!=Facing
 ;抢招
@@ -1612,8 +1614,6 @@ TriggerAll = EnemyNear,StateType != A&&EnemyNear,Vel Y=0
 ;不能是气AB和落地受身 都是全程无敌的
 TriggerAll = (var(16)&2**2) = 0 && (var(16)&2**3) = 0
 TriggerAll = EnemyNear,HitDefAttr != SCA,AT
-;
-TriggerAll = (!EnemyNear,NumProj&&!PlayerIdExist(Helper(33333333),var(3)))||!InGuardDist
 ;近重拳
 Trigger1 = var(17) = 1 
 Trigger1 = (abs(P2BodyDist X) < 21)
@@ -1973,7 +1973,6 @@ TriggerAll = stateType != A
 TriggerAll = EnemyNear,MoveType = A
 TriggerAll = EnemyNear,Vel x >= 0 ;类似Bloo这种空振后退的
 TriggerAll = EnemyNear,Facing != Facing
-TriggerAll = Helper(11990),var(44) = 1
 TriggerAll = InGuardDist
 ;空振切返必杀/超杀
 Trigger1 = var(17) = 2
@@ -2015,7 +2014,6 @@ Trigger5 = EnemyNear,Time <= 4
 Trigger5 = EnemyNear,StateNo = [200,999]
 Trigger5 = EnemyNear,MoveType = A
 Trigger5 = EnemyNear,StateType != A
-Trigger5 = EnemyNear,MoveType != H
 Trigger5 = P2BodyDist x < 80
 Trigger5 = var(50) := 130077
 ;被刚CD了
@@ -2785,8 +2783,9 @@ TriggerAll = var(59)
 TriggerAll = !EnemyNear,Ctrl
 TriggerAll = EnemyNear,MoveType = H && EnemyNear,StateType = A
 TriggerAll = var(17) = 1
+Triggerall = EnemyNear,StateNo!=[1470,1471]
 ;追击
-Trigger1 = P2BodyDist x > 150
+Trigger1 = P2BodyDist x > 180
 Trigger1 = (P2BodyDist x - 35)/16.0 + 6 = [fvar(11)-3,fvar(11)]
 Trigger1 = var(50):=100067
 ;
@@ -2881,7 +2880,7 @@ Trigger1 = var(17) = 2
 Trigger1 = AnimTime <= -4
 Trigger1 = EnemyNear,MoveType = A || EnemyNear,Ctrl
 Trigger1 = P2Dist x = [-40,0]
-Trigger1 = var(50) := 130064
+Trigger1 = var(50) := 130069
 ;剪刀脚
 value = 1300
 

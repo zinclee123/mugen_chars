@@ -315,8 +315,15 @@ IgnoreHitPause = 1
 [State -3, ]
 Type = varSet
 triggerall = IsHelper(33334)
-Trigger1= 1
+Trigger1= TeamSide = 1
 fvar(15)= ifelse(root,Facing = 1, Helper(33002),RootDist x, Helper(33001),RootDist x)
+IgnoreHitPause = 1
+
+[State -3, ]
+Type = varSet
+triggerall = IsHelper(33334)
+Trigger1= TeamSide = 2
+fvar(15)= ifelse(root,Facing = -1, Helper(33002),RootDist x, Helper(33001),RootDist x)
 IgnoreHitPause = 1
 ;---------------------------------------------------------------------------------
 ;后版边绝对距离
@@ -1375,7 +1382,7 @@ Type=Projectile
 Trigger1 = time=0
 Velocity = -10,0
 ProjID = 5555
-Projanim = -1
+Projanim = 9999
 Offset = 0,0
 projstagebound = 0
 Projedgebound = 100000
@@ -1429,7 +1436,7 @@ Type = Projectile
 Trigger1 = time=0
 Velocity = -10,0
 ProjID = 6666
-Projanim = -1
+Projanim = 9999
 Offset = 0,0
 projstagebound = 0
 Projedgebound = 100000
@@ -8085,6 +8092,15 @@ Trigger2 = Pos Y < -50
 Trigger2 = Vel Y >= 0
 Trigger2 = var(50) := 130035
 Trigger2 = var(54) := 625
+;对地 抢招
+Trigger3 = EnemyNear,StateType!=A
+Trigger3 = EnemyNear,StateNo=[200,999]
+Trigger3 = EnemyNear,MoveType=A
+Trigger3 = EnemyNear,Time=[1,6]
+Trigger3 = Helper(33334),fvar(15)<40
+Trigger3 = Pos Y < -50
+Trigger3 = var(50) := 138034
+Trigger3 = var(54) := 1380
 value = var(54)
 
 
